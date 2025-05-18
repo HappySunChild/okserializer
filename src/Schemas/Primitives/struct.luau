@@ -1,8 +1,6 @@
-local package = script.Parent.Parent.Parent
+local Types = require "../../Types"
 
-local Types = require(package.Types)
-
-local Schema = require(package.Schemas.Schema)
+local Schema = require "../Schema"
 
 return function(schemaDict: { [string]: Types.Schema<unknown> }, order: { string }?)
 	local keys = {}

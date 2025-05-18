@@ -1,6 +1,4 @@
-local package = script.Parent.Parent
-
-local Types = require(package.Types)
+local Types = require "../Types"
 
 local U8_LIMIT = 2 ^ 8
 local U16_LIMIT = 2 ^ 16

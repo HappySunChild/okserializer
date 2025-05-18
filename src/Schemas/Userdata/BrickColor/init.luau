@@ -1,9 +1,7 @@
-local package = script.Parent.Parent.Parent
+local Schema = require "../Schema"
+local Types = require "../../Types"
 
-local Types = require(package.Types)
-
-local Schema = require(package.Schemas.Schema)
-
+-- I hate how this isn't consistant, but for some reason the `@self` alias isn't currently available in Roblox, so you have to do this.
 local BrickColorLookup = require(script.Lookup)
 
 return Schema "BrickColor" {

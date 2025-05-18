@@ -1,8 +1,6 @@
-local package = script.Parent.Parent.Parent
+local Types = require "../../Types"
 
-local Types = require(package.Types)
-
-local Schema = require(package.Schemas.Schema)
+local Schema = require "../Schema"
 
 return Schema "Color3" {
 	write = function(b: buffer, offset: number, value: Color3)

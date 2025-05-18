@@ -1,11 +1,8 @@
-local package = script.Parent.Parent
+local Types = require "../Types"
 
-local Types = require(package.Types)
-
-local float16 = require(package.Formats.float16)
-
-local radian = require(package.Formats.radian)
-local small = require(package.Formats.small)
+local float16 = require "../Formats/float16"
+local radian = require "../Formats/radian"
+local small = require "../Formats/small"
 
 local BYTE_FORMATS = table.freeze {
 	u8 = {

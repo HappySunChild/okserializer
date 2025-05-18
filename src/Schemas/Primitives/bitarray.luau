@@ -1,10 +1,8 @@
-local package = script.Parent.Parent.Parent
+local Types = require "../../Types"
 
-local Types = require(package.Types)
+local Schema = require "../Schema"
 
-local Schema = require(package.Schemas.Schema)
-
-local isArray = require(package.Utility.isArray)
+local isArray = require "../../Utility/isArray"
 
 return function(bitCount: number): Types.Schema<{ boolean }>
 	local byteCount = math.ceil(bitCount / 8)

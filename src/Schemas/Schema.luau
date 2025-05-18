@@ -1,7 +1,5 @@
 -- "Schema" class
-local package = script.Parent.Parent
-
-local Types = require(package.Types)
+local Types = require "../Types"
 
 type Self<V> = Types.Schema<V>
 type SchemaInfo<V> = {
@@ -41,6 +39,10 @@ function class.Deserialize<V>(self: Self<V>, serialized: string)
 	local buf = buffer.fromstring(serialized)
 
 	return self._read(buf, 0)
+end
+
+function class.Validate<V>(self: Self<V>, value: V)
+	return self._validate(value)
 end
 
 table.freeze(class)

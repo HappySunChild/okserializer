@@ -1,16 +1,14 @@
-local package = script.Parent.Parent.Parent
+local Types = require "../../Types"
 
-local Types = require(package.Types)
+local Schema = require "../Schema"
 
-local Schema = require(package.Schemas.Schema)
-
-local determineFormat = require(package.Utility.determineFormat)
-local getFormatInfo = require(package.Utility.getFormatInfo)
+local determineFormat = require "../../Utility/determineFormat"
+local getFormatInfo = require "../../Utility/getFormatInfo"
 
 return function(set: { unknown }): Types.Schema<unknown>
 	-- note to future self, because i got really confused just now,
 	-- this automatically determines the format
-	-- sets don't store multiple values, they only store one value from the `set`
+	-- sets don't store multiple values, they only store one value from a set of values
 	local info = getFormatInfo(determineFormat(#set))
 	local write = info.write
 	local read = info.read

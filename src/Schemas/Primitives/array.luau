@@ -1,10 +1,9 @@
-local package = script.Parent.Parent.Parent
+local Types = require "../../Types"
 
-local Types = require(package.Types)
+local Schema = require "../Schema"
 
-local Schema = require(package.Schemas.Schema)
-
-local isArray = require(package.Utility.isArray)
+local getFormatInfo = require "../../Utility/getFormatInfo"
+local isArray = require "../../Utility/isArray"
 
 return function<T>(schema: Types.Schema<T>, lenFormat: Types.UIntByteFormat?): Types.Schema<{ T }>
 	local len = getFormatInfo(lengthFormat, "u16")

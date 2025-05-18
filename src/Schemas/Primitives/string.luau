@@ -1,10 +1,8 @@
-local package = script.Parent.Parent.Parent
+local Types = require "../../Types"
 
-local Types = require(package.Types)
+local Schema = require "../Schema"
 
-local Schema = require(package.Schemas.Schema)
-
-local getFormatInfo = require(package.Utility.getFormatInfo)
+local getFormatInfo = require "../../Utility/getFormatInfo"
 
 return function(lenFormat: Types.UIntByteFormat?): Types.Schema<string>
 	local len = getFormatInfo(lenFormat, "u16")
