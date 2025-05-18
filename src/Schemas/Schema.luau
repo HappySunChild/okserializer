@@ -1,25 +1,25 @@
 -- "Schema" class
-
 local package = script.Parent.Parent
 
 local Types = require(package.Types)
 
 type Self<V> = Types.Schema<V>
+type SchemaInfo<V> = {
+	write: (b: buffer, offset: number, value: V) -> (),
+	read: (b: buffer, offset: number) -> V,
+	size: (value: V) -> number,
+}
 
 local class = {}
 local METATABLE = table.freeze { __index = class }
 
 local function Schema(name: string)
-	return function<V>(methods: {
-		write: (b: buffer, offset: number, value: V) -> (),
-		read: (b: buffer, offset: number) -> V,
-		size: (value: V) -> number,
-	}): Types.Schema<V>
+	return function<V>(info: SchemaInfo<V>): Types.Schema<V>
 		local newSchema = setmetatable({
 			Name = name,
-			_write = methods.write,
-			_read = methods.read,
-			_size = methods.size,
+			_write = info.write,
+			_read = info.read,
+			_size = info.size,
 		}, METATABLE)
 
 		return newSchema
