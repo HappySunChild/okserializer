@@ -6,7 +6,7 @@ local getFormatInfo = require "../../Utility/getFormatInfo"
 local isArray = require "../../Utility/isArray"
 
 return function<T>(schema: Types.Schema<T>, lenFormat: Types.UIntByteFormat?): Types.Schema<{ T }>
-	local len = getFormatInfo(lengthFormat, "u16")
+	local len = getFormatInfo(lenFormat, "u16")
 
 	return Schema "array" {
 		write = function(b: buffer, offset: number, array: { T })

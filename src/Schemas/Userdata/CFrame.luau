@@ -6,7 +6,7 @@ local getFormatInfo = require "../../Utility/getFormatInfo"
 
 return function(format: Types.NumberByteFormat, rotFormat: Types.NumberByteFormat)
 	local pos = getFormatInfo(format, "f32")
-	local rot = getFormatInfo(rotationFormat, "r16")
+	local rot = getFormatInfo(rotFormat, "r16")
 
 	return Schema "CFrame" {
 		write = function(b: buffer, offset: number, value: CFrame)

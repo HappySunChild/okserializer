@@ -5,7 +5,7 @@ local Schema = require "../Schema"
 local getFormatInfo = require "../../Utility/getFormatInfo"
 
 return function(lenFormat: Types.UIntByteFormat)
-	local len = getFormatInfo(lengthFormat, "u16")
+	local len = getFormatInfo(lenFormat, "u16")
 
 	return Schema "buffer" {
 		write = function(b: buffer, offset: number, value: buffer)
