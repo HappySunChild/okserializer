@@ -62,7 +62,7 @@ local function getFormatInfo(formatKey: Types.NumberByteFormat?, default: Types.
 	local info = BYTE_FORMATS[formatKey]
 
 	if default and info == nil then
-		warn(`Unknown byte format '{formatKey}', resorting to default.`)
+		warn(`Unknown byte format '{formatKey}', resorting to default {default}.`)
 
 		info = BYTE_FORMATS[default]
 	end
