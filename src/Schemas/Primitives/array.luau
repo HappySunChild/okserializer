@@ -43,5 +43,18 @@ return function<T>(schema: Types.Schema<T>, lenFormat: Types.UIntByteFormat?): T
 			return byteCount
 		end,
 
+		validate = function(array: unknown)
+			if not isArray(array) then
+				return false
+			end
+
+			for _, value in array do
+				if not schema._validate(value) then
+					return false
+				end
+			end
+
+			return true
+		end,
 	}
 end

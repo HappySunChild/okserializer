@@ -41,5 +41,8 @@ return function(format: Types.NumberByteFormat, rotFormat: Types.NumberByteForma
 			return pos.size * 3 + rot.size * 3
 		end,
 
+		validate = function(value: unknown)
+			return typeof(value) == "CFrame"
+		end,
 	}
 end

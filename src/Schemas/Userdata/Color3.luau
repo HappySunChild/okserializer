@@ -21,4 +21,7 @@ return Schema "Color3" {
 		return 3
 	end,
 
+	validate = function(value: unknown)
+		return typeof(value) == "Color3"
+	end,
 } :: Types.Schema<Color3>

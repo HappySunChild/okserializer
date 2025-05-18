@@ -23,5 +23,12 @@ return function(enum: Enum, format: Types.UIntByteFormat?)
 			return sizeBytes
 		end,
 
+		validate = function(value: unknown)
+			if typeof(value) ~= "EnumItem" then
+				return false
+			end
+
+			return (value :: EnumItem).EnumType == enum
+		end,
 	}
 end

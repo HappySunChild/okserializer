@@ -20,5 +20,8 @@ return function(format: Types.NumberByteFormat)
 			return size
 		end,
 
+		validate = function(v: unknown)
+			return type(v) == "number"
+		end,
 	}
 end

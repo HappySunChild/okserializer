@@ -25,5 +25,8 @@ return function(lenFormat: Types.UIntByteFormat?): Types.Schema<string>
 			return len.size + string.len(value)
 		end,
 
+		validate = function(value: unknown)
+			return type(value) == "string"
+		end,
 	}
 end

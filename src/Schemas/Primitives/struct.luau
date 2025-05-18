@@ -66,5 +66,18 @@ return function(schemaDict: { [string]: Types.Schema<unknown> }, order: { string
 			return byteCount
 		end,
 
+		validate = function(value: { [string]: unknown })
+			if type(value) ~= "table" then
+				return false
+			end
+
+			for key, schema in schemaDict do
+				if not schema._validate(value[key]) then
+					return false
+				end
+			end
+
+			return true
+		end,
 	}
 end

@@ -27,5 +27,8 @@ return function(format: Types.NumberByteFormat)
 			return byteCount * 3
 		end,
 
+		validate = function(value: unknown)
+			return typeof(value) == "Vector2"
+		end,
 	}
 end

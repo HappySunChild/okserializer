@@ -8,6 +8,7 @@ type SchemaInfo<V> = {
 	write: (b: buffer, offset: number, value: V) -> (),
 	read: (b: buffer, offset: number) -> V,
 	size: (value: V) -> number,
+	validate: (value: V) -> boolean,
 }
 
 local class = {}
@@ -20,6 +21,7 @@ local function Schema(name: string)
 			_write = info.write,
 			_read = info.read,
 			_size = info.size,
+			_validate = info.validate,
 		}, METATABLE)
 
 		return newSchema

@@ -17,6 +17,7 @@ export type Schema<V> = {
 	_write: (b: buffer, offset: number, value: V) -> (),
 	_read: (b: buffer, offset: number) -> V,
 	_size: (value: V) -> number,
+	_validate: (value: V) -> boolean,
 }
 
 export type ByteFormatInfo = {

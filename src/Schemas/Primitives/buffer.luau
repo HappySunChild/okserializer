@@ -25,5 +25,8 @@ return function(lenFormat: Types.UIntByteFormat)
 			return len.size + buffer.len(value)
 		end,
 
+		validate = function(value: unknown)
+			return type(value) == "buffer"
+		end,
 	}
 end

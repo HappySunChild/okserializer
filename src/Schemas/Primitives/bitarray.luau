@@ -54,5 +54,18 @@ return function(bitCount: number): Types.Schema<{ boolean }>
 			return byteCount
 		end,
 
+		validate = function(array: unknown)
+			if not isArray(array) then
+				return false
+			end
+
+			for _, v in array do
+				if type(v) ~= "boolean" then
+					return false
+				end
+			end
+
+			return true
+		end,
 	}
 end

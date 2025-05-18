@@ -41,5 +41,8 @@ return function(set: { unknown }): Types.Schema<unknown>
 			return byteCount
 		end,
 
+		validate = function(value: unknown)
+			return value ~= nil and keys[value] ~= nil
+		end,
 	}
 end
