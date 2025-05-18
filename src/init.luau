@@ -6,7 +6,6 @@ local Serializer = {
 	Schemas = require(script.Schemas),
 	CharacterSets = require(script.CharacterSets),
 
-	-- thinking of just removing this
 	serialize = function<V>(value: V, schema: Types.Schema<V>)
 		return schema:Serialize(value)
 	end,

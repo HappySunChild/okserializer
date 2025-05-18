@@ -13,6 +13,7 @@ export type Schema<V> = {
 
 	Serialize: (self: Schema<V>, value: V) -> (string, buffer),
 	Deserialize: (self: Schema<V>, serialized: string) -> V,
+	Validate: (self: Schema<V>, value: V) -> boolean,
 
 	_write: (b: buffer, offset: number, value: V) -> (),
 	_read: (b: buffer, offset: number) -> V,
