@@ -7,7 +7,7 @@ local float16 = require(package.Formats.float16)
 local radian = require(package.Formats.radian)
 local small = require(package.Formats.small)
 
-local BYTE_FORMAT_INFO = table.freeze {
+local BYTE_FORMATS = table.freeze {
 	u8 = {
 		write = buffer.writeu8,
 		read = buffer.readu8,
@@ -62,12 +62,12 @@ local BYTE_FORMAT_INFO = table.freeze {
 } :: { [string]: Types.ByteFormatInfo }
 
 local function getFormatInfo(formatKey: Types.NumberByteFormat?, default: Types.NumberByteFormat): Types.ByteFormatInfo
-	local info = BYTE_FORMAT_INFO[formatKey]
+	local info = BYTE_FORMATS[formatKey]
 
 	if default and info == nil then
 		warn(`Unknown byte format '{formatKey}', resorting to default.`)
 
-		info = BYTE_FORMAT_INFO[default]
+		info = BYTE_FORMATS[default]
 	end
 
 	if info == nil then
