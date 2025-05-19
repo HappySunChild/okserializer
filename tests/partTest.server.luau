@@ -1,4 +1,7 @@
+local DataStoreService = game:GetService "DataStoreService"
 local ServerStorage = game:GetService "ServerStorage"
+
+local GlobalStore = DataStoreService:GetGlobalDataStore()
 
 local Serializer = require(ServerStorage.Serializer)
 local Schemas = Serializer.Schemas
@@ -11,11 +14,31 @@ local PartSerde = Schemas.struct {
 
 local PartsSerde = Schemas.array(PartSerde, "u8")
 
-local encoded = workspace:FindFirstChild "Encoded" or Instance.new "Configuration"
-encoded.Name = "Encoded"
-encoded.Parent = workspace
+local partBuffer = GlobalStore:GetAsync "Parts"
 
-if not encoded:GetAttribute "Parts" then
+if partBuffer then
+	local serialized = buffer.tostring(partBuffer)
+	local parts
+
+	local success, err = pcall(function()
+		parts = PartsSerde:Deserialize(serialized)
+	end)
+
+	if not success then
+		warn(err)
+	else
+		for _, data in parts do
+			local newPart = Instance.new "Part"
+			newPart.CFrame = data.CFrame
+			newPart.Size = data.Size
+			newPart.Color = data.Color
+			newPart.Anchored = true
+			newPart.Parent = workspace.Parts
+		end
+	end
+end
+
+game:BindToClose(function()
 	local parts = {}
 
 	for _, part: BasePart in workspace.Parts:GetChildren() do
@@ -26,18 +49,9 @@ if not encoded:GetAttribute "Parts" then
 		})
 	end
 
-	local serialized = PartsSerde:Serialize(parts)
+	local ser, b = PartsSerde:Serialize(parts)
 
-	encoded:SetAttribute("Parts", serialized)
-else
-	local parts = PartsSerde:Deserialize(encoded:GetAttribute "Parts")
+	print(#ser)
 
-	for _, data in parts do
-		local newPart = Instance.new "Part"
-		newPart.CFrame = data.CFrame
-		newPart.Size = data.Size
-		newPart.Color = data.Color
-		newPart.Anchored = true
-		newPart.Parent = workspace.Parts
-	end
-end
+	GlobalStore:SetAsync("Parts", b)
+end)
