@@ -1,36 +1,29 @@
-local package = script.Parent
-local Types = require(package.Types)
+local Types = require "./Types"
 
-local determineFormat = require(package.Utility.determineFormat)
-local getFormatInfo = require(package.Utility.getFormatInfo)
+local determineFormat = require "./Utility/determineFormat"
+local getFormatInfo = require "./Utility/getFormatInfo"
 
-local Schema = require(package.Schemas.Schema)
-
-local Primitive = script.Primitives
-local Userdata = script.Userdata
-
--- again, string requires don't really work because @self doesn't seem to be implemented.
--- i've left the string requires commented out so that when *(and if)* it is added, it can easily be swapped in.
+local Schema = require "@self/Schema"
 
 local Schemas = {
-	null = require(Primitive.null), -- require "@self/Primitives/null",
-	boolean = require(Primitive.boolean), -- require "@self/Primitives/boolean",
-	string = require(Primitive.string), -- require "@self/Primitives/string",
-	csetstring = require(Primitive.csetstring), -- require "@self/Primitives/csetstring",
-	buffer = require(Primitive.buffer), -- require "@self/Primitives/buffer",
-	number = require(Primitive.number), -- require "@self/Primitives/number",
-	vector = require(Primitive.vector), -- require "@self/Primitives/vector",
-	array = require(Primitive.array), -- require "@self/Primitives/array",
-	bitarray = require(Primitive.bitarray), -- require "@self/Primitives/bitarray",
-	struct = require(Primitive.struct), -- require "@self/Primitives/struct",
-	set = require(Primitive.set), -- require "@self/Primitives/set",
+	null = require "@self/Primitives/null",
+	boolean = require "@self/Primitives/boolean",
+	string = require "@self/Primitives/string",
+	csetstring = require "@self/Primitives/csetstring",
+	buffer = require "@self/Primitives/buffer",
+	number = require "@self/Primitives/number",
+	vector = require "@self/Primitives/vector",
+	array = require "@self/Primitives/array",
+	bitarray = require "@self/Primitives/bitarray",
+	struct = require "@self/Primitives/struct",
+	set = require "@self/Primitives/set",
 
-	CFrame = require(Userdata.CFrame), -- require "@self/Userdata/CFrame",
-	Enum = require(Userdata.Enum), -- require "@self/Userdata/Enum",
-	Vector2 = require(Userdata.Vector2), -- require "@self/Userdata/Vector2",
-	Vector3 = require(Userdata.Vector3), -- require "@self/Userdata/Vector3",
-	BrickColor = require(Userdata.BrickColor), -- require "@self/Userdata/BrickColor",
-	Color3 = require(Userdata.Color3), -- require "@self/Userdata/Color3",
+	CFrame = require "@self/Userdata/CFrame",
+	Enum = require "@self/Userdata/Enum",
+	Vector2 = require "@self/Userdata/Vector2",
+	Vector3 = require "@self/Userdata/Vector3",
+	BrickColor = require "@self/Userdata/BrickColor",
+	Color3 = require "@self/Userdata/Color3",
 }
 
 Schemas.union = function(...: Types.Schema<any>): Types.Schema<any>

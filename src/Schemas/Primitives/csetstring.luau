@@ -55,7 +55,7 @@ return function(cset: string, lenFormat: Types.UIntByteFormat?)
 			local count = len.read(b, offset)
 			local bitOffset = (offset + len.size) * 8
 
-			for i = 1, count do
+			for _ = 1, count do
 				local index = buffer.readbits(b, bitOffset, charBitSize) + 1
 				local char = toChar(index)
 

@@ -1,8 +1,7 @@
 local Schema = require "../Schema"
 local Types = require "../../Types"
 
--- I hate how this isn't consistant, but for some reason the `@self` alias isn't currently available in Roblox, so you have to do this.
-local BrickColorLookup = require(script.Lookup)
+local BrickColorLookup = require "@self/Lookup"
 
 return Schema "BrickColor" {
 	write = function(b: buffer, offset: number, value: BrickColor)
