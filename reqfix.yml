@@ -1,0 +1,19 @@
+---
+base: roblox
+globals:
+  require:
+    args:
+      - type: any
+  buffer.readbits:
+    args:
+      - type:
+          display: buffer
+      - type: number
+      - type: number
+  buffer.writebits:
+    args:
+      - type:
+          display: buffer
+      - type: number
+      - type: number
+      - type: number

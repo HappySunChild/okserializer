@@ -17,7 +17,7 @@ return function(lenFormat: Types.UIntByteFormat)
 		read = function(b: buffer, offset: number)
 			local count = len.read(b, offset)
 
-			return buffer.fromstring(b, offset + len.size, count)
+			return buffer.fromstring(buffer.readstring(b, offset + len.size, count))
 		end,
 		size = function(value: string)
 			return len.size + buffer.len(value)
