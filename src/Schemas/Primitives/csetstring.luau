@@ -1,20 +1,20 @@
-local Types = require "../../Types"
+local types = require "../../types"
 
 local Schema = require "../Schema"
 
 local getFormatInfo = require "../../Utility/getFormatInfo"
 
-return function(cset: string, lenFormat: Types.UIntByteFormat?)
+return function(cset: string, lenFormat: types.UIntByteFormat?): types.Schema<string>
 	assert(string.len(cset) < 256, "Maximum character set size is 255 characters.")
 
 	local len = getFormatInfo(lenFormat, "u16")
-	local charBitSize = math.ceil(math.log(string.len(cset), 2))
+	local character_bit_size = math.ceil(math.log(string.len(cset), 2))
 
-	local function toIndex(char: string)
+	local function to_index(char: string): number
 		return string.find(cset, char, 1, true)
 	end
 
-	local function toChar(index: number)
+	local function to_character(index: number)
 		return string.sub(cset, index, index)
 	end
 
@@ -24,7 +24,7 @@ return function(cset: string, lenFormat: Types.UIntByteFormat?)
 		for i = 1, string.len(text) do
 			local char = string.sub(text, i, i)
 
-			if toIndex(char) then
+			if to_index(char) then
 				output ..= char
 			end
 		end
@@ -39,42 +39,42 @@ return function(cset: string, lenFormat: Types.UIntByteFormat?)
 
 			len.write(b, offset, count)
 
-			local bitOffset = (offset + len.size) * 8
+			local bit_offset = (offset + len.size) * 8
 
 			for i = 1, count do
 				local char = string.sub(filtered, i, i)
-				local index = toIndex(char) - 1
+				local index = to_index(char) - 1
 
-				buffer.writebits(b, bitOffset, charBitSize, index)
+				buffer.writebits(b, bit_offset, character_bit_size, index)
 
-				bitOffset += charBitSize
+				bit_offset += character_bit_size
 			end
 		end,
-		read = function(b: buffer, offset: number)
+		read = function(b: buffer, offset: number): string
 			local output = ""
 			local count = len.read(b, offset)
 			local bitOffset = (offset + len.size) * 8
 
 			for _ = 1, count do
-				local index = buffer.readbits(b, bitOffset, charBitSize) + 1
-				local char = toChar(index)
+				local index = buffer.readbits(b, bitOffset, character_bit_size) + 1
+				local char = to_character(index)
 
 				output ..= char
 
-				bitOffset += charBitSize
+				bitOffset += character_bit_size
 			end
 
 			return output
 		end,
-		size = function(value: string)
+		size = function(value: string): number
 			local filtered = filter(value)
 			local count = string.len(filtered)
-			local byteCount = math.ceil(charBitSize * count / 8)
+			local byteCount = math.ceil(character_bit_size * count / 8)
 
 			return len.size + byteCount
 		end,
 
-		validate = function(v: unknown)
+		validate = function(v: unknown): boolean
 			return type(v) == "string"
 		end,
 	}

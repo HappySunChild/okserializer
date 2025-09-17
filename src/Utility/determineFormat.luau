@@ -1,4 +1,4 @@
-local Types = require "../Types"
+local types = require "../types"
 
 local U8_LIMIT = 2 ^ 8
 local U16_LIMIT = 2 ^ 16
@@ -6,7 +6,7 @@ local U16_LIMIT = 2 ^ 16
 local I8_LIMIT = U8_LIMIT / 2 - 1
 local I16_LIMIT = U16_LIMIT / 2 - 1
 
-local function determineFormat(value: number): Types.NumberByteFormat
+local function determineFormat(value: number): types.NumberByteFormat
 	local integral, decimal = math.modf(value)
 
 	if decimal == 0 then -- integer

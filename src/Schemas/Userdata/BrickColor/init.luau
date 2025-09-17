@@ -1,5 +1,5 @@
 local Schema = require "../Schema"
-local Types = require "../../Types"
+local types = require "../../types"
 
 local BrickColorLookup = require "@self/Lookup"
 
@@ -9,16 +9,16 @@ return Schema "BrickColor" {
 
 		buffer.writeu8(b, offset, index)
 	end,
-	read = function(b: buffer, offset: number)
+	read = function(b: buffer, offset: number): BrickColor
 		local index = buffer.readu8(b, offset)
 
 		return BrickColorLookup.color(index)
 	end,
-	size = function()
+	size = function(): number
 		return 1
 	end,
 
-	validate = function(value: unknown)
+	validate = function(value: unknown): boolean
 		return typeof(value) == "BrickColor"
 	end,
-} :: Types.Schema<BrickColor>
+} :: types.Schema<BrickColor>

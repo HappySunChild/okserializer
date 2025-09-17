@@ -1,11 +1,11 @@
-local Types = require "../../Types"
+local types = require "../../types"
 
 local Schema = require "../Schema"
 
 local getFormatInfo = require "../../Utility/getFormatInfo"
 local isArray = require "../../Utility/isArray"
 
-return function<T>(schema: Types.Schema<T>, lenFormat: Types.UIntByteFormat?): Types.Schema<{ T }>
+return function<T>(schema: types.Schema<T>, lenFormat: types.UIntByteFormat?): types.Schema<{ T }>
 	local len = getFormatInfo(lenFormat, "u16")
 
 	return Schema "array" {
@@ -19,7 +19,7 @@ return function<T>(schema: Types.Schema<T>, lenFormat: Types.UIntByteFormat?): T
 				offset += schema._size(value)
 			end
 		end,
-		read = function(b: buffer, offset: number)
+		read = function(b: buffer, offset: number): { T }
 			local length = len.read(b, offset)
 			offset += len.size
 
@@ -32,7 +32,7 @@ return function<T>(schema: Types.Schema<T>, lenFormat: Types.UIntByteFormat?): T
 
 			return array
 		end,
-		size = function(array: { T })
+		size = function(array: { T }): number
 			local byteCount = len.size
 
 			for _, value in array do
@@ -42,7 +42,7 @@ return function<T>(schema: Types.Schema<T>, lenFormat: Types.UIntByteFormat?): T
 			return byteCount
 		end,
 
-		validate = function(array: unknown)
+		validate = function(array: unknown): boolean
 			if not isArray(array) then
 				return false
 			end

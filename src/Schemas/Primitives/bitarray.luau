@@ -1,11 +1,11 @@
-local Types = require "../../Types"
+local types = require "../../types"
 
 local Schema = require "../Schema"
 
 local isArray = require "../../Utility/isArray"
 
-return function(bitCount: number): Types.Schema<{ boolean }>
-	local byteCount = math.ceil(bitCount / 8)
+return function(bit_count: number): types.Schema<{ boolean }>
+	local byteCount = math.ceil(bit_count / 8)
 
 	return Schema "bitarray" {
 		write = function(b: buffer, offset: number, array: { boolean })
@@ -15,7 +15,7 @@ return function(bitCount: number): Types.Schema<{ boolean }>
 				for bitOffset = 0, 7 do
 					local index = byteOffset * 8 + bitOffset + 1
 
-					if index > bitCount then
+					if index > bit_count then
 						break
 					end
 
@@ -29,7 +29,7 @@ return function(bitCount: number): Types.Schema<{ boolean }>
 				buffer.writeu8(b, offset + byteOffset, bundled)
 			end
 		end,
-		read = function(b: buffer, offset: number)
+		read = function(b: buffer, offset: number): { boolean }
 			local array = {}
 
 			for byteOffset = 0, byteCount - 1 do
@@ -38,7 +38,7 @@ return function(bitCount: number): Types.Schema<{ boolean }>
 				for bitOffset = 0, 7 do
 					local index = byteOffset * 8 + bitOffset + 1
 
-					if index > bitCount then
+					if index > bit_count then
 						break
 					end
 
@@ -48,11 +48,11 @@ return function(bitCount: number): Types.Schema<{ boolean }>
 
 			return array
 		end,
-		size = function()
+		size = function(): number
 			return byteCount
 		end,
 
-		validate = function(array: unknown)
+		validate = function(array: unknown): boolean
 			if not isArray(array) then
 				return false
 			end

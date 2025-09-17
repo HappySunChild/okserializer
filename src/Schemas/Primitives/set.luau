@@ -1,11 +1,11 @@
-local Types = require "../../Types"
+local types = require "../../types"
 
 local Schema = require "../Schema"
 
 local determineFormat = require "../../Utility/determineFormat"
 local getFormatInfo = require "../../Utility/getFormatInfo"
 
-return function(set: { unknown }): Types.Schema<unknown>
+return function(set: { any }): types.Schema<any>
 	-- note to future self, because i got really confused just now,
 	-- this automatically determines the format
 	-- sets don't store multiple values, they only store one value from a set of values
@@ -21,7 +21,7 @@ return function(set: { unknown }): Types.Schema<unknown>
 	end
 
 	return Schema "set" {
-		write = function(b: buffer, offset: number, value: V)
+		write = function(b: buffer, offset: number, value: any)
 			local index = keys[value]
 
 			if not index then
@@ -30,16 +30,16 @@ return function(set: { unknown }): Types.Schema<unknown>
 
 			write(b, offset, index)
 		end,
-		read = function(b: buffer, offset: number)
+		read = function(b: buffer, offset: number): any
 			local index = read(b, offset)
 
 			return set[index]
 		end,
-		size = function()
+		size = function(): number
 			return byteCount
 		end,
 
-		validate = function(value: unknown)
+		validate = function(value: any): boolean
 			return value ~= nil and keys[value] ~= nil
 		end,
 	}

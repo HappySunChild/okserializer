@@ -1,10 +1,10 @@
-local Types = require "../../Types"
+local types = require "../../types"
 
 local Schema = require "../Schema"
 
 local getFormatInfo = require "../../Utility/getFormatInfo"
 
-return function(format: Types.NumberByteFormat, rotFormat: Types.NumberByteFormat)
+return function(format: types.NumberByteFormat, rotFormat: types.NumberByteFormat): types.Schema<CFrame>
 	local pos = getFormatInfo(format, "f32")
 	local rot = getFormatInfo(rotFormat, "r16")
 
@@ -24,7 +24,7 @@ return function(format: Types.NumberByteFormat, rotFormat: Types.NumberByteForma
 			rot.write(b, offset + pos.size * 3 + rot.size, ry)
 			rot.write(b, offset + pos.size * 3 + rot.size * 2, rz)
 		end,
-		read = function(b: buffer, offset: number)
+		read = function(b: buffer, offset: number): CFrame
 			local x = pos.read(b, offset)
 			local y = pos.read(b, offset + pos.size)
 			local z = pos.read(b, offset + pos.size * 2)
@@ -35,11 +35,11 @@ return function(format: Types.NumberByteFormat, rotFormat: Types.NumberByteForma
 
 			return CFrame.new(x, y, z) * CFrame.fromOrientation(rx, ry, rz)
 		end,
-		size = function()
+		size = function(): number
 			return pos.size * 3 + rot.size * 3
 		end,
 
-		validate = function(value: unknown)
+		validate = function(value: unknown): boolean
 			return typeof(value) == "CFrame"
 		end,
 	}

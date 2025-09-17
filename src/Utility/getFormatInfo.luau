@@ -1,4 +1,4 @@
-local Types = require "../Types"
+local types = require "../types"
 
 local float16 = require "../Formats/float16"
 local radian = require "../Formats/radian"
@@ -41,9 +41,9 @@ local BYTE_FORMATS = table.freeze {
 	s16 = small.s16,
 	s32 = small.s32,
 
-	r8 = radian.r8, --   pi / 256        ≈ 0.703 degrees
-	r16 = radian.r16, -- pi / 65536      ≈ 0.002 degrees
-	r32 = radian.r32, -- pi / 4294967296 ≈ 0.00000004 degrees
+	r8 = radian.r8, --   pi / 256        ≈ 0.703 degrees (perfect 4ths)
+	r16 = radian.r16, -- pi / 65536      ≈ 0.002 degrees (perfect 4ths)
+	r32 = radian.r32, -- pi / 4294967296 ≈ 0.00000004 degrees (perfect 4ths)
 
 	f16 = float16,
 	f32 = {
@@ -56,9 +56,9 @@ local BYTE_FORMATS = table.freeze {
 		read = buffer.readf64,
 		size = 8,
 	},
-} :: { [string]: Types.ByteFormatInfo }
+} :: { [string]: types.ByteFormatInfo }
 
-local function getFormatInfo(formatKey: Types.NumberByteFormat?, default: Types.NumberByteFormat): Types.ByteFormatInfo
+local function getFormatInfo(formatKey: types.NumberByteFormat?, default: types.NumberByteFormat): types.ByteFormatInfo
 	local info = BYTE_FORMATS[formatKey]
 
 	if default and info == nil then

@@ -1,4 +1,4 @@
-local Types = require "./Types"
+local types = require "./types"
 
 local determineFormat = require "./Utility/determineFormat"
 local getFormatInfo = require "./Utility/getFormatInfo"
@@ -26,7 +26,7 @@ local Schemas = {
 	Color3 = require "@self/Userdata/Color3",
 }
 
-Schemas.union = function(...: Types.Schema<any>): Types.Schema<any>
+Schemas.union = function(...: types.Schema<any>): types.Schema<any>
 	local schemas = { ... }
 
 	local info = getFormatInfo(determineFormat(#schemas), "u8")
@@ -34,7 +34,7 @@ Schemas.union = function(...: Types.Schema<any>): Types.Schema<any>
 	local read = info.read
 	local byteCount = info.size
 
-	local function getSchema<V>(value: V): (number?, Types.Schema<V>?)
+	local function get_schema<V>(value: V): (number?, types.Schema<V>?)
 		for index, schema in schemas do
 			if schema._validate(value) then
 				return index, schema
@@ -46,7 +46,7 @@ Schemas.union = function(...: Types.Schema<any>): Types.Schema<any>
 
 	return Schema "union" {
 		write = function(b: buffer, offset: number, value: any)
-			local index, schema = getSchema(value)
+			local index, schema = get_schema(value)
 
 			if not schema then
 				error(`No available schema for value {value} ({typeof(value)})`)
@@ -56,14 +56,14 @@ Schemas.union = function(...: Types.Schema<any>): Types.Schema<any>
 
 			schema._write(b, offset + byteCount, value)
 		end,
-		read = function(b: buffer, offset: number)
+		read = function(b: buffer, offset: number): any
 			local index = read(b, offset)
 			local schema = schemas[index]
 
 			return schema._read(b, offset + byteCount)
 		end,
-		size = function(value: any)
-			local _, schema = getSchema(value)
+		size = function(value: any): number
+			local _, schema = get_schema(value)
 
 			if not schema then
 				error(`No available schema for value {value} ({typeof(value)})`)
@@ -74,8 +74,8 @@ Schemas.union = function(...: Types.Schema<any>): Types.Schema<any>
 			return byteCount + size
 		end,
 
-		validate = function(value: unknown)
-			return getSchema(value) ~= nil
+		validate = function(value: unknown): boolean
+			return get_schema(value) ~= nil
 		end,
 	}
 end

@@ -1,10 +1,10 @@
-local Types = require "../../Types"
+local types = require "../../types"
 
 local Schema = require "../Schema"
 
 local getFormatInfo = require "../../Utility/getFormatInfo"
 
-return function(format: Types.NumberByteFormat)
+return function(format: types.NumberByteFormat)
 	local info = getFormatInfo(format, "f32")
 
 	local write = info.write

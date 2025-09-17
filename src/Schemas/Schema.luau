@@ -1,19 +1,35 @@
 -- "Schema" class
-local Types = require "../Types"
+local types = require "../types"
 
-type Self<V> = Types.Schema<V>
-type SchemaInfo<V> = {
-	write: (b: buffer, offset: number, value: V) -> (),
-	read: (b: buffer, offset: number) -> V,
-	size: (value: V) -> number,
-	validate: (value: V) -> boolean,
+type SchemaInfo<T> = {
+	write: (b: buffer, offset: number, value: T) -> (),
+	read: (b: buffer, offset: number) -> T,
+	size: (value: T) -> number,
+	validate: (value: T) -> boolean,
 }
+type Self<T> = types.Schema<T>
 
-local class = {}
+local class = table.freeze {
+	serialize = function<T>(self: Self<T>, value: T): (string, buffer)
+		local out_buf = buffer.create(self._size(value))
+
+		self._write(out_buf, 0, value)
+
+		return buffer.tostring(out_buf), out_buf
+	end,
+	deserialize = function<T>(self: Self<T>, serialized: string): T
+		local buf = buffer.fromstring(serialized)
+
+		return self._read(buf, 0)
+	end,
+	validate = function<T>(self: Self<T>, value: T): boolean
+		return self._validate(value)
+	end,
+}
 local METATABLE = table.freeze { __index = class }
 
 local function Schema(name: string)
-	return function<V>(info: SchemaInfo<V>): Types.Schema<V>
+	return function<T>(info: SchemaInfo<T>): types.Schema<T>
 		local newSchema = setmetatable({
 			Name = name,
 			_write = info.write,
@@ -25,26 +41,5 @@ local function Schema(name: string)
 		return newSchema
 	end
 end
-
-function class.Serialize<V>(self: Self<V>, value: V)
-	local size = self._size(value)
-	local outBuf = buffer.create(size)
-
-	self._write(outBuf, 0, value)
-
-	return buffer.tostring(outBuf), outBuf
-end
-
-function class.Deserialize<V>(self: Self<V>, serialized: string)
-	local buf = buffer.fromstring(serialized)
-
-	return self._read(buf, 0)
-end
-
-function class.Validate<V>(self: Self<V>, value: V)
-	return self._validate(value)
-end
-
-table.freeze(class)
 
 return Schema

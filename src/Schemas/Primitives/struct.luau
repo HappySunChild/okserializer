@@ -1,24 +1,24 @@
-local Types = require "../../Types"
+local types = require "../../types"
 
 local Schema = require "../Schema"
 
-return function(schemaDict: { [string]: Types.Schema<unknown> }, order: { string }?)
+return function(schema_dict: { [string]: types.Schema<unknown> }, order: { string }?): types.Schema<any>
 	local keys = {}
 
-	for key in schemaDict do
+	for key in schema_dict do
 		table.insert(keys, key)
 	end
 
 	if type(order) == "table" then
 		table.sort(keys, function(a: string, b: string)
-			local aIndex = table.find(order, a) or 0
-			local bIndex = table.find(order, b) or 0
+			local a_index = table.find(order, a) or 0
+			local b_index = table.find(order, b) or 0
 
-			if aIndex == bIndex then
+			if a_index == b_index then
 				return a > b
 			end
 
-			return aIndex < bIndex
+			return a_index < b_index
 		end)
 	else
 		-- ensure consistant order, this will break when adding/remove
@@ -27,9 +27,9 @@ return function(schemaDict: { [string]: Types.Schema<unknown> }, order: { string
 	end
 
 	return Schema "struct" {
-		write = function(b: buffer, offset: number, dict: { [string]: unknown })
+		write = function(b: buffer, offset: number, dict: any)
 			for _, key in keys do
-				local schema = schemaDict[key]
+				local schema = schema_dict[key]
 				local value = dict[key]
 
 				schema._write(b, offset, value)
@@ -37,11 +37,11 @@ return function(schemaDict: { [string]: Types.Schema<unknown> }, order: { string
 				offset += schema._size(value)
 			end
 		end,
-		read = function(b: buffer, offset: number)
+		read = function(b: buffer, offset: number): any
 			local result = {}
 
 			for _, key in keys do
-				local schema = schemaDict[key]
+				local schema = schema_dict[key]
 				local value = schema._read(b, offset)
 
 				result[key] = value
@@ -51,11 +51,11 @@ return function(schemaDict: { [string]: Types.Schema<unknown> }, order: { string
 
 			return result
 		end,
-		size = function(dict: V)
+		size = function(dict: any): number
 			local byteCount = 0
 
 			for _, key in keys do
-				local schema = schemaDict[key]
+				local schema = schema_dict[key]
 				local value = dict[key]
 
 				byteCount += schema._size(value)
@@ -64,12 +64,12 @@ return function(schemaDict: { [string]: Types.Schema<unknown> }, order: { string
 			return byteCount
 		end,
 
-		validate = function(value: { [string]: unknown })
+		validate = function(value: any): boolean
 			if type(value) ~= "table" then
 				return false
 			end
 
-			for key, schema in schemaDict do
+			for key, schema in schema_dict do
 				if not schema._validate(value[key]) then
 					return false
 				end

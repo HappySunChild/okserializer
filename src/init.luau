@@ -1,19 +1,17 @@
-local Types = require "@self/Types"
+local types = require "@self/types"
 
-export type Schema<V> = Types.Schema<V>
+export type Schema<V> = types.Schema<V>
 
-local Serializer = {
+return table.freeze {
 	Schemas = require "@self/Schemas",
 	CharacterSets = require "@self/CharacterSets",
 
 	generateCset = require "@self/Utility/generateCset",
 
-	serialize = function<V>(value: V, schema: Types.Schema<V>)
+	serialize = function<V>(value: V, schema: types.Schema<V>)
 		return schema:Serialize(value)
 	end,
-	deserialize = function<V>(serialized: string, schema: Types.Schema<V>): V
+	deserialize = function<V>(serialized: string, schema: types.Schema<V>): V
 		return schema:Deserialize(serialized)
 	end,
 }
-
-return Serializer
