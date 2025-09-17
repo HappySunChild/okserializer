@@ -5,15 +5,15 @@ local Schema = require "../Schema"
 local isArray = require "../../Utility/isArray"
 
 return function(bit_count: number): types.Schema<{ boolean }>
-	local byteCount = math.ceil(bit_count / 8)
+	local byte_count = math.ceil(bit_count / 8)
 
 	return Schema "bitarray" {
 		write = function(b: buffer, offset: number, array: { boolean })
-			for byteOffset = 0, byteCount - 1 do
+			for byte_offset = 0, byte_count - 1 do
 				local bundled = 0
 
-				for bitOffset = 0, 7 do
-					local index = byteOffset * 8 + bitOffset + 1
+				for bit_offset = 0, 7 do
+					local index = byte_offset * 8 + bit_offset + 1
 
 					if index > bit_count then
 						break
@@ -23,33 +23,33 @@ return function(bit_count: number): types.Schema<{ boolean }>
 						continue
 					end
 
-					bundled += 2 ^ bitOffset
+					bundled += 2 ^ bit_offset
 				end
 
-				buffer.writeu8(b, offset + byteOffset, bundled)
+				buffer.writeu8(b, offset + byte_offset, bundled)
 			end
 		end,
 		read = function(b: buffer, offset: number): { boolean }
 			local array = {}
 
-			for byteOffset = 0, byteCount - 1 do
-				local bundled = buffer.readu8(b, offset + byteOffset)
+			for byte_offset = 0, byte_count - 1 do
+				local bundled = buffer.readu8(b, offset + byte_offset)
 
-				for bitOffset = 0, 7 do
-					local index = byteOffset * 8 + bitOffset + 1
+				for bit_offset = 0, 7 do
+					local index = byte_offset * 8 + bit_offset + 1
 
 					if index > bit_count then
 						break
 					end
 
-					array[index] = bit32.btest(bundled, 2 ^ bitOffset)
+					array[index] = bit32.btest(bundled, 2 ^ bit_offset)
 				end
 			end
 
 			return array
 		end,
 		size = function(): number
-			return byteCount
+			return byte_count
 		end,
 
 		validate = function(array: unknown): boolean

@@ -53,15 +53,15 @@ return function(cset: string, lenFormat: types.UIntByteFormat?): types.Schema<st
 		read = function(b: buffer, offset: number): string
 			local output = ""
 			local count = len.read(b, offset)
-			local bitOffset = (offset + len.size) * 8
+			local bit_offset = (offset + len.size) * 8
 
 			for _ = 1, count do
-				local index = buffer.readbits(b, bitOffset, character_bit_size) + 1
+				local index = buffer.readbits(b, bit_offset, character_bit_size) + 1
 				local char = to_character(index)
 
 				output ..= char
 
-				bitOffset += character_bit_size
+				bit_offset += character_bit_size
 			end
 
 			return output
@@ -69,9 +69,9 @@ return function(cset: string, lenFormat: types.UIntByteFormat?): types.Schema<st
 		size = function(value: string): number
 			local filtered = filter(value)
 			local count = string.len(filtered)
-			local byteCount = math.ceil(character_bit_size * count / 8)
+			local byte_count = math.ceil(character_bit_size * count / 8)
 
-			return len.size + byteCount
+			return len.size + byte_count
 		end,
 
 		validate = function(v: unknown): boolean

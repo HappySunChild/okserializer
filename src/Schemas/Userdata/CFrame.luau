@@ -4,9 +4,9 @@ local Schema = require "../Schema"
 
 local getFormatInfo = require "../../Utility/getFormatInfo"
 
-return function(format: types.NumberByteFormat, rotFormat: types.NumberByteFormat): types.Schema<CFrame>
-	local pos = getFormatInfo(format, "f32")
-	local rot = getFormatInfo(rotFormat, "r16")
+return function(pos_format: types.NumberByteFormat, rot_format: types.NumberByteFormat): types.Schema<CFrame>
+	local pos = getFormatInfo(pos_format, "f32")
+	local rot = getFormatInfo(rot_format, "r16")
 
 	return Schema "CFrame" {
 		write = function(b: buffer, offset: number, value: CFrame)

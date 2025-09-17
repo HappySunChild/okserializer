@@ -215,13 +215,11 @@ for key, name in colors do
 	keys[name] = key
 end
 
-local Lookup = {
-	index = function(brickColor: BrickColor)
-		return keys[brickColor.Name]
+return table.freeze {
+	indexOf = function(brick_color: BrickColor)
+		return keys[brick_color.Name]
 	end,
-	color = function(index: number)
+	colorFor = function(index: number)
 		return BrickColor.new(colors[index])
 	end,
 }
-
-return Lookup

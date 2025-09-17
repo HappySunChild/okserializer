@@ -7,7 +7,12 @@ type SchemaInfo<T> = {
 	size: (value: T) -> number,
 	validate: (value: T) -> boolean,
 }
-type Self<T> = types.Schema<T>
+type Self<T> = types.Schema<T> & {
+	_write: (b: buffer, offset: number, value: T) -> (),
+	_read: (b: buffer, offset: number) -> T,
+	_size: (value: T) -> number,
+	_validate: (value: T) -> boolean,
+}
 
 local class = table.freeze {
 	serialize = function<T>(self: Self<T>, value: T): (string, buffer)
@@ -31,7 +36,8 @@ local METATABLE = table.freeze { __index = class }
 local function Schema(name: string)
 	return function<T>(info: SchemaInfo<T>): types.Schema<T>
 		local newSchema = setmetatable({
-			Name = name,
+			name = name,
+
 			_write = info.write,
 			_read = info.read,
 			_size = info.size,
