@@ -16,8 +16,8 @@ export type ByteFormatInfo = {
 export type Schema<T> = {
 	name: string,
 
-	serialize: (self: Schema<T>, value: T) -> (string, buffer),
-	deserialize: (self: Schema<T>, serialized: string) -> T,
+	serialize: (self: Schema<T>, value: T) -> buffer,
+	deserialize: (self: Schema<T>, serialized: buffer) -> T,
 	validate: (self: Schema<T>, value: T) -> boolean,
 }
 

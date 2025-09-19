@@ -15,17 +15,15 @@ type Self<T> = types.Schema<T> & {
 }
 
 local class = table.freeze {
-	serialize = function<T>(self: Self<T>, value: T): (string, buffer)
+	serialize = function<T>(self: Self<T>, value: T): buffer
 		local out_buf = buffer.create(self._size(value))
 
 		self._write(out_buf, 0, value)
 
-		return buffer.tostring(out_buf), out_buf
+		return out_buf
 	end,
-	deserialize = function<T>(self: Self<T>, serialized: string): T
-		local buf = buffer.fromstring(serialized)
-
-		return self._read(buf, 0)
+	deserialize = function<T>(self: Self<T>, serialized: buffer): T
+		return self._read(serialized, 0)
 	end,
 	validate = function<T>(self: Self<T>, value: T): boolean
 		return self._validate(value)
@@ -35,7 +33,7 @@ local METATABLE = table.freeze { __index = class }
 
 local function Schema(name: string)
 	return function<T>(info: SchemaInfo<T>): types.Schema<T>
-		local newSchema = setmetatable({
+		local new_schema = setmetatable({
 			name = name,
 
 			_write = info.write,
@@ -44,7 +42,7 @@ local function Schema(name: string)
 			_validate = info.validate,
 		}, METATABLE)
 
-		return newSchema
+		return new_schema
 	end
 end
 
