@@ -49,7 +49,7 @@ game:BindToClose(function()
 		})
 	end
 
-	local ser, b = PartsSerde:Serialize(parts)
+	local ser, b = PartsSerde:serialize(parts)
 
 	print(#ser)
 
