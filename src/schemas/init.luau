@@ -8,9 +8,10 @@ return table.freeze {
 	vector = require "@self/primitive/vector",
 	array = require "@self/primitive/array",
 	bitarray = require "@self/primitive/bitarray",
-	struct = require "@self/primitive/struct",
-	set = require "@self/primitive/set",
-	union = require "@self/primitive/union",
+
+	struct = require "@self/compound/struct",
+	set = require "@self/compound/set",
+	union = require "@self/compound/union",
 
 	CFrame = require "@self/roblox/CFrame",
 	Enum = require "@self/roblox/Enum",

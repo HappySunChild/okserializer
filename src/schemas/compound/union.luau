@@ -8,10 +8,10 @@ local Schema = require "../Schema"
 return function(...: types.Schema<any>): types.Schema<any>
 	local schemas = { ... }
 
-	local _info = getFormatInfo(determineFormat(#schemas), "u8")
-	local write, read, size = _info.write, _info.read, _info.size
+	local _id = getFormatInfo(determineFormat(#schemas), "u8")
+	local id_write, id_read, id_size = _id.write, _id.read, _id.size
 
-	local function get_schema<V>(value: V): (number?, types.Schema<V>?)
+	local function getSchema<V>(value: V): (number?, types.Schema<V>?)
 		for index, schema in schemas do
 			if schema._validate(value) then
 				return index, schema
@@ -23,24 +23,24 @@ return function(...: types.Schema<any>): types.Schema<any>
 
 	return Schema "union" {
 		write = function(b: buffer, offset: number, value: any)
-			local index, schema = get_schema(value)
+			local index, schema = getSchema(value)
 
 			if not schema then
 				error(`No available schema for value {value} ({typeof(value)})`)
 			end
 
-			write(b, offset, index)
+			id_write(b, offset, index)
 
-			schema._write(b, offset + size, value)
+			schema._write(b, offset + id_size, value)
 		end,
 		read = function(b: buffer, offset: number): any
-			local index = read(b, offset)
+			local index = id_read(b, offset)
 			local schema = schemas[index]
 
-			return schema._read(b, offset + size)
+			return schema._read(b, offset + id_size)
 		end,
 		size = function(value: any): number
-			local _, schema = get_schema(value)
+			local _, schema = getSchema(value)
 
 			if not schema then
 				error(`No available schema for value {value} ({typeof(value)})`)
@@ -48,11 +48,11 @@ return function(...: types.Schema<any>): types.Schema<any>
 
 			local size = schema._size(value)
 
-			return size + size
+			return id_size + size
 		end,
 
 		validate = function(value: unknown): boolean
-			return get_schema(value) ~= nil
+			return getSchema(value) ~= nil
 		end,
 	}
 end
