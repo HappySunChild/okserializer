@@ -1,19 +1,6 @@
 {
-	"name": "BufferSerializer",
+	"name": "okserializer",
 	"tree": {
-		"$className": "DataModel",
-		"$ignoreUnknownInstances": true,
-		"ServerStorage": {
-			"$ignoreUnknownInstances": true,
-			"Serializer": {
-				"$path": "src"
-			}
-		},
-		"ServerScriptService": {
-			"Tests": {
-				"$ignoreUnknownInstances": true,
-				"$path": "tests"
-			}
-		}
+		"$path": "src"
 	}
 }

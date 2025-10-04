@@ -1,0 +1,23 @@
+{
+	"name": "okserializer",
+	"tree": {
+		"$className": "DataModel",
+		"$ignoreUnknownInstances": true,
+		"ReplicatedStorage": {
+			"$ignoreUnknownInstances": true,
+			"Libraries": {
+				"$ignoreUnknownInstances": true,
+				"$className": "Folder",
+				"okserializer": {
+					"$path": "src"
+				}
+			}
+		},
+		"ServerScriptService": {
+			"tests": {
+				"$ignoreUnknownInstances": true,
+				"$path": "dev/tests"
+			}
+		}
+	}
+}
