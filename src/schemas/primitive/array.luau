@@ -2,8 +2,8 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-local getFormatInfo = require "../../Utility/getFormatInfo"
-local isArray = require "../../Utility/isArray"
+local getFormatInfo = require "../../utility/getFormatInfo"
+local isArray = require "../../utility/isArray"
 
 return function<T>(schema: types.Schema<T>, len_format: types.UIntByteFormat?): types.Schema<{ T }>
 	local _len = getFormatInfo(len_format, "u16")

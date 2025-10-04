@@ -2,7 +2,7 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-local getFormatInfo = require "../../Utility/getFormatInfo"
+local getFormatInfo = require "../../utility/getFormatInfo"
 
 return function(len_format: types.UIntByteFormat): types.Schema<buffer>
 	local _len = getFormatInfo(len_format, "u16")
@@ -18,7 +18,9 @@ return function(len_format: types.UIntByteFormat): types.Schema<buffer>
 		read = function(b: buffer, offset: number): buffer
 			local count = len_read(b, offset)
 
-			return buffer.fromstring(buffer.readstring(b, offset + len_size, count))
+			return buffer.fromstring(
+				buffer.readstring(b, offset + len_size, count)
+			)
 		end,
 		size = function(value: buffer): number
 			return len_size + buffer.len(value)

@@ -2,10 +2,16 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-local getFormatInfo = require "../../Utility/getFormatInfo"
+local getFormatInfo = require "../../utility/getFormatInfo"
 
-return function(character_set: string, len_format: types.UIntByteFormat?): types.Schema<string>
-	assert(string.len(character_set) < 256, "Maximum character set size is 255 characters.")
+return function(
+	character_set: string,
+	len_format: types.UIntByteFormat?
+): types.Schema<string>
+	assert(
+		string.len(character_set) < 256,
+		"Maximum character set size is 255 characters."
+	)
 
 	local _len = getFormatInfo(len_format, "u16")
 	local len_write, len_read, len_size = _len.write, _len.read, _len.size
@@ -58,7 +64,8 @@ return function(character_set: string, len_format: types.UIntByteFormat?): types
 			local bit_offset = (offset + _len.size) * 8
 
 			for _ = 1, count do
-				local index = buffer.readbits(b, bit_offset, character_bit_size) + 1
+				local index = buffer.readbits(b, bit_offset, character_bit_size)
+					+ 1
 				local char = toChar(index)
 
 				output ..= char

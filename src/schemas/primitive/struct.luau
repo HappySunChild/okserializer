@@ -2,7 +2,10 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-return function(schema_dict: { [string]: types.Schema<unknown> }, order: { string }?): types.Schema<any>
+return function(
+	schema_dict: { [string]: types.Schema<unknown> },
+	order: { string }?
+): types.Schema<any>
 	local keys = {}
 
 	for key in schema_dict do

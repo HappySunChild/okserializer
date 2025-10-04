@@ -2,12 +2,12 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-local getFormatInfo = require "../../Utility/getFormatInfo"
+local getFormatInfo = require "../../utility/getFormatInfo"
 
-return function(lenFormat: types.UIntByteFormat?): types.Schema<string>
-	local _len = getFormatInfo(lenFormat, "u16")
+return function(len_format: types.UIntByteFormat?): types.Schema<string>
+	local _len = getFormatInfo(len_format, "u16")
 	local len_write, len_read, len_size = _len.write, _len.read, _len.size
-	
+
 	return Schema "string" {
 		write = function(b: buffer, offset: number, value: string)
 			local count = string.len(value)

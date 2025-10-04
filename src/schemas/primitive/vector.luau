@@ -2,7 +2,7 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-local getFormatInfo = require "../../Utility/getFormatInfo"
+local getFormatInfo = require "../../utility/getFormatInfo"
 
 return function(format: types.NumberByteFormat): types.Schema<vector>
 	local _info = getFormatInfo(format, "f32")

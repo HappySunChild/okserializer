@@ -2,7 +2,7 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-local isArray = require "../../Utility/isArray"
+local isArray = require "../../utility/isArray"
 
 return function(bit_count: number): types.Schema<{ boolean }>
 	local byte_count = math.ceil(bit_count / 8)

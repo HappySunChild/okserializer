@@ -2,8 +2,8 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-local determineFormat = require "../../Utility/determineFormat"
-local getFormatInfo = require "../../Utility/getFormatInfo"
+local determineFormat = require "../../utility/determineFormat"
+local getFormatInfo = require "../../utility/getFormatInfo"
 
 return function(set: { any }): types.Schema<any>
 	-- note to future self, because i got really confused just now,
