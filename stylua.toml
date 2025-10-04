@@ -1,4 +1,5 @@
 syntax = "Luau"
 quote_style = "ForceDouble"
 call_parentheses = "None"
-sort_requires = { enabled = true}
+sort_requires = { enabled = true }
+column_width = 80
