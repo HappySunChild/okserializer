@@ -12,6 +12,7 @@ return table.freeze {
 	struct = require "@self/compound/struct",
 	set = require "@self/compound/set",
 	union = require "@self/compound/union",
+	optional = require "@self/compound/optional",
 
 	CFrame = require "@self/roblox/CFrame",
 	Enum = require "@self/roblox/Enum",
