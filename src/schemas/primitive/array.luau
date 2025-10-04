@@ -5,14 +5,15 @@ local Schema = require "../Schema"
 local getFormatInfo = require "../../Utility/getFormatInfo"
 local isArray = require "../../Utility/isArray"
 
-return function<T>(schema: types.Schema<T>, lenFormat: types.UIntByteFormat?): types.Schema<{ T }>
-	local len = getFormatInfo(lenFormat, "u16")
+return function<T>(schema: types.Schema<T>, len_format: types.UIntByteFormat?): types.Schema<{ T }>
+	local _len = getFormatInfo(len_format, "u16")
+	local len_write, len_read, len_size = _len.write, _len.read, _len.size
 
 	return Schema "array" {
 		write = function(b: buffer, offset: number, array: { T })
-			len.write(b, offset, #array)
+			len_write(b, offset, #array)
 
-			offset += len.size
+			offset += len_size
 
 			for _, value in array do
 				schema._write(b, offset, value)
@@ -20,8 +21,9 @@ return function<T>(schema: types.Schema<T>, lenFormat: types.UIntByteFormat?): t
 			end
 		end,
 		read = function(b: buffer, offset: number): { T }
-			local length = len.read(b, offset)
-			offset += len.size
+			local length = len_read(b, offset)
+
+			offset += len_size
 
 			local array = {}
 
@@ -33,13 +35,13 @@ return function<T>(schema: types.Schema<T>, lenFormat: types.UIntByteFormat?): t
 			return array
 		end,
 		size = function(array: { T }): number
-			local byteCount = len.size
+			local byte_count = len_size
 
 			for _, value in array do
-				byteCount += schema._size(value)
+				byte_count += schema._size(value)
 			end
 
-			return byteCount
+			return byte_count
 		end,
 
 		validate = function(array: unknown): boolean

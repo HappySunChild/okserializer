@@ -5,11 +5,8 @@ local Schema = require "../Schema"
 local getFormatInfo = require "../../Utility/getFormatInfo"
 
 return function(format: types.NumberByteFormat): types.Schema<number>
-	local info = getFormatInfo(format, "f32")
-
-	local write = info.write
-	local read = info.read
-	local size = info.size
+	local _info = getFormatInfo(format, "f32")
+	local write, read, size = _info.write, _info.read, _info.size
 
 	return Schema "number" {
 		write = write,

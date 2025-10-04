@@ -9,10 +9,8 @@ return function(set: { any }): types.Schema<any>
 	-- note to future self, because i got really confused just now,
 	-- this automatically determines the format
 	-- sets don't store multiple values, they only store one value from a set of values
-	local info = getFormatInfo(determineFormat(#set))
-	local write = info.write
-	local read = info.read
-	local byteCount = info.size
+	local _info = getFormatInfo(determineFormat(#set))
+	local write, read, size = _info.write, _info.read, _info.size
 
 	local keys = {}
 
@@ -36,7 +34,7 @@ return function(set: { any }): types.Schema<any>
 			return set[index]
 		end,
 		size = function(): number
-			return byteCount
+			return size
 		end,
 
 		validate = function(value: any): boolean

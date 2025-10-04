@@ -9,11 +9,11 @@ return Schema "Color3" {
 		buffer.writeu8(b, offset + 2, value.B * 255)
 	end,
 	read = function(b: buffer, offset: number): Color3
-		local red = buffer.readu8(b, offset)
-		local green = buffer.readu8(b, offset + 1)
-		local blue = buffer.readu8(b, offset + 2)
-
-		return Color3.fromRGB(red, green, blue)
+		return Color3.fromRGB(
+			buffer.readu8(b, offset),
+			buffer.readu8(b, offset + 1),
+			buffer.readu8(b, offset + 2)
+		)
 	end,
 	size = function(): number
 		return 3

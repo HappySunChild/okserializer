@@ -3,7 +3,7 @@ local types = require "@self/types"
 export type Schema<V> = types.Schema<V>
 
 return table.freeze {
-	Schemas = require "@self/Schemas",
+	Schemas = require "@self/schemas",
 
 	serialize = function<V>(value: V, schema: types.Schema<V>): buffer
 		return schema:serialize(value)

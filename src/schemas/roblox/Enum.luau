@@ -5,10 +5,8 @@ local Schema = require "../Schema"
 local getFormatInfo = require "../../Utility/getFormatInfo"
 
 return function(enum: Enum, format: types.UIntByteFormat?): types.Schema<EnumItem>
-	local info = getFormatInfo(format, "u16")
-	local write = info.write
-	local read = info.read
-	local size_bytes = info.size
+	local _info = getFormatInfo(format, "u16")
+	local write, read, size = _info.write, _info.read, _info.size
 
 	return Schema "Enum"({
 		write = function(b: buffer, offset: number, value: EnumItem)
@@ -18,7 +16,7 @@ return function(enum: Enum, format: types.UIntByteFormat?): types.Schema<EnumIte
 			return enum:FromValue(read(b, offset))
 		end,
 		size = function(): number
-			return size_bytes
+			return size
 		end,
 
 		validate = function(value: unknown): boolean
