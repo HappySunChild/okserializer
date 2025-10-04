@@ -6,7 +6,7 @@ return table.freeze {
 	version = table.freeze {
 		major = 0,
 		minor = 1,
-		patch = 0,
+		patch = 1,
 	},
 
 	Schemas = require "@self/schemas",
