@@ -5,8 +5,8 @@ export type Schema<V> = types.Schema<V>
 return table.freeze {
 	version = table.freeze {
 		major = 0,
-		minor = 1,
-		patch = 1,
+		minor = 2,
+		patch = 0,
 	},
 
 	Schemas = require "@self/schemas",
