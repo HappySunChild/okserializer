@@ -8,9 +8,9 @@ return table.freeze {
 	vector = require "@self/primitive/vector",
 	array = require "@self/primitive/array",
 	bitarray = require "@self/primitive/bitarray",
+	set = require "@self/primitive/set",
 
 	struct = require "@self/compound/struct",
-	set = require "@self/compound/set",
 	union = require "@self/compound/union",
 	optional = require "@self/compound/optional",
 
