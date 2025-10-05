@@ -11,7 +11,7 @@ return function(...: types.Schema<any>): types.Schema<any>
 	local _id = getFormatInfo(determineFormat(#schemas), "u8")
 	local id_write, id_read, id_size = _id.write, _id.read, _id.size
 
-	local function getSchema<V>(value: V): (number?, types.Schema<V>?)
+	local function getSchemaForValue<V>(value: V): (number?, types.Schema<V>?)
 		for index, schema in schemas do
 			if schema._validate(value) then
 				return index, schema
@@ -23,7 +23,7 @@ return function(...: types.Schema<any>): types.Schema<any>
 
 	return Schema "union" {
 		write = function(b: buffer, offset: number, value: any)
-			local index, schema = getSchema(value)
+			local index, schema = getSchemaForValue(value)
 
 			if not schema then
 				error(`No available schema for value {value} ({typeof(value)})`)
@@ -40,7 +40,7 @@ return function(...: types.Schema<any>): types.Schema<any>
 			return schema._read(b, offset + id_size)
 		end,
 		size = function(value: any): number
-			local _, schema = getSchema(value)
+			local _, schema = getSchemaForValue(value)
 
 			if not schema then
 				error(`No available schema for value {value} ({typeof(value)})`)
@@ -52,7 +52,7 @@ return function(...: types.Schema<any>): types.Schema<any>
 		end,
 
 		validate = function(value: unknown): boolean
-			return getSchema(value) ~= nil
+			return getSchemaForValue(value) ~= nil
 		end,
 	}
 end
