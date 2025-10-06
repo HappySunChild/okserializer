@@ -3,8 +3,8 @@ local types = require "../../types"
 local Schema = require "../Schema"
 
 return function(
-	schema_dict: { [string]: types.Schema<unknown> },
-	order: { string }?
+	schema_dict: { [any]: types.Schema<unknown> },
+	order: { any }?
 ): types.Schema<any>
 	local keys = {}
 
@@ -13,13 +13,9 @@ return function(
 	end
 
 	if type(order) == "table" then
-		table.sort(keys, function(a: string, b: string)
+		table.sort(keys, function(a: any, b: any)
 			local a_index = table.find(order, a) or 0
 			local b_index = table.find(order, b) or 0
-
-			if a_index == b_index then
-				return a > b
-			end
 
 			return a_index < b_index
 		end)
