@@ -17,10 +17,11 @@ return function(len_format: types.UIntByteFormat): types.Schema<buffer>
 		end,
 		read = function(b: buffer, offset: number): buffer
 			local count = len_read(b, offset)
+			local output_buffer = buffer.create(count)
 
-			return buffer.fromstring(
-				buffer.readstring(b, offset + len_size, count)
-			)
+			buffer.copy(output_buffer, 0, b, offset, count)
+
+			return output_buffer
 		end,
 		size = function(value: buffer): number
 			return len_size + buffer.len(value)
