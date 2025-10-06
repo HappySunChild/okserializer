@@ -21,7 +21,7 @@ return function(term: string?): types.Schema<string>
 
 	local term_len = string.len(term)
 
-	return Schema "tmstring" {
+	return Schema "termmstring" {
 		write = function(b: buffer, offset: number, value: string)
 			local count = nextTerminator(value, term)
 

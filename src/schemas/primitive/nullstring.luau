@@ -1,3 +1,3 @@
-local tmstring = require "../primitive/tmstring"
+local termstring = require "../primitive/termstring"
 
-return tmstring "\0"
+return termstring "\0"

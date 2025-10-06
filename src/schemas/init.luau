@@ -11,7 +11,7 @@ return table.freeze {
 	-- Primitive: strings
 	string = require "@self/primitive/string",
 	csetstring = require "@self/primitive/csetstring",
-	tmstring = require "@self/primitive/tmstring",
+	termstring = require "@self/primitive/termstring",
 	nullstring = require "@self/primitive/nullstring",
 
 	-- Compound
