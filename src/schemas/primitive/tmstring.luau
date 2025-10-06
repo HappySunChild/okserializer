@@ -29,6 +29,8 @@ return function(term: string?): types.Schema<string>
 			buffer.writestring(b, offset + count, term) -- terminator
 		end,
 		read = function(b: buffer, offset: number): string
+			-- is this better than progressively reading the buffer and then stopping at the terminator?
+			-- it'd sure be a lot easier to understand than whatever nonsense this is
 			local count = nextTerminator(buffer.tostring(b), term, offset + 1)
 				- offset
 
