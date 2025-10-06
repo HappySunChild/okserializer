@@ -23,9 +23,9 @@ return table.freeze {
 
 	-- Roblox
 	CFrame = require "@self/roblox/CFrame",
-	Enum = require "@self/roblox/Enum",
 	Vector2 = require "@self/roblox/Vector2",
 	Vector3 = require "@self/roblox/Vector3",
 	BrickColor = require "@self/roblox/BrickColor",
 	Color3 = require "@self/roblox/Color3",
+	EnumItem = require "@self/roblox/EnumItem",
 }
