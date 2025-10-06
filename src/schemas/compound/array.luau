@@ -5,7 +5,10 @@ local Schema = require "../Schema"
 local getFormatInfo = require "../../utility/getFormatInfo"
 local isArray = require "../../utility/isArray"
 
-return function<T>(schema: types.Schema<T>, len_format: types.UIntByteFormat?): types.Schema<{ T }>
+return function<T>(
+	schema: types.Schema<T>,
+	len_format: types.UIntByteFormat?
+): types.Schema<{ T }>
 	local _len = getFormatInfo(len_format, "u16")
 	local len_write, len_read, len_size = _len.write, _len.read, _len.size
 
@@ -21,13 +24,13 @@ return function<T>(schema: types.Schema<T>, len_format: types.UIntByteFormat?): 
 			end
 		end,
 		read = function(b: buffer, offset: number): { T }
-			local length = len_read(b, offset)
+			local count = len_read(b, offset)
 
 			offset += len_size
 
-			local array = {}
+			local array = table.create(count)
 
-			for i = 1, length do
+			for i = 1, count do
 				array[i] = schema._read(b, offset)
 				offset += schema._size(array[i])
 			end
