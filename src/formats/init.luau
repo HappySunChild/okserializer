@@ -1,5 +1,3 @@
-local types = require "./types"
-
 local float16 = require "@self/float16"
 local radian = require "@self/radian"
 local small = require "@self/small"
@@ -56,4 +54,4 @@ return table.freeze {
 	r8 = radian.r8, --   pi / 256        ≈ 0.703 degrees (perfect 4ths)
 	r16 = radian.r16, -- pi / 65536      ≈ 0.002 degrees (perfect 4ths)
 	r32 = radian.r32, -- pi / 4294967296 ≈ 0.00000004 degrees (perfect 4ths)
-} :: { [types.NumberByteFormat]: types.ByteFormatInfo }
+}
