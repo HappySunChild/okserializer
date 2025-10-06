@@ -6,19 +6,29 @@ export type FloatByteFormat = "f16" | "f32" | "f64"
 export type SmallByteFormat = "s8" | "s16" | "s32"
 export type RadianByteFormat = "r8" | "r16" | "r32"
 
-export type NumberByteFormat = UIntByteFormat | IntByteFormat | FloatByteFormat | SmallByteFormat | RadianByteFormat
+export type NumberByteFormat =
+	UIntByteFormat
+	| IntByteFormat
+	| FloatByteFormat
+	| SmallByteFormat
+	| RadianByteFormat
 export type ByteFormatInfo = {
 	write: (b: buffer, offset: number, value: number) -> (),
 	read: (b: buffer, offset: number) -> number,
 	size: number,
 }
 
-export type Schema<T> = {
+export type Schema<T...> = {
 	name: string,
 
-	serialize: (self: Schema<T>, value: T) -> buffer,
-	deserialize: (self: Schema<T>, serialized: buffer) -> T,
-	validate: (self: Schema<T>, value: T) -> boolean,
+	serialize: (self: Schema<T...>, T...) -> buffer,
+	deserialize: (self: Schema<T...>, serialized: buffer) -> T...,
+	validate: (self: Schema<T...>, T...) -> boolean,
+
+	_write: (b: buffer, offset: number, T...) -> (),
+	_read: (b: buffer, offset: number) -> T...,
+	_size: (T...) -> number,
+	_validate: (T...) -> boolean,
 }
 
 return nil
