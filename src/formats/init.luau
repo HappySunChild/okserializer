@@ -37,14 +37,6 @@ return table.freeze {
 		size = 4,
 	},
 
-	s8 = small.s8,
-	s16 = small.s16,
-	s32 = small.s32,
-
-	r8 = radian.r8, --   pi / 256        ≈ 0.703 degrees (perfect 4ths)
-	r16 = radian.r16, -- pi / 65536      ≈ 0.002 degrees (perfect 4ths)
-	r32 = radian.r32, -- pi / 4294967296 ≈ 0.00000004 degrees (perfect 4ths)
-
 	f16 = float16,
 	f32 = table.freeze {
 		write = buffer.writef32,
@@ -56,4 +48,12 @@ return table.freeze {
 		read = buffer.readf64,
 		size = 8,
 	},
+
+	s8 = small.s8,
+	s16 = small.s16,
+	s32 = small.s32,
+
+	r8 = radian.r8, --   pi / 256        ≈ 0.703 degrees (perfect 4ths)
+	r16 = radian.r16, -- pi / 65536      ≈ 0.002 degrees (perfect 4ths)
+	r32 = radian.r32, -- pi / 4294967296 ≈ 0.00000004 degrees (perfect 4ths)
 } :: { [types.NumberByteFormat]: types.ByteFormatInfo }
