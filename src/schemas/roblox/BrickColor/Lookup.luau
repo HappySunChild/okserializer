@@ -1,4 +1,4 @@
-local colors = table.freeze {
+local BRICK_COLORS = table.freeze {
 	"Medium stone grey",
 	"White",
 	"Grey",
@@ -208,18 +208,17 @@ local colors = table.freeze {
 	"Royal purple",
 	"Hot pink",
 }
+local KEYS = {}
 
-local keys = {}
-
-for key, name in colors do
-	keys[name] = key
+for key, name in BRICK_COLORS do
+	KEYS[name] = key
 end
 
 return table.freeze {
 	indexOf = function(brick_color: BrickColor)
-		return keys[brick_color.Name]
+		return KEYS[brick_color.Name]
 	end,
 	colorFor = function(index: number)
-		return BrickColor.new(colors[index])
+		return BrickColor.new(BRICK_COLORS[index])
 	end,
 }
