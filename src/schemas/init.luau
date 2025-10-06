@@ -16,10 +16,10 @@ return table.freeze {
 
 	-- Compound
 	array = require "@self/compound/array",
+	tuple = require "@self/compound/tuple",
 	struct = require "@self/compound/struct",
 	union = require "@self/compound/union",
 	optional = require "@self/compound/optional",
-	tuple = require "@self/compound/tuple",
 
 	-- Roblox
 	CFrame = require "@self/roblox/CFrame",
@@ -27,5 +27,6 @@ return table.freeze {
 	Vector3 = require "@self/roblox/Vector3",
 	BrickColor = require "@self/roblox/BrickColor",
 	Color3 = require "@self/roblox/Color3",
+	Enum = require "@self/roblox/Enum",
 	EnumItem = require "@self/roblox/EnumItem",
 }
