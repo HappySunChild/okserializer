@@ -3,7 +3,7 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-return function(len_format: types.UIntByteFormat): types.Schema<buffer>
+return function(len_format: types.UIntFormat): types.Schema<buffer>
 	local _len = formats.get(len_format, "u16")
 	local len_write, len_read, len_size = _len.write, _len.read, _len.size
 

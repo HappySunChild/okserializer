@@ -4,8 +4,8 @@ local types = require "../../types"
 local Schema = require "../Schema"
 
 return function(
-	pos_format: types.NumberByteFormat,
-	rot_format: types.NumberByteFormat
+	pos_format: types.NumberFormat?,
+	rot_format: types.NumberFormat?
 ): types.Schema<CFrame>
 	local _pos = formats.get(pos_format, "f32")
 	local pos_write, pos_read, pos_size = _pos.write, _pos.read, _pos.size

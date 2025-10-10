@@ -5,7 +5,7 @@ local Schema = require "../Schema"
 
 return function(
 	enumerator: Enum,
-	format: types.UIntByteFormat?
+	format: types.UIntFormat?
 ): types.Schema<EnumItem>
 	local _info = formats.get(format, "u16")
 	local write, read, size = _info.write, _info.read, _info.size

@@ -1,18 +1,19 @@
-export type UIntByteFormat = "u8" | "u16" | "u32"
-export type IntByteFormat = "i8" | "i16" | "i32"
-export type FloatByteFormat = "f16" | "f32" | "f64"
+export type UIntFormat = "u8" | "u16" | "u32"
+export type IntFormat = "i8" | "i16" | "i32"
+export type FloatFormat = "f16" | "f32" | "f64"
 
 -- custom byte formats
-export type SmallByteFormat = "s8" | "s16" | "s32"
-export type RadianByteFormat = "r8" | "r16" | "r32"
+export type SmallFormat = "s8" | "s16" | "s32"
+export type RadianFormat = "r8" | "r16" | "r32"
 
-export type NumberByteFormat =
-	UIntByteFormat
-	| IntByteFormat
-	| FloatByteFormat
-	| SmallByteFormat
-	| RadianByteFormat
-export type ByteFormatInfo = {
+export type NumberFormat =
+	UIntFormat
+	| IntFormat
+	| FloatFormat
+	| SmallFormat
+	| RadianFormat
+
+export type NumberFormatSpec = {
 	write: (b: buffer, offset: number, value: number) -> (),
 	read: (b: buffer, offset: number) -> number,
 	size: number,

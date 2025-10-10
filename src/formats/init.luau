@@ -62,20 +62,20 @@ local FORMATS = table.freeze {
 	r8 = radian.r8, --   tau / 256        ≈ 1.40625    degrees (perfect 4ths)
 	r16 = radian.r16, -- tau / 65536      ≈ 0.00549316 degrees (perfect 4ths)
 	r32 = radian.r32, -- tau / 4294967296 ≈ 0.00000008 degrees (perfect 4ths)
-} :: { [types.NumberByteFormat]: types.ByteFormatInfo }
+} :: { [types.NumberFormat]: types.NumberFormatSpec }
 
 return table.freeze {
 	get = function(
-		format_key: types.NumberByteFormat?,
-		default: types.NumberByteFormat
-	): types.ByteFormatInfo
+		format_key: types.NumberFormat?,
+		default: types.NumberFormat
+	): types.NumberFormatSpec
 		if format_key then
 			return FORMATS[format_key]
 		end
 
 		return FORMATS[default]
 	end,
-	determine = function(value: number): types.ByteFormatInfo
+	determine = function(value: number): types.NumberFormatSpec
 		local integral, decimal = math.modf(value)
 
 		if decimal == 0 then -- integer

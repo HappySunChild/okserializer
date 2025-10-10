@@ -7,7 +7,7 @@ local isArray = require "../../utility/isArray"
 
 return function<T>(
 	schema: types.Schema<T>,
-	len_format: types.UIntByteFormat?
+	len_format: types.UIntFormat?
 ): types.Schema<{ T }>
 	local _len = formats.get(len_format, "u16")
 	local len_write, len_read, len_size = _len.write, _len.read, _len.size

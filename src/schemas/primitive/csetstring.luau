@@ -5,7 +5,7 @@ local Schema = require "../Schema"
 
 return function(
 	character_set: string,
-	len_format: types.UIntByteFormat?
+	len_format: types.UIntFormat?
 ): types.Schema<string>
 	assert(
 		string.len(character_set) < 256,
