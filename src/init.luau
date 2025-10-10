@@ -1,6 +1,6 @@
 local types = require "@self/types"
 
-export type Schema<V> = types.Schema<V>
+export type Schema<T...> = types.Schema<T...>
 
 return table.freeze {
 	version = table.freeze {

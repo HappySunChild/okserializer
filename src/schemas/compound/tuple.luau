@@ -12,9 +12,9 @@ return function<R...>(...: types.Schema<any>): types.Schema<R...>
 			for index, schema in tuple_order do
 				local value = select(index, ...)
 
-				schema._write(b, current_offset, value)
+				schema.write(b, current_offset, value)
 
-				current_offset += schema._size(value)
+				current_offset += schema.size(value)
 			end
 		end,
 		read = function(b: buffer, offset: number): R...
@@ -22,11 +22,11 @@ return function<R...>(...: types.Schema<any>): types.Schema<R...>
 			local current_offset = offset
 
 			for index, schema in tuple_order do
-				local value = schema._read(b, current_offset)
+				local value = schema.read(b, current_offset)
 
 				output[index] = value
 
-				current_offset += schema._size(value)
+				current_offset += schema.size(value)
 			end
 
 			return unpack(output, 1, #tuple_order)
@@ -37,7 +37,7 @@ return function<R...>(...: types.Schema<any>): types.Schema<R...>
 			for index, schema in tuple_order do
 				local value = select(index, ...)
 
-				total_size += schema._size(value)
+				total_size += schema.size(value)
 			end
 
 			return total_size
@@ -45,7 +45,7 @@ return function<R...>(...: types.Schema<any>): types.Schema<R...>
 
 		validate = function(...: unknown): boolean
 			for index, schema in tuple_order do
-				if not schema._validate(select(index, ...)) then
+				if not schema.validate(select(index, ...)) then
 					return false
 				end
 			end

@@ -19,8 +19,8 @@ return function<T>(
 			offset += len_size
 
 			for _, value in array do
-				schema._write(b, offset, value)
-				offset += schema._size(value)
+				schema.write(b, offset, value)
+				offset += schema.size(value)
 			end
 		end,
 		read = function(b: buffer, offset: number): { T }
@@ -31,8 +31,8 @@ return function<T>(
 			local array = table.create(count)
 
 			for i = 1, count do
-				array[i] = schema._read(b, offset)
-				offset += schema._size(array[i])
+				array[i] = schema.read(b, offset)
+				offset += schema.size(array[i])
 			end
 
 			return array
@@ -41,7 +41,7 @@ return function<T>(
 			local byte_count = len_size
 
 			for _, value in array do
-				byte_count += schema._size(value)
+				byte_count += schema.size(value)
 			end
 
 			return byte_count
@@ -53,7 +53,7 @@ return function<T>(
 			end
 
 			for _, value in array :: { T } do
-				if not schema._validate(value) then
+				if not schema.validate(value) then
 					return false
 				end
 			end

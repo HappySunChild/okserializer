@@ -11,7 +11,7 @@ return function(...: types.Schema<any>): types.Schema<any>
 
 	local function getSchemaForValue<V>(value: V): (number?, types.Schema<V>?)
 		for index, schema in schemas do
-			if schema._validate(value) then
+			if schema.validate(value) then
 				return index, schema
 			end
 		end
@@ -29,13 +29,13 @@ return function(...: types.Schema<any>): types.Schema<any>
 
 			id_write(b, offset, index)
 
-			schema._write(b, offset + id_size, value)
+			schema.write(b, offset + id_size, value)
 		end,
 		read = function(b: buffer, offset: number): any
 			local index = id_read(b, offset)
 			local schema = schemas[index]
 
-			return schema._read(b, offset + id_size)
+			return schema.read(b, offset + id_size)
 		end,
 		size = function(value: any): number
 			local _, schema = getSchemaForValue(value)
@@ -44,7 +44,7 @@ return function(...: types.Schema<any>): types.Schema<any>
 				error(`No available schema for value {value} ({typeof(value)})`)
 			end
 
-			local size = schema._size(value)
+			local size = schema.size(value)
 
 			return id_size + size
 		end,

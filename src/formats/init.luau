@@ -10,7 +10,7 @@ local U16_LIMIT = 2 ^ 16
 local I8_LIMIT = U8_LIMIT / 2 - 1
 local I16_LIMIT = U16_LIMIT / 2 - 1
 
-local FORMATS = table.freeze {
+local NUMBER_FORMATS = table.freeze {
 	u8 = table.freeze {
 		write = buffer.writeu8,
 		read = buffer.readu8,
@@ -70,10 +70,10 @@ return table.freeze {
 		default: types.NumberFormat
 	): types.NumberFormatSpec
 		if format_key then
-			return FORMATS[format_key]
+			return NUMBER_FORMATS[format_key]
 		end
 
-		return FORMATS[default]
+		return NUMBER_FORMATS[default]
 	end,
 	determine = function(value: number): types.NumberFormatSpec
 		local integral, decimal = math.modf(value)
@@ -81,23 +81,23 @@ return table.freeze {
 		if decimal == 0 then -- integer
 			if integral < 0 then -- signed
 				if value > I16_LIMIT then
-					return FORMATS["i32"]
+					return NUMBER_FORMATS["i32"]
 				elseif value > I8_LIMIT then
-					return FORMATS["i16"]
+					return NUMBER_FORMATS["i16"]
 				else
-					return FORMATS["i8"]
+					return NUMBER_FORMATS["i8"]
 				end
 			end
 
 			if value > U16_LIMIT then
-				return FORMATS["u32"]
+				return NUMBER_FORMATS["u32"]
 			elseif value > U8_LIMIT then
-				return FORMATS["u16"]
+				return NUMBER_FORMATS["u16"]
 			else
-				return FORMATS["u8"]
+				return NUMBER_FORMATS["u8"]
 			end
 		end
 
-		return FORMATS["f32"]
+		return NUMBER_FORMATS["f32"]
 	end,
 }

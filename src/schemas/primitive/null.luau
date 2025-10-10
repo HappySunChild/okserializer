@@ -1,3 +1,5 @@
+local types = require "../../types"
+
 local Schema = require "../Schema"
 
 return Schema "null" {
@@ -12,4 +14,4 @@ return Schema "null" {
 	validate = function(value: unknown): boolean
 		return value == nil
 	end,
-}
+} :: types.Schema<nil>

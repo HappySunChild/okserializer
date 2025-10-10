@@ -3,10 +3,9 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-return function(set: { any }): types.Schema<any>
+return function<T>(set: { T }): types.Schema<T>
 	-- note to future self, because i got really confused just now,
-	-- this automatically determines the format
-	-- sets don't store multiple values, they only store one value from a set of values
+	-- sets don't store multiple values, they only store one value from a set of possibilities
 	local _info = formats.determine(#set)
 	local write, read, size = _info.write, _info.read, _info.size
 
@@ -17,7 +16,7 @@ return function(set: { any }): types.Schema<any>
 	end
 
 	return Schema "set" {
-		write = function(b: buffer, offset: number, value: any)
+		write = function(b: buffer, offset: number, value: T)
 			local index = keys[value]
 
 			if not index then
@@ -26,7 +25,7 @@ return function(set: { any }): types.Schema<any>
 
 			write(b, offset, index)
 		end,
-		read = function(b: buffer, offset: number): any
+		read = function(b: buffer, offset: number): T
 			local index = read(b, offset)
 
 			return set[index]
@@ -35,7 +34,7 @@ return function(set: { any }): types.Schema<any>
 			return size
 		end,
 
-		validate = function(value: any): boolean
+		validate = function(value: unknown): boolean
 			return value ~= nil and keys[value] ~= nil
 		end,
 	}

@@ -24,12 +24,11 @@ export type Schema<T...> = {
 
 	read serialize: (self: Schema<T...>, T...) -> buffer,
 	read deserialize: (self: Schema<T...>, serialized: buffer) -> T...,
-	read validate: (self: Schema<T...>, ...unknown) -> boolean,
 
-	read _write: (b: buffer, offset: number, T...) -> (),
-	read _read: (b: buffer, offset: number) -> T...,
-	read _size: (T...) -> number,
-	read _validate: (...unknown) -> boolean,
+	read write: (b: buffer, offset: number, T...) -> (),
+	read read: (b: buffer, offset: number) -> T...,
+	read size: (T...) -> number,
+	read validate: (...unknown) -> boolean,
 }
 
 return nil

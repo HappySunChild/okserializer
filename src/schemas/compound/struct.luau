@@ -31,9 +31,9 @@ return function(
 				local schema = schema_dict[key]
 				local value = dict[key]
 
-				schema._write(b, offset, value)
+				schema.write(b, offset, value)
 
-				offset += schema._size(value)
+				offset += schema.size(value)
 			end
 		end,
 		read = function(b: buffer, offset: number): any
@@ -41,11 +41,11 @@ return function(
 
 			for _, key in keys do
 				local schema = schema_dict[key]
-				local value = schema._read(b, offset)
+				local value = schema.read(b, offset)
 
 				result[key] = value
 
-				offset += schema._size(value)
+				offset += schema.size(value)
 			end
 
 			return result
@@ -57,7 +57,7 @@ return function(
 				local schema = schema_dict[key]
 				local value = dict[key]
 
-				byteCount += schema._size(value)
+				byteCount += schema.size(value)
 			end
 
 			return byteCount
@@ -71,7 +71,7 @@ return function(
 			value = value :: { [any]: any }
 
 			for key, schema in schema_dict do
-				if not schema._validate(value[key]) then
+				if not schema.validate(value[key]) then
 					return false
 				end
 			end
