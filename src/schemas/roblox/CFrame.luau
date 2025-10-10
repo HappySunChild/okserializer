@@ -18,9 +18,6 @@ return function(
 			local x, y, z = value.X, value.Y, value.Z
 			local rx, ry, rz = value:ToOrientation()
 
-			-- TODO: find a way to reduce this maybe???
-			-- might have to learn quaternions nooooooo....
-			-- i'm too used to euler,,. its 3 am WHY AM I STILL AWAKE
 			pos_write(b, offset, x)
 			pos_write(b, offset + pos_size, y)
 			pos_write(b, offset + pos_size * 2, z)
