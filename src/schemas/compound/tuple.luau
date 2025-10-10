@@ -2,7 +2,7 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-return function<R...>(...: types.Schema<R...>): types.Schema<R...>
+return function<R...>(...: types.Schema<any>): types.Schema<R...>
 	local tuple_order = { ... }
 
 	return Schema "tuple" {
@@ -18,18 +18,18 @@ return function<R...>(...: types.Schema<R...>): types.Schema<R...>
 			end
 		end,
 		read = function(b: buffer, offset: number): R...
-			local tuple_output = {}
+			local output = {}
 			local current_offset = offset
 
 			for index, schema in tuple_order do
 				local value = schema._read(b, current_offset)
 
-				tuple_output[index] = value
+				output[index] = value
 
 				current_offset += schema._size(value)
 			end
 
-			return unpack(tuple_output, 1, #tuple_order)
+			return unpack(output, 1, #tuple_order)
 		end,
 		size = function(...: R...): number
 			local total_size = 0
@@ -43,7 +43,7 @@ return function<R...>(...: types.Schema<R...>): types.Schema<R...>
 			return total_size
 		end,
 
-		validate = function(...: R...): boolean
+		validate = function(...: unknown): boolean
 			for index, schema in tuple_order do
 				if not schema._validate(select(index, ...)) then
 					return false

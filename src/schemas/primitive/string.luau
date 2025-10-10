@@ -1,11 +1,10 @@
+local formats = require "../../formats"
 local types = require "../../types"
 
 local Schema = require "../Schema"
 
-local getFormatInfo = require "../../utility/getFormatInfo"
-
 return function(len_format: types.UIntByteFormat?): types.Schema<string>
-	local _len = getFormatInfo(len_format, "u16")
+	local _len = formats.get(len_format, "u16")
 	local len_write, len_read, len_size = _len.write, _len.read, _len.size
 
 	return Schema "string" {

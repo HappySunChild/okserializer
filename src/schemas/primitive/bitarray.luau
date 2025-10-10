@@ -57,7 +57,7 @@ return function(bit_count: number): types.Schema<{ boolean }>
 				return false
 			end
 
-			for _, v in array do
+			for _, v in array :: { unknown } do
 				if type(v) ~= "boolean" then
 					return false
 				end

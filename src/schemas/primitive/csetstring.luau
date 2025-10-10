@@ -1,8 +1,7 @@
+local formats = require "../../formats"
 local types = require "../../types"
 
 local Schema = require "../Schema"
-
-local getFormatInfo = require "../../utility/getFormatInfo"
 
 return function(
 	character_set: string,
@@ -13,13 +12,13 @@ return function(
 		"Maximum character set size is 255 characters."
 	)
 
-	local _len = getFormatInfo(len_format, "u16")
+	local _len = formats.get(len_format, "u16")
 	local len_write, len_read, len_size = _len.write, _len.read, _len.size
 
 	local character_bit_size = math.ceil(math.log(string.len(character_set), 2))
 
 	local function toIndex(char: string): number
-		return string.find(character_set, char, 1, true)
+		return string.find(character_set, char, 1, true) or 0
 	end
 
 	local function toChar(index: number)

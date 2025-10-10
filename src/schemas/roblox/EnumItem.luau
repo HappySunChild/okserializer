@@ -1,14 +1,13 @@
+local formats = require "../../formats"
 local types = require "../../types"
 
 local Schema = require "../Schema"
-
-local getFormatInfo = require "../../utility/getFormatInfo"
 
 return function(
 	enumerator: Enum,
 	format: types.UIntByteFormat?
 ): types.Schema<EnumItem>
-	local _info = getFormatInfo(format, "u16")
+	local _info = formats.get(format, "u16")
 	local write, read, size = _info.write, _info.read, _info.size
 
 	return Schema "EnumItem" {
@@ -23,7 +22,7 @@ return function(
 		end,
 
 		validate = function(value: unknown): boolean
-			return typeof(value) ~= "EnumItem"
+			return typeof(value) == "EnumItem"
 				and (value :: EnumItem).EnumType == enumerator
 		end,
 	}

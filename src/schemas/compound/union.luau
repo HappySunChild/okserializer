@@ -1,14 +1,12 @@
+local formats = require "../../formats"
 local types = require "../../types"
-
-local determineFormat = require "../../utility/determineFormat"
-local getFormatInfo = require "../../utility/getFormatInfo"
 
 local Schema = require "../Schema"
 
 return function(...: types.Schema<any>): types.Schema<any>
 	local schemas = { ... }
 
-	local _id = getFormatInfo(determineFormat(#schemas), "u8")
+	local _id = formats.determine(#schemas)
 	local id_write, id_read, id_size = _id.write, _id.read, _id.size
 
 	local function getSchemaForValue<V>(value: V): (number?, types.Schema<V>?)
@@ -18,14 +16,14 @@ return function(...: types.Schema<any>): types.Schema<any>
 			end
 		end
 
-		return nil
+		return nil, nil
 	end
 
 	return Schema "union" {
 		write = function(b: buffer, offset: number, value: any)
 			local index, schema = getSchemaForValue(value)
 
-			if not schema then
+			if index == nil or schema == nil then
 				error(`No available schema for value {value} ({typeof(value)})`)
 			end
 
@@ -42,7 +40,7 @@ return function(...: types.Schema<any>): types.Schema<any>
 		size = function(value: any): number
 			local _, schema = getSchemaForValue(value)
 
-			if not schema then
+			if schema == nil then
 				error(`No available schema for value {value} ({typeof(value)})`)
 			end
 

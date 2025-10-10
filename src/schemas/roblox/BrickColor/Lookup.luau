@@ -215,10 +215,10 @@ for key, name in BRICK_COLORS do
 end
 
 return table.freeze {
-	indexOf = function(brick_color: BrickColor)
+	indexOf = function(brick_color: BrickColor): number
 		return KEYS[brick_color.Name]
 	end,
-	colorFor = function(index: number)
-		return BrickColor.new(BRICK_COLORS[index])
+	colorFor = function(index: number): BrickColor
+		return BrickColor.new(BRICK_COLORS[index] :: any)
 	end,
 }

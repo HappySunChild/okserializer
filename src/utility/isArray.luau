@@ -1,4 +1,4 @@
-local function isArray(t: { any })
+local function isArray(t: unknown)
 	if type(t) ~= "table" then
 		return false
 	end

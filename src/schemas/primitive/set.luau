@@ -1,15 +1,13 @@
+local formats = require "../../formats"
 local types = require "../../types"
 
 local Schema = require "../Schema"
-
-local determineFormat = require "../../utility/determineFormat"
-local getFormatInfo = require "../../utility/getFormatInfo"
 
 return function(set: { any }): types.Schema<any>
 	-- note to future self, because i got really confused just now,
 	-- this automatically determines the format
 	-- sets don't store multiple values, they only store one value from a set of values
-	local _info = getFormatInfo(determineFormat(#set))
+	local _info = formats.determine(#set)
 	local write, read, size = _info.write, _info.read, _info.size
 
 	local keys = {}

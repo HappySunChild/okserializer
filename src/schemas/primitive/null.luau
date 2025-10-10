@@ -2,7 +2,9 @@ local Schema = require "../Schema"
 
 return Schema "null" {
 	write = function() end,
-	read = function(): nil end,
+	read = function(): nil
+		return nil
+	end,
 	size = function(): number
 		return 0
 	end,

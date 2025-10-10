@@ -23,12 +23,12 @@ export type Schema<T...> = {
 
 	serialize: (self: Schema<T...>, T...) -> buffer,
 	deserialize: (self: Schema<T...>, serialized: buffer) -> T...,
-	validate: (self: Schema<T...>, T...) -> boolean,
+	validate: (self: Schema<T...>, ...unknown) -> boolean,
 
 	_write: (b: buffer, offset: number, T...) -> (),
 	_read: (b: buffer, offset: number) -> T...,
 	_size: (T...) -> number,
-	_validate: (T...) -> boolean,
+	_validate: (...unknown) -> boolean,
 }
 
 return nil

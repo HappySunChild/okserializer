@@ -63,10 +63,12 @@ return function(
 			return byteCount
 		end,
 
-		validate = function(value: any): boolean
+		validate = function(value: unknown): boolean
 			if type(value) ~= "table" then
 				return false
 			end
+
+			value = value :: { [any]: any }
 
 			for key, schema in schema_dict do
 				if not schema._validate(value[key]) then

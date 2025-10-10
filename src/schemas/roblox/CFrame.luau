@@ -1,17 +1,16 @@
+local formats = require "../../formats"
 local types = require "../../types"
 
 local Schema = require "../Schema"
-
-local getFormatInfo = require "../../utility/getFormatInfo"
 
 return function(
 	pos_format: types.NumberByteFormat,
 	rot_format: types.NumberByteFormat
 ): types.Schema<CFrame>
-	local _pos = getFormatInfo(pos_format, "f32")
+	local _pos = formats.get(pos_format, "f32")
 	local pos_write, pos_read, pos_size = _pos.write, _pos.read, _pos.size
 
-	local _rot = getFormatInfo(rot_format, "r16")
+	local _rot = formats.get(rot_format, "r16")
 	local rot_write, rot_read, rot_size = _rot.write, _rot.read, _rot.size
 
 	return Schema "CFrame" {

@@ -17,27 +17,26 @@ local function nextTerminator(
 end
 
 return function(term: string?): types.Schema<string>
-	term = term or "\0"
-
-	local term_len = string.len(term)
+	local n_term: string = term or "\0"
+	local term_len = string.len(n_term)
 
 	return Schema "termmstring" {
 		write = function(b: buffer, offset: number, value: string)
-			local count = nextTerminator(value, term)
+			local count = nextTerminator(value, n_term)
 
 			buffer.writestring(b, offset, value, count)
-			buffer.writestring(b, offset + count, term) -- terminator
+			buffer.writestring(b, offset + count, n_term) -- terminator
 		end,
 		read = function(b: buffer, offset: number): string
 			-- is this better than progressively reading the buffer and then stopping at the terminator?
 			-- it'd sure be a lot easier to understand than whatever nonsense this is
-			local count = nextTerminator(buffer.tostring(b), term, offset + 1)
+			local count = nextTerminator(buffer.tostring(b), n_term, offset + 1)
 				- offset
 
 			return buffer.readstring(b, offset, count)
 		end,
 		size = function(value: string)
-			return nextTerminator(value, term) + term_len
+			return nextTerminator(value, n_term) + term_len
 		end,
 
 		validate = function(value: unknown)

@@ -1,15 +1,15 @@
+local formats = require "../../formats"
 local types = require "../../types"
 
 local Schema = require "../Schema"
 
-local getFormatInfo = require "../../utility/getFormatInfo"
 local isArray = require "../../utility/isArray"
 
 return function<T>(
 	schema: types.Schema<T>,
 	len_format: types.UIntByteFormat?
 ): types.Schema<{ T }>
-	local _len = getFormatInfo(len_format, "u16")
+	local _len = formats.get(len_format, "u16")
 	local len_write, len_read, len_size = _len.write, _len.read, _len.size
 
 	return Schema "array" {
@@ -52,7 +52,7 @@ return function<T>(
 				return false
 			end
 
-			for _, value in array do
+			for _, value in array :: { T } do
 				if not schema._validate(value) then
 					return false
 				end
