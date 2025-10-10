@@ -1,6 +1,6 @@
 local types = require "../types"
 
-type SchemaMethods<T...> = {
+type SchemaImpl<T...> = {
 	write: (b: buffer, offset: number, T...) -> (),
 	read: (b: buffer, offset: number) -> T...,
 	size: (T...) -> number,
@@ -26,14 +26,14 @@ local class = table.freeze {
 local METATABLE = table.freeze { __index = class }
 
 local function Schema(name: string)
-	return function<T...>(info: SchemaMethods<T...>): types.Schema<T...>
+	return function<T...>(impl: SchemaImpl<T...>): types.Schema<T...>
 		return setmetatable({
 			name = name,
 
-			_write = info.write,
-			_read = info.read,
-			_size = info.size,
-			_validate = info.validate,
+			_write = impl.write,
+			_read = impl.read,
+			_size = impl.size,
+			_validate = impl.validate,
 		}, METATABLE) :: any
 	end
 end
