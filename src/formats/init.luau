@@ -1,8 +1,16 @@
+local types = require "./types"
+
 local float16 = require "@self/float16"
 local radian = require "@self/radian"
 local small = require "@self/small"
 
-return table.freeze {
+local U8_LIMIT = 2 ^ 8
+local U16_LIMIT = 2 ^ 16
+
+local I8_LIMIT = U8_LIMIT / 2 - 1
+local I16_LIMIT = U16_LIMIT / 2 - 1
+
+local FORMATS = table.freeze {
 	u8 = table.freeze {
 		write = buffer.writeu8,
 		read = buffer.readu8,
@@ -51,7 +59,45 @@ return table.freeze {
 	s16 = small.s16,
 	s32 = small.s32,
 
-	r8 = radian.r8, --   pi / 256        ≈ 0.703 degrees (perfect 4ths)
-	r16 = radian.r16, -- pi / 65536      ≈ 0.002 degrees (perfect 4ths)
-	r32 = radian.r32, -- pi / 4294967296 ≈ 0.00000004 degrees (perfect 4ths)
+	r8 = radian.r8, --   tau / 256        ≈ 1.40625    degrees (perfect 4ths)
+	r16 = radian.r16, -- tau / 65536      ≈ 0.00549316 degrees (perfect 4ths)
+	r32 = radian.r32, -- tau / 4294967296 ≈ 0.00000008 degrees (perfect 4ths)
+} :: { [types.NumberByteFormat]: types.ByteFormatInfo }
+
+return table.freeze {
+	get = function(
+		format_key: types.NumberByteFormat?,
+		default: types.NumberByteFormat
+	): types.ByteFormatInfo
+		if format_key then
+			return FORMATS[format_key]
+		end
+
+		return FORMATS[default]
+	end,
+	determine = function(value: number): types.ByteFormatInfo
+		local integral, decimal = math.modf(value)
+
+		if decimal == 0 then -- integer
+			if integral < 0 then -- signed
+				if value > I16_LIMIT then
+					return FORMATS["i32"]
+				elseif value > I8_LIMIT then
+					return FORMATS["i16"]
+				else
+					return FORMATS["i8"]
+				end
+			end
+
+			if value > U16_LIMIT then
+				return FORMATS["u32"]
+			elseif value > U8_LIMIT then
+				return FORMATS["u16"]
+			else
+				return FORMATS["u8"]
+			end
+		end
+
+		return FORMATS["f32"]
+	end,
 }
