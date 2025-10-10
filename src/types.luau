@@ -14,22 +14,22 @@ export type NumberFormat =
 	| RadianFormat
 
 export type NumberFormatSpec = {
-	write: (b: buffer, offset: number, value: number) -> (),
-	read: (b: buffer, offset: number) -> number,
-	size: number,
+	read write: (b: buffer, offset: number, value: number) -> (),
+	read read: (b: buffer, offset: number) -> number,
+	read size: number,
 }
 
 export type Schema<T...> = {
-	name: string,
+	read name: string,
 
-	serialize: (self: Schema<T...>, T...) -> buffer,
-	deserialize: (self: Schema<T...>, serialized: buffer) -> T...,
-	validate: (self: Schema<T...>, ...unknown) -> boolean,
+	read serialize: (self: Schema<T...>, T...) -> buffer,
+	read deserialize: (self: Schema<T...>, serialized: buffer) -> T...,
+	read validate: (self: Schema<T...>, ...unknown) -> boolean,
 
-	_write: (b: buffer, offset: number, T...) -> (),
-	_read: (b: buffer, offset: number) -> T...,
-	_size: (T...) -> number,
-	_validate: (...unknown) -> boolean,
+	read _write: (b: buffer, offset: number, T...) -> (),
+	read _read: (b: buffer, offset: number) -> T...,
+	read _size: (T...) -> number,
+	read _validate: (...unknown) -> boolean,
 }
 
 return nil
