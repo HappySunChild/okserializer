@@ -8,22 +8,22 @@ return function(len_format: types.UIntFormat?): types.Schema<string>
 	local len_write, len_read, len_size = _len.write, _len.read, _len.size
 
 	return Schema "string" {
-		write = function(b: buffer, offset: number, value: string)
+		write = @native function(b: buffer, offset: number, value: string)
 			local count = string.len(value)
 
 			len_write(b, offset, count)
 			buffer.writestring(b, offset + len_size, value, count)
 		end,
-		read = function(b: buffer, offset: number): string
+		read = @native function(b: buffer, offset: number): string
 			local count = len_read(b, offset)
 
 			return buffer.readstring(b, offset + len_size, count)
 		end,
-		size = function(value: string): number
+		size = @native function(value: string): number
 			return len_size + string.len(value)
 		end,
 
-		validate = function(value: unknown): boolean
+		validate = @native function(value: unknown): boolean
 			return type(value) == "string"
 		end,
 	}

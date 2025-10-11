@@ -3,15 +3,15 @@ local types = require "../../types"
 local Schema = require "../Schema"
 
 return Schema "null" {
-	write = function() end,
-	read = function(): nil
+	write = @native function() end,
+	read = @native function(): nil
 		return nil
 	end,
-	size = function(): number
+	size = @native function(): number
 		return 0
 	end,
 
-	validate = function(value: unknown): boolean
+	validate = @native function(value: unknown): boolean
 		return value == nil
 	end,
 } :: types.Schema<nil>

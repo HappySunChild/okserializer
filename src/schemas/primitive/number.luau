@@ -10,12 +10,12 @@ return function(format: types.NumberFormat?): types.Schema<number>
 	return Schema "number" {
 		write = write,
 		read = read,
-		size = function(): number
+		size = @native function(): number
 			return size
 		end,
 
-		validate = function(v: unknown): boolean
-			return type(v) == "number"
+		validate = @native function(value: unknown): boolean
+			return type(value) == "number"
 		end,
 	}
 end

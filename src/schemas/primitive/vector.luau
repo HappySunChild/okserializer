@@ -8,23 +8,23 @@ return function(format: types.NumberFormat?): types.Schema<vector>
 	local write, read, size = _info.write, _info.read, _info.size
 
 	return Schema "vector" {
-		write = function(b: buffer, offset: number, value: vector)
+		write = @native function(b: buffer, offset: number, value: vector)
 			write(b, offset, value.x)
 			write(b, offset + size, value.y)
 			write(b, offset + size * 2, value.z)
 		end,
-		read = function(b: buffer, offset: number): vector
+		read = @native function(b: buffer, offset: number): vector
 			local x = read(b, offset)
 			local y = read(b, offset + size)
 			local z = read(b, offset + size * 2)
 
 			return vector.create(x, y, z)
 		end,
-		size = function(): number
+		size = @native function(): number
 			return size * 3
 		end,
 
-		validate = function(value: unknown): boolean
+		validate = @native function(value: unknown): boolean
 			return type(value) == "vector"
 		end,
 	}
