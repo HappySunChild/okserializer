@@ -1,9 +1,12 @@
+-- Float 16 (2 bytes) implementation
+-- May have some use-cases where you need to store a low precision mixed number in 2 bytes.
+
 local FLOAT16_SIGN_MASK = 0x8000 --     0b1000000000000000
 local FLOAT16_EXPONENT_MASK = 0x7C00 -- 0b0111110000000000
 local FLOAT16_MANTISSA_MASK = 0x03FF -- 0b0000001111111111
 
 local float16 = table.freeze {
-	write = function(b: buffer, offset: number, value: number)
+	write = @native function(b: buffer, offset: number, value: number)
 		-- Handle zero and NaN
 		if value == 0 then
 			buffer.writei16(b, offset, 0)
@@ -56,16 +59,20 @@ local float16 = table.freeze {
 		mantissa = math.min(math.floor(mantissa * 1024 + 0.5), 0x3FF)
 
 		-- Combine all components
-		local result = bit32.bor(sign, bit32.lshift(exponent + 15, 10), mantissa)
+		local result =
+			bit32.bor(sign, bit32.lshift(exponent + 15, 10), mantissa)
 
 		buffer.writeu16(b, offset, result)
 	end,
-	read = function(b: buffer, offset: number)
+	read = @native function(b: buffer, offset: number)
 		local bits = buffer.readu16(b, offset)
 
 		-- Extract components
 		local sign = bit32.band(bits, FLOAT16_SIGN_MASK) ~= 0 and -1 or 1
-		local exponent = bit32.rshift(bit32.band(bits, FLOAT16_EXPONENT_MASK), 10) - 15
+		local exponent = bit32.rshift(
+			bit32.band(bits, FLOAT16_EXPONENT_MASK),
+			10
+		) - 15
 		local mantissa = bit32.band(bits, FLOAT16_MANTISSA_MASK)
 
 		-- Handle special cases
