@@ -22,11 +22,18 @@ return table.freeze {
 	optional = require "@self/compound/optional",
 
 	-- Roblox
-	CFrame = require "@self/roblox/CFrame",
-	Vector2 = require "@self/roblox/Vector2",
-	Vector3 = require "@self/roblox/Vector3",
+	Axes = require "@self/roblox/Axes",
 	BrickColor = require "@self/roblox/BrickColor",
+	CFrame = require "@self/roblox/CFrame",
 	Color3 = require "@self/roblox/Color3",
+	Content = require "@self/roblox/Content",
 	Enum = require "@self/roblox/Enum",
 	EnumItem = require "@self/roblox/EnumItem",
+	NumberRange = require "@self/roblox/NumberRange",
+	PathWaypoint = require "@self/roblox/PathWaypoint",
+	Rect = require "@self/roblox/Rect",
+	Region3 = require "@self/roblox/Region3",
+	TweenInfo = require "@self/roblox/TweenInfo",
+	Vector2 = require "@self/roblox/Vector2",
+	Vector3 = require "@self/roblox/Vector3",
 }

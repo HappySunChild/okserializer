@@ -6,12 +6,7 @@ export type FloatFormat = "f16" | "f32" | "f64"
 export type SmallFormat = "s8" | "s16" | "s32"
 export type RadianFormat = "r8" | "r16" | "r32"
 
-export type NumberFormat =
-	UIntFormat
-	| IntFormat
-	| FloatFormat
-	| SmallFormat
-	| RadianFormat
+export type NumberFormat = UIntFormat | IntFormat | FloatFormat | SmallFormat | RadianFormat
 
 export type NumberFormatSpec = {
 	read write: (b: buffer, offset: number, value: number) -> (),
