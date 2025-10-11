@@ -4,15 +4,15 @@ return table.freeze {
 	boolean = require "@self/primitive/boolean",
 	number = require "@self/primitive/number",
 	vector = require "@self/primitive/vector",
-	bitarray = require "@self/primitive/bitarray",
 	buffer = require "@self/primitive/buffer",
-	set = require "@self/primitive/set",
-
-	-- Primitive: strings
 	string = require "@self/primitive/string",
-	csetstring = require "@self/primitive/csetstring",
-	termstring = require "@self/primitive/termstring",
-	nullstring = require "@self/primitive/nullstring",
+
+	-- Custom
+	set = require "@self/custom/set",
+	bitarray = require "@self/custom/bitarray",
+	csetstring = require "@self/custom/csetstring",
+	termstring = require "@self/custom/termstring",
+	nullstring = require "@self/custom/nullstring",
 
 	-- Compound
 	array = require "@self/compound/array",

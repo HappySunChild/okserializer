@@ -16,7 +16,7 @@ return function<T>(set: { T }): types.Schema<T>
 	end
 
 	return Schema "set" {
-		write = function(b: buffer, offset: number, value: T)
+		write = @native function(b: buffer, offset: number, value: T)
 			local index = keys[value]
 
 			if not index then
@@ -25,16 +25,16 @@ return function<T>(set: { T }): types.Schema<T>
 
 			write(b, offset, index)
 		end,
-		read = function(b: buffer, offset: number): T
+		read = @native function(b: buffer, offset: number): T
 			local index = read(b, offset)
 
 			return set[index]
 		end,
-		size = function(): number
+		size = @native function(): number
 			return size
 		end,
 
-		validate = function(value: unknown): boolean
+		validate = @native function(value: unknown): boolean
 			return value ~= nil and keys[value] ~= nil
 		end,
 	}

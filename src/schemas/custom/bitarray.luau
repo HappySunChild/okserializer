@@ -8,7 +8,7 @@ return function(bit_count: number): types.Schema<{ boolean }>
 	local byte_count = math.ceil(bit_count / 8)
 
 	return Schema "bitarray" {
-		write = function(b: buffer, offset: number, array: { boolean })
+		write = @native function(b: buffer, offset: number, array: { boolean })
 			for byte_offset = 0, byte_count - 1 do
 				local bundled = 0
 
@@ -29,7 +29,7 @@ return function(bit_count: number): types.Schema<{ boolean }>
 				buffer.writeu8(b, offset + byte_offset, bundled)
 			end
 		end,
-		read = function(b: buffer, offset: number): { boolean }
+		read = @native function(b: buffer, offset: number): { boolean }
 			local array = {}
 
 			for byte_offset = 0, byte_count - 1 do
@@ -48,11 +48,11 @@ return function(bit_count: number): types.Schema<{ boolean }>
 
 			return array
 		end,
-		size = function(): number
+		size = @native function(): number
 			return byte_count
 		end,
 
-		validate = function(array: unknown): boolean
+		validate = @native function(array: unknown): boolean
 			if not isArray(array) then
 				return false
 			end
