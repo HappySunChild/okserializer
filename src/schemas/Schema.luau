@@ -8,7 +8,7 @@ type SchemaImpl<T...> = {
 }
 type Self<T...> = types.Schema<T...>
 
-local class = table.freeze {
+local CLASS = table.freeze {
 	serialize = function<T...>(self: Self<T...>, ...: T...): buffer
 		local out_buffer = buffer.create(self.size(...))
 
@@ -20,7 +20,7 @@ local class = table.freeze {
 		return self.read(serialized, 0)
 	end,
 }
-local METATABLE = table.freeze { __index = class }
+local METATABLE = table.freeze { __index = CLASS }
 
 local function Schema(name: string)
 	return function<T...>(impl: SchemaImpl<T...>): types.Schema<T...>
