@@ -1,61 +1,51 @@
 local types = require "../../types"
 
+local sortWithOrder = require "../../utility/sortWithOrder"
+
 local Schema = require "../Schema"
 
-return function(
-	schema_dict: { [any]: types.Schema<unknown> },
-	order: { any }?
-): types.Schema<any>
+type StructInfo<K, V> = { [K]: types.Schema<V> }
+
+return function<K, V>(schema_dict: StructInfo<K, V>, order: { K }?): types.Schema<{ [K]: V }>
 	local keys = {}
 
 	for key in schema_dict do
 		table.insert(keys, key)
 	end
 
-	if type(order) == "table" then
-		table.sort(keys, function(a: any, b: any)
-			local a_index = table.find(order, a) or 0
-			local b_index = table.find(order, b) or 0
-
-			return a_index < b_index
-		end)
-	else
-		-- ensure consistant order, this will break when adding/remove
-		-- keys though, so maybe try to avoid doing that?
-		table.sort(keys)
-	end
+	sortWithOrder(keys, order)
 
 	return Schema "struct" {
-		write = function(b: buffer, offset: number, dict: any)
+		write = function(b: buffer, offset: number, input_dict: { [K]: V })
 			for _, key in keys do
 				local schema = schema_dict[key]
-				local value = dict[key]
+				local value = input_dict[key]
 
 				schema.write(b, offset, value)
 
 				offset += schema.size(value)
 			end
 		end,
-		read = function(b: buffer, offset: number): any
-			local result = {}
+		read = function(b: buffer, offset: number): { [K]: V }
+			local output_dict = {}
 
 			for _, key in keys do
 				local schema = schema_dict[key]
 				local value = schema.read(b, offset)
 
-				result[key] = value
+				output_dict[key] = value
 
 				offset += schema.size(value)
 			end
 
-			return result
+			return output_dict
 		end,
-		size = function(dict: any): number
+		size = function(input_dict: { [K]: V }): number
 			local byteCount = 0
 
 			for _, key in keys do
 				local schema = schema_dict[key]
-				local value = dict[key]
+				local value = input_dict[key]
 
 				byteCount += schema.size(value)
 			end
@@ -68,7 +58,7 @@ return function(
 				return false
 			end
 
-			value = value :: { [any]: any }
+			value = value :: { [K]: V }
 
 			for key, schema in schema_dict do
 				if not schema.validate(value[key]) then
