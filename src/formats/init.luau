@@ -65,6 +65,9 @@ local NUMBER_FORMATS = table.freeze {
 } :: { [types.NumberFormat]: types.NumberFormatSpec }
 
 return table.freeze {
+	get_atomic = function(format_key: types.NumberFormat): types.NumberFormatSpec
+		return NUMBER_FORMATS[format_key]
+	end,
 	get = function(
 		format_key: types.NumberFormat?,
 		default: types.NumberFormat
