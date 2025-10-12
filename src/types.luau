@@ -1,4 +1,4 @@
-export type UIntFormat = "u8" | "u16" | "u32"
+export type UIntFormat = "u8" | "u16" | "u32" | "u64"
 export type IntFormat = "i8" | "i16" | "i32"
 export type FloatFormat = "f16" | "f32" | "f64"
 
