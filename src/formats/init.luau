@@ -59,9 +59,9 @@ local NUMBER_FORMATS = table.freeze {
 	s16 = small.s16,
 	s32 = small.s32,
 
-	r8 = radian.r8, --   tau / 256        ≈ 1.40625    degrees (perfect 4ths)
-	r16 = radian.r16, -- tau / 65536      ≈ 0.00549316 degrees (perfect 4ths)
-	r32 = radian.r32, -- tau / 4294967296 ≈ 0.00000008 degrees (perfect 4ths)
+	r8 = radian.r8, --   tau / 256        ≈ 1.40625    degrees
+	r16 = radian.r16, -- tau / 65536      ≈ 0.00549316 degrees
+	r32 = radian.r32, -- tau / 4294967296 ≈ 0.00000008 degrees
 } :: { [types.NumberFormat]: types.NumberFormatSpec }
 
 return table.freeze {
