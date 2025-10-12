@@ -54,7 +54,7 @@ return Schemas "Axes" {
 			back :: Enum.NormalId
 		)
 	end,
-	size = @native function(value: Axes): number
+	size = @native function(): number
 		return 2
 	end,
 
