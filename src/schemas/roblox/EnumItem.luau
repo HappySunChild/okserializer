@@ -3,10 +3,7 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-return function(
-	enumerator: Enum,
-	format: types.UIntFormat?
-): types.Schema<EnumItem>
+return function(enumerator: Enum, format: types.UIntFormat?): types.Schema<EnumItem>
 	local _info = formats.get(format, "u16")
 	local write, read, size = _info.write, _info.read, _info.size
 
@@ -22,8 +19,7 @@ return function(
 		end,
 
 		validate = function(value: unknown): boolean
-			return typeof(value) == "EnumItem"
-				and (value :: EnumItem).EnumType == enumerator
+			return typeof(value) == "EnumItem" and (value :: EnumItem).EnumType == enumerator
 		end,
 	}
 end
