@@ -9,7 +9,7 @@ local REPEATS_MASK = 0b10000000
 
 return Schema "TweenInfo" {
 	write = function(b: buffer, offset: number, value: TweenInfo)
-		-- can be encoded into 7 bits
+		-- can be encoded into 8 bits (1 byte)
 		local direction = value.EasingDirection.Value -- (max: 2 | 0b10, width: 2)
 		local style = bit32.lshift(value.EasingStyle.Value, 2) -- (max: 10 | 0b1010, width: 4)
 		local reverses = bit32.lshift(value.Reverses and 1 or 0, 6) -- (width: 1)

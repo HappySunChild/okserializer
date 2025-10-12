@@ -8,6 +8,8 @@ type ContentTypeImplementation = {
 	read size: (content: Content) -> number,
 }
 
+-- i think it's safe to say that there probably isn't going to be an implementation for Object content sources
+-- might just scrap this
 local SOURCE_TYPE_IMPLEMENTATIONS: { [Enum.ContentSourceType]: ContentTypeImplementation } =
 	table.freeze {
 		[Enum.ContentSourceType.None] = table.freeze {
