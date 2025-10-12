@@ -10,6 +10,7 @@ return table.freeze {
 	},
 
 	Schemas = require "@self/schemas",
+	Schema = require "@self/schemas/Schema",
 
 	serialize = function<V>(value: V, schema: types.Schema<V>): buffer
 		return schema:serialize(value)
