@@ -2,41 +2,45 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-local DIRECTION_MASK = 0b00000011
-local STYLE_MASK = 0b00111100
-local REVERSES_MASK = 0b01000000
-local REPEATS_MASK = 0b10000000
+local Schema_bitstruct = require "../custom/bitstruct"
+
+type TweenInfoCompactInfo = {
+	direction: number,
+	style: number,
+	reverses: number,
+	repeats_indefinitely: number,
+}
+
+local _infoschem = Schema_bitstruct(
+	{ repeats_indefinitely = 1, reverses = 1, direction = 2, style = 4 },
+	{ "reapeats_indefinitely", "reverses", "direction", "style" }
+) :: types.Schema<TweenInfoCompactInfo>
+local info_write, info_read = _infoschem.write, _infoschem.read
 
 return Schema "TweenInfo" {
 	write = function(b: buffer, offset: number, value: TweenInfo)
-		-- can be encoded into 8 bits (1 byte)
-		local direction = value.EasingDirection.Value -- (max: 2 | 0b10, width: 2)
-		local style = bit32.lshift(value.EasingStyle.Value, 2) -- (max: 10 | 0b1010, width: 4)
-		local reverses = bit32.lshift(value.Reverses and 1 or 0, 6) -- (width: 1)
-		local repeats_indefinitely = bit32.lshift(value.RepeatCount == -1 and 1 or 0, 7) -- (width: 1)
-
-		buffer.writeu8(b, offset, bit32.bor(direction, style, reverses, repeats_indefinitely))
+		info_write(b, offset, {
+			direction = value.EasingDirection.Value,
+			style = value.EasingStyle.Value,
+			reverses = value.Reverses and 1 or 0,
+			repeats_indefinitely = value.RepeatCount == -1 and 1 or 0,
+		})
 		buffer.writeu8(b, offset + 1, value.RepeatCount) -- compromising >255 repeat counts for storage space here
 		buffer.writef32(b, offset + 2, value.DelayTime)
 		buffer.writef32(b, offset + 6, value.Time)
 	end,
 	read = function(b: buffer, offset: number): TweenInfo
-		local combined = buffer.readu8(b, offset)
-		local direction = bit32.band(combined, DIRECTION_MASK)
-		local style = bit32.rshift(bit32.band(combined, STYLE_MASK), 2)
-		local reverses = bit32.btest(combined, REVERSES_MASK)
-		local repeats_indefinitely = bit32.btest(combined, REPEATS_MASK)
-
+		local info = info_read(b, offset)
 		local repeat_count = buffer.readu8(b, offset + 1)
 		local delay_time = buffer.readf32(b, offset + 2)
 		local tween_time = buffer.readf32(b, offset + 6)
 
 		return TweenInfo.new(
 			tween_time,
-			Enum.EasingStyle:FromValue(style),
-			Enum.EasingDirection:FromValue(direction),
-			repeats_indefinitely and -1 or repeat_count,
-			reverses,
+			Enum.EasingStyle:FromValue(info.style),
+			Enum.EasingDirection:FromValue(info.direction),
+			info.repeats_indefinitely == 1 and -1 or repeat_count,
+			info.reverses == 1,
 			delay_time
 		)
 	end,
