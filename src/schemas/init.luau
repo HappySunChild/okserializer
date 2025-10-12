@@ -10,6 +10,7 @@ return table.freeze {
 	-- Custom
 	set = require "@self/custom/set",
 	bitarray = require "@self/custom/bitarray",
+	bitstruct = require "@self/custom/bitstruct",
 	csetstring = require "@self/custom/csetstring",
 	termstring = require "@self/custom/termstring",
 	nullstring = require "@self/custom/nullstring",
