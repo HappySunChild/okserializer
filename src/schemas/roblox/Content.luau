@@ -30,7 +30,7 @@ local SOURCE_TYPE_IMPLEMENTATIONS: { [Enum.ContentSourceType]: ContentTypeImplem
 				buffer.writestring(b, offset + 1, uri)
 			end,
 			read = function(b: buffer, offset: number): Content
-				local uri_count = buffer.readu8(b, offset) + 1 -- assuming they aren't going to be above 256 characters
+				local uri_count = buffer.readu8(b, offset) -- assuming they aren't going to be above 256 characters
 				local uri = buffer.readstring(b, offset + 1, uri_count)
 
 				return Content.fromUri(uri)
