@@ -4,8 +4,8 @@ local float16 = require "@self/float16"
 local radian = require "@self/radian"
 local small = require "@self/small"
 
-local U8_LIMIT = 2 ^ 8
-local U16_LIMIT = 2 ^ 16
+local U8_LIMIT = (2 ^ 8) - 1
+local U16_LIMIT = (2 ^ 16) - 1
 
 local I8_LIMIT = U8_LIMIT / 2 - 1
 local I16_LIMIT = U16_LIMIT / 2 - 1
