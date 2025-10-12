@@ -35,6 +35,8 @@ return table.freeze {
 	Font = require "@self/roblox/Font",
 	Instance = require "@self/roblox/Instance",
 	NumberRange = require "@self/roblox/NumberRange",
+	NumberSequence = require "@self/roblox/NumberSequence",
+	NumberSequenceKeypoint = require "@self/roblox/NumberSequenceKeypoint",
 	PathWaypoint = require "@self/roblox/PathWaypoint",
 	Ray = require "@self/roblox/Ray",
 	Rect = require "@self/roblox/Rect",
