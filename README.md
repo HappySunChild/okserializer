@@ -1,5 +1,5 @@
-# OkSerializer
-A schema-based Luau buffer serializer, comes with some premade `Schema` for some Roblox userdata types aswell.
+# okserializer
+A low-abstraction, schema-based Luau buffer serializer. Comes with some premade `Schema` for Roblox userdata types as well.
 
 Based off of athar_adventure's [BufferConverter2](https://devforum.roblox.com/t/temporarily-archived-bufferconverter2-blazingly-fast-schema-based-buffer-serialization/3429040).
 
