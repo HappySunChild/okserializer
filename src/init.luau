@@ -4,8 +4,8 @@ export type Schema<T...> = types.Schema<T...>
 
 return table.freeze {
 	version = table.freeze {
-		major = 0,
-		minor = 2,
+		major = 1,
+		minor = 0,
 		patch = 0,
 	},
 
