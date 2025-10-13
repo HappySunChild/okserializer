@@ -12,10 +12,10 @@ return table.freeze {
 	Schemas = require "@self/schemas",
 	Schema = require "@self/schemas/Schema",
 
-	serialize = function<V>(value: V, schema: types.Schema<V>): buffer
-		return schema:serialize(value)
+	serialize = function<T...>(schema: types.Schema<T...>, ...: T...): buffer
+		return schema:serialize(...)
 	end,
-	deserialize = function<V>(serialized: buffer, schema: types.Schema<V>): V
+	deserialize = function<T...>(schema: types.Schema<T...>, serialized: buffer): T...
 		return schema:deserialize(serialized)
 	end,
 }
