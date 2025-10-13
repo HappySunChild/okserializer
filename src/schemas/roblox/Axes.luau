@@ -2,45 +2,39 @@ local types = require "../../types"
 
 local Schemas = require "../Schema"
 
-local X_MASK = 0b100
-local Y_MASK = 0b010
-local Z_MASK = 0b001
+local Schema_flags = require "../custom/flags"
 
-local TOP_MASK = 0b100000_000
-local BOTTOM_MASK = 0b010000_000
-local LEFT_MASK = 0b001000_000
-local RIGHT_MASK = 0b000100_000
-local FRONT_MASK = 0b000010_000
-local BACK_MASK = 0b000001_000
+local _schem = Schema_flags(9)
+local write, read = _schem.write, _schem.read
 
 return Schemas "Axes" {
 	write = @native function(b: buffer, offset: number, value: Axes)
-		local x = value.X and X_MASK or 0
-		local y = value.Y and Y_MASK or 0
-		local z = value.Z and Z_MASK or 0
+		write(b, offset, {
+			value.X,
+			value.Y,
+			value.Z,
 
-		local top = value.Top and TOP_MASK or 0
-		local bottom = value.Bottom and BOTTOM_MASK or 0
-		local left = value.Left and LEFT_MASK or 0
-		local right = value.Right and RIGHT_MASK or 0
-		local front = value.Front and FRONT_MASK or 0
-		local back = value.Back and BACK_MASK or 0
-
-		buffer.writeu16(b, offset, bit32.bor(x, y, z, top, bottom, left, right, front, back))
+			value.Top,
+			value.Bottom,
+			value.Left,
+			value.Right,
+			value.Front,
+			value.Back,
+		})
 	end,
 	read = @native function(b: buffer, offset: number): Axes
-		local combined = buffer.readu16(b, offset)
+		local data = read(b, offset)
 
-		local x = bit32.btest(combined, X_MASK) and Enum.Axis.X or nil
-		local y = bit32.btest(combined, Y_MASK) and Enum.Axis.Y or nil
-		local z = bit32.btest(combined, Z_MASK) and Enum.Axis.Z or nil
+		local x = data[1] and Enum.Axis.X or nil
+		local y = data[2] and Enum.Axis.Y or nil
+		local z = data[3] and Enum.Axis.Z or nil
 
-		local top = bit32.btest(combined, TOP_MASK) and Enum.NormalId.Top or nil
-		local bottom = bit32.btest(combined, BOTTOM_MASK) and Enum.NormalId.Bottom or nil
-		local left = bit32.btest(combined, LEFT_MASK) and Enum.NormalId.Left or nil
-		local right = bit32.btest(combined, RIGHT_MASK) and Enum.NormalId.Right or nil
-		local front = bit32.btest(combined, FRONT_MASK) and Enum.NormalId.Front or nil
-		local back = bit32.btest(combined, BACK_MASK) and Enum.NormalId.Back or nil
+		local top = data[4] and Enum.NormalId.Top or nil
+		local bottom = data[5] and Enum.NormalId.Bottom or nil
+		local left = data[6] and Enum.NormalId.Left or nil
+		local right = data[7] and Enum.NormalId.Right or nil
+		local front = data[8] and Enum.NormalId.Front or nil
+		local back = data[9] and Enum.NormalId.Back or nil
 
 		return Axes.new(
 			x :: Enum.Axis,
