@@ -1,64 +1,55 @@
+local formats = require "../../formats"
 local types = require "../../types"
 
 local Schema = require "../Schema"
 
 local isArray = require "../../utility/isArray"
 
-return function(bit_count: number): types.Schema<{ boolean }>
-	local byte_count = math.ceil(bit_count / 8)
+return function(bit_width: number, len_format: types.UIntFormat?): types.Schema<{ number }>
+	local _len = formats.get(len_format, "u16")
+	local len_write, len_read, len_size = _len.write, _len.read, _len.size
 
 	return Schema "bitarray" {
-		write = @native function(b: buffer, offset: number, array: { boolean })
-			for byte_offset = 0, byte_count - 1 do
-				local bundled = 0
+		write = @native function(b: buffer, offset: number, value: { number })
+			local count = #value
 
-				for bit_offset = 0, 7 do
-					local index = byte_offset * 8 + bit_offset + 1
+			len_write(b, offset, count)
 
-					if index > bit_count then
-						break
-					end
+			local bit_offset = (offset + len_size) * 8
 
-					if array[index] == false then
-						continue
-					end
+			for _, num in value do
+				buffer.writebits(b, bit_offset, bit_width, num)
 
-					bundled += 2 ^ bit_offset
-				end
-
-				buffer.writeu8(b, offset + byte_offset, bundled)
+				bit_offset += bit_width
 			end
 		end,
-		read = @native function(b: buffer, offset: number): { boolean }
-			local array = {}
+		read = @native function(b: buffer, offset: number): { number }
+			local count = len_read(b, offset)
+			local output = table.create(count, 0)
 
-			for byte_offset = 0, byte_count - 1 do
-				local bundled = buffer.readu8(b, offset + byte_offset)
+			local bit_offset = (offset + len_size) * 8
 
-				for bit_offset = 0, 7 do
-					local index = byte_offset * 8 + bit_offset + 1
+			for i = 1, count do
+				output[i] = buffer.readbits(b, bit_offset, bit_width)
 
-					if index > bit_count then
-						break
-					end
-
-					array[index] = bit32.btest(bundled, 2 ^ bit_offset)
-				end
+				bit_offset += bit_width
 			end
 
-			return array
+			return output
 		end,
-		size = @native function(): number
-			return byte_count
+		size = @native function(value: { number }): number
+			local byte_count = math.ceil(#value * bit_width / 8)
+
+			return len_size + byte_count
 		end,
 
-		validate = @native function(array: unknown): boolean
-			if not isArray(array) then
+		validate = @native function(value: unknown): boolean
+			if not isArray(value) then
 				return false
 			end
 
-			for _, v in array :: { unknown } do
-				if type(v) ~= "boolean" then
+			for _, v in value :: { unknown } do
+				if type(v) ~= "number" then
 					return false
 				end
 			end
