@@ -3,18 +3,16 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-local Schema_Color3 = require "./Color3"
-
 local _time = formats.get_atomic "s16"
 local time_write, time_read, time_size = _time.write, _time.read, _time.size
 
-local color_write, color_read, color_size =
-	Schema_Color3.write, Schema_Color3.read, Schema_Color3.size(Color3.new())
+local _color = require "./Color3"
+local color_write, color_read, color_size = _color.write, _color.read, _color.size()
 
 return Schema "ColorSequenceKeypoint" {
 	write = @native function(b: buffer, offset: number, value: ColorSequenceKeypoint)
 		time_write(b, offset, value.Time)
-		color_write(b, offset, value.Value)
+		color_write(b, offset + color_size, value.Value)
 	end,
 	read = @native function(b: buffer, offset: number): ColorSequenceKeypoint
 		local keypoint_time = time_read(b, offset)

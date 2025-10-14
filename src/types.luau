@@ -29,7 +29,7 @@ export type Schema<T...> = {
 
 	read write: (b: buffer, offset: number, T...) -> (),
 	read read: (b: buffer, offset: number) -> T...,
-	read size: (T...) -> number,
+	read size: (...unknown) -> number,
 	read validate: (...unknown) -> boolean,
 }
 

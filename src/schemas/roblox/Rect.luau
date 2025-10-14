@@ -6,7 +6,7 @@ local Schema_Vector2 = require "./Vector2"
 
 return function(format: types.NumberFormat?): types.Schema<Rect>
 	local _schem = Schema_Vector2(format)
-	local write, read, size = _schem.write, _schem.read, _schem.size(Vector2.zero)
+	local write, read, size = _schem.write, _schem.read, _schem.size()
 
 	return Schema "Rect" {
 		write = function(b: buffer, offset: number, value: Rect)

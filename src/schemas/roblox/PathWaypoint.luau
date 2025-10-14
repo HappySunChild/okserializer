@@ -6,7 +6,7 @@ local Schema_Vector3 = require "./Vector3"
 
 return function(format: types.NumberFormat?): types.Schema<PathWaypoint>
 	local _pos = Schema_Vector3(format)
-	local pos_write, pos_read, pos_size = _pos.write, _pos.read, _pos.size(Vector3.zero)
+	local pos_write, pos_read, pos_size = _pos.write, _pos.read, _pos.size()
 
 	return Schema "PathWaypoint" {
 		write = function(b: buffer, offset: number, waypoint: PathWaypoint)
