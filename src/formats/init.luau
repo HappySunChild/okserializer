@@ -1,8 +1,11 @@
 local types = require "./types"
 
-local float16 = require "@self/float16"
 local radian = require "@self/radian"
 local small = require "@self/small"
+
+local float = require "@self/float"
+local int = require "@self/integer"
+local uint = require "@self/uinteger"
 
 local U8_LIMIT = (2 ^ 8) - 1
 local U16_LIMIT = (2 ^ 16) - 1
@@ -11,53 +14,21 @@ local I8_LIMIT = U8_LIMIT / 2 - 1
 local I16_LIMIT = U16_LIMIT / 2 - 1
 
 local NUMBER_FORMATS = table.freeze {
-	u8 = table.freeze {
-		write = buffer.writeu8,
-		read = buffer.readu8,
-		size = 1,
-	},
-	u16 = table.freeze {
-		write = buffer.writeu16,
-		read = buffer.readu16,
-		size = 2,
-	},
-	u32 = table.freeze {
-		write = buffer.writeu32,
-		read = buffer.readu32,
-		size = 4,
-	},
+	u8 = uint.u8,
+	u16 = uint.u16,
+	u32 = uint.u32,
 
-	i8 = table.freeze {
-		write = buffer.writei8,
-		read = buffer.readi8,
-		size = 1,
-	},
-	i16 = table.freeze {
-		write = buffer.writei16,
-		read = buffer.readi16,
-		size = 2,
-	},
-	i32 = table.freeze {
-		write = buffer.writei32,
-		read = buffer.readi32,
-		size = 4,
-	},
+	i8 = int.i8,
+	i16 = int.i16,
+	i32 = int.i32,
 
-	f16 = float16,
-	f32 = table.freeze {
-		write = buffer.writef32,
-		read = buffer.readf32,
-		size = 4,
-	},
-	f64 = table.freeze {
-		write = buffer.writef64,
-		read = buffer.readf64,
-		size = 8,
-	},
+	f16 = float.f16,
+	f32 = float.f32,
+	f64 = float.f64,
 
-	s8 = small.s8,
-	s16 = small.s16,
-	s32 = small.s32,
+	s8 = small.s8, --   1 / 256        ≈ 0.00390625
+	s16 = small.s16, -- 1 / 65536      ≈ 0.0000152587890625
+	s32 = small.s32, -- 1 / 4294967296 ≈ 0.00000000023283064365386962890625
 
 	r8 = radian.r8, --   tau / 256        ≈ 1.40625    degrees
 	r16 = radian.r16, -- tau / 65536      ≈ 0.00549316 degrees
