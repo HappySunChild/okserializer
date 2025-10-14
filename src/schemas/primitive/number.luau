@@ -4,8 +4,8 @@ local types = require "../../types"
 local Schema = require "../Schema"
 
 return function(format: types.NumberFormat?): types.Schema<number>
-	local _info = formats.get(format, "f32")
-	local write, read, size = _info.write, _info.read, _info.size
+	local _spec = formats.get(format, "f32")
+	local write, read, size = _spec.write, _spec.read, _spec.size
 
 	return Schema "number" {
 		write = write,
