@@ -17,6 +17,8 @@ return table.freeze {
 			return buffer.readu8(b, offset) / U8_MAX_INCLUSIVE * TAU
 		end,
 		size = 1,
+		min = 0,
+		max = TAU - 1 / U8_MAX_INCLUSIVE,
 	},
 	r16 = table.freeze {
 		write = @native function(b: buffer, offset: number, value: number)
@@ -26,6 +28,8 @@ return table.freeze {
 			return buffer.readu16(b, offset) / U16_MAX_INCLUSIVE * TAU
 		end,
 		size = 2,
+		min = 0,
+		max = TAU - 1 / U16_MAX_INCLUSIVE,
 	},
 	r32 = table.freeze {
 		write = @native function(b: buffer, offset: number, value: number)
@@ -35,5 +39,7 @@ return table.freeze {
 			return buffer.readu32(b, offset) / U32_MAX_INCLUSIVE * TAU
 		end,
 		size = 4,
+		min = 0,
+		max = TAU - 1 / U32_MAX_INCLUSIVE,
 	},
 }

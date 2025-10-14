@@ -18,7 +18,11 @@ export type NumberFormat =
 export type NumberFormatSpec = {
 	read write: (b: buffer, offset: number, value: number) -> (),
 	read read: (b: buffer, offset: number) -> number,
+
 	read size: number,
+
+	read min: number,
+	read max: number,
 }
 
 export type Schema<T...> = {

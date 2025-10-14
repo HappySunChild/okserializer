@@ -2,6 +2,8 @@ local FLOAT16_SIGN_MASK = 0x8000 --     0b1000000000000000
 local FLOAT16_EXPONENT_MASK = 0x7C00 -- 0b0111110000000000
 local FLOAT16_MANTISSA_MASK = 0x03FF -- 0b0000001111111111
 
+local HUGE = math.huge
+
 return table.freeze {
 	f16 = table.freeze {
 		write = @native function(b: buffer, offset: number, value: number): ()
@@ -91,15 +93,21 @@ return table.freeze {
 			return sign * (1 + mantissa / 1024) * (2 ^ exponent)
 		end,
 		size = 2,
+		min = -HUGE,
+		max = HUGE,
 	},
 	f32 = table.freeze {
 		write = buffer.writef32,
 		read = buffer.readf32,
 		size = 4,
+		min = -HUGE,
+		max = HUGE,
 	},
 	f64 = table.freeze {
 		write = buffer.writef64,
 		read = buffer.readf64,
 		size = 8,
+		min = -HUGE,
+		max = HUGE,
 	},
 }

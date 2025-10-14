@@ -7,4 +7,6 @@ return table.freeze {
 		return 0
 	end,
 	size = 0,
+	min = 0,
+	max = 0,
 }

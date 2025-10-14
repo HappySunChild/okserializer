@@ -14,6 +14,8 @@ return table.freeze {
 			return buffer.readu8(b, offset) / U8_MAX
 		end,
 		size = 1,
+		min = 0,
+		max = 1,
 	},
 	s16 = table.freeze {
 		write = @native function(b: buffer, offset: number, value: number)
@@ -23,6 +25,8 @@ return table.freeze {
 			return buffer.readu16(b, offset) / U16_MAX
 		end,
 		size = 2,
+		min = 0,
+		max = 1,
 	},
 	s32 = table.freeze {
 		write = @native function(b: buffer, offset: number, value: number)
@@ -32,5 +36,7 @@ return table.freeze {
 			return buffer.readu32(b, offset) / U32_MAX
 		end,
 		size = 4,
+		min = 0,
+		max = 1,
 	},
 }
