@@ -2,71 +2,38 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-type ContentTypeImplementation = {
-	read write: (b: buffer, offset: number, content: Content) -> (),
-	read read: (b: buffer, offset: number) -> Content,
-	read size: (content: Content) -> number,
-}
+local Schema_string = require "../primitive/string"
 
--- i think it's safe to say that there probably isn't going to be an implementation for Object content sources
--- might just scrap this
-local SOURCE_TYPE_IMPLEMENTATIONS: { [Enum.ContentSourceType]: ContentTypeImplementation } =
-	table.freeze {
-		[Enum.ContentSourceType.None] = table.freeze {
-			write = function() end,
-			read = function(): Content
-				return Content.none
-			end,
-			size = function(): number
-				return 0
-			end,
-		},
-		[Enum.ContentSourceType.Uri] = table.freeze {
-			write = function(b: buffer, offset: number, content: Content)
-				local uri = content.Uri :: string
-				local uri_count = string.len(uri)
-
-				buffer.writeu8(b, offset, uri_count)
-				buffer.writestring(b, offset + 1, uri)
-			end,
-			read = function(b: buffer, offset: number): Content
-				local uri_count = buffer.readu8(b, offset) -- assuming they aren't going to be above 256 characters
-				local uri = buffer.readstring(b, offset + 1, uri_count)
-
-				return Content.fromUri(uri)
-			end,
-			size = function(content: Content): number
-				local uri = content.Uri :: string
-				local uri_count = string.len(uri)
-
-				return 1 + uri_count
-			end,
-		},
-	}
-
-local function getImplementation(source_type: Enum.ContentSourceType?): ContentTypeImplementation
-	return SOURCE_TYPE_IMPLEMENTATIONS[source_type or Enum.ContentSourceType.None]
-end
+local _uri = Schema_string "u8"
+local uri_write, uri_read, uri_size = _uri.write, _uri.read, _uri.size
 
 return Schema "Content" {
 	write = function(b: buffer, offset: number, content: Content)
 		local source_type = content.SourceType
-		local impl = getImplementation(source_type)
 
 		buffer.writeu8(b, offset, content.SourceType.Value)
-		impl.write(b, offset + 1, content)
+
+		if source_type == Enum.ContentSourceType.Uri then
+			uri_write(b, offset + 1, content.Uri or "")
+		end
 	end,
 	read = function(b: buffer, offset: number): Content
 		local source_type = Enum.ContentSourceType:FromValue(buffer.readu8(b, offset))
-		local impl = getImplementation(source_type)
 
-		return impl.read(b, offset + 1)
+		if source_type == Enum.ContentSourceType.Uri then
+			return Content.fromUri(uri_read(b, offset + 1))
+		end
+
+		return Content.none
 	end,
 	size = function(content: Content): number
 		local source_type = content.SourceType
-		local impl = getImplementation(source_type)
 
-		return 1 + impl.size(content)
+		if source_type == Enum.ContentSourceType.Uri then
+			return 1 + uri_size(content.Uri)
+		end
+
+		return 1
 	end,
 
 	validate = function(content: unknown): boolean
