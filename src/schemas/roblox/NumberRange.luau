@@ -1,12 +1,11 @@
+local formats = require "../../formats"
 local types = require "../../types"
 
 local Schema = require "../Schema"
 
-local Schema_number = require "../primitive/number"
-
 return function(format: types.NumberFormat?): types.Schema<NumberRange>
-	local _schem = Schema_number(format)
-	local write, read, size = _schem.write, _schem.read, _schem.size(0)
+	local _spec = formats.get(format, "f32")
+	local write, read, size = _spec.write, _spec.read, _spec.size
 
 	return Schema "NumberRange" {
 		write = function(b: buffer, offset: number, value: NumberRange)
