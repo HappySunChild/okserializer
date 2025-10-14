@@ -9,7 +9,7 @@ return table.freeze {
 		patch = 0,
 	},
 
-	Schemas = require "@self/schemas",
+	schemas = require "@self/schemas",
 	Schema = require "@self/schemas/Schema",
 
 	serialize = function<T...>(schema: types.Schema<T...>, ...: T...): buffer
