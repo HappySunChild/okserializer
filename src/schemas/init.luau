@@ -8,6 +8,7 @@ return table.freeze {
 	string = require "@self/primitive/string",
 
 	-- Custom
+	void = require "@self/custom/void",
 	flags = require "@self/custom/flags",
 	set = require "@self/custom/set",
 	bitarray = require "@self/custom/bitarray",
