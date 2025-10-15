@@ -69,7 +69,7 @@ return function(character_set: string, len_format: types.UIntFormat?): types.Sch
 		size = function(value: string): number
 			local filtered = filter(value)
 			local char_count = string.len(filtered)
-			local byte_count = math.ceil(bits_per_character * char_count / 8)
+			local byte_count = math.ceil(bits_per_character * char_count / 8) % (_len.max + 1)
 
 			return len_size + byte_count
 		end,

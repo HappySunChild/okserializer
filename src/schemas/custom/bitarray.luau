@@ -38,7 +38,7 @@ return function(bit_width: number, len_format: types.UIntFormat?): types.Schema<
 			return output
 		end,
 		size = @native function(value: { number }): number
-			local byte_count = math.ceil(#value * bit_width / 8)
+			local byte_count = math.ceil(#value * bit_width / 8) % (_len.max + 1)
 
 			return len_size + byte_count
 		end,
