@@ -24,7 +24,7 @@ local METATABLE = table.freeze { __index = CLASS }
 
 local function Schema(name: string)
 	return function<T...>(impl: SchemaImpl<T...>): types.Schema<T...>
-		return setmetatable({
+		local new_schema: types.Schema<T...> = setmetatable({
 			name = name,
 
 			write = impl.write,
@@ -32,6 +32,8 @@ local function Schema(name: string)
 			size = impl.size,
 			validate = impl.validate,
 		}, METATABLE) :: any
+
+		return table.freeze(new_schema)
 	end
 end
 
