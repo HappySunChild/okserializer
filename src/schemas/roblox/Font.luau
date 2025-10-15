@@ -22,7 +22,7 @@ return Schema "Font" {
 		return Font.new(family, weight, style)
 	end,
 	size = @native function(value: Font): number
-		local family_len = string.len(value.Family)
+		local family_len = string.len(value.Family) % 256
 
 		return 3 + family_len
 	end,

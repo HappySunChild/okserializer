@@ -23,7 +23,7 @@ return function(len_format: types.UIntFormat): types.Schema<buffer>
 			return output_buffer
 		end,
 		size = @native function(value: buffer): number
-			return len_size + buffer.len(value)
+			return len_size + buffer.len(value) % (_len.max + 1)
 		end,
 
 		validate = @native function(value: unknown): boolean

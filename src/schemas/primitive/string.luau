@@ -20,7 +20,7 @@ return function(len_format: types.UIntFormat?): types.Schema<string>
 			return buffer.readstring(b, offset + len_size, count)
 		end,
 		size = @native function(value: string): number
-			return len_size + string.len(value)
+			return len_size + string.len(value) % (_len.max + 1)
 		end,
 
 		validate = @native function(value: unknown): boolean
