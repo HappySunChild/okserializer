@@ -8,7 +8,7 @@ local Schema_array = require "../compound/array"
 local _array = Schema_array(Schema_ColorSequenceKeypoint, "u8")
 local write, read, size = _array.write, _array.read, _array.size
 
-return Schema "NumberSequence" {
+return Schema "ColorSequence" {
 	write = @native function(b: buffer, offset: number, value: ColorSequence)
 		write(b, offset, value.Keypoints)
 	end,
@@ -20,6 +20,6 @@ return Schema "NumberSequence" {
 	end,
 
 	validate = @native function(value: unknown): boolean
-		return typeof(value) == "NumberSequence"
+		return typeof(value) == "ColorSequence"
 	end,
 } :: types.Schema<ColorSequence>
