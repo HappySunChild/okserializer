@@ -6,11 +6,11 @@ Based off of athar_adventure's [BufferConverter2](https://devforum.roblox.com/t/
 ## Usage Example
 ```luau
 local okserializer = require "path/to/okserializer"
-local Schemas = okserializer.Schemas
+local schemas = okserializer.schemas
 
-local person_schema = Schemas.struct {
-	name = Schemas.string "u8",
-	last_name = Schemas.string "u8",
+local person_schema = schemas.struct {
+	name =sSchemas.string "u8",
+	last_name = schemas.string "u8",
 }
 
 local example_person = {
