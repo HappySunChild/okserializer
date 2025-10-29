@@ -9,7 +9,7 @@ local okserializer = require "path/to/okserializer"
 local schemas = okserializer.schemas
 
 local person_schema = schemas.struct {
-	name =sSchemas.string "u8",
+	name = schemas.string "u8",
 	last_name = schemas.string "u8",
 }
 
