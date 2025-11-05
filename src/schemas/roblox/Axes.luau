@@ -1,13 +1,13 @@
 local types = require "../../types"
 
-local Schemas = require "../Schema"
+local Schema = require "../Schema"
 
 local Schema_flags = require "../custom/flags"
 
 local _schem = Schema_flags(9)
 local write, read = _schem.write, _schem.read
 
-return Schemas "Axes" {
+return Schema {
 	write = @native function(b: buffer, offset: number, value: Axes)
 		write(b, offset, {
 			value.X,
