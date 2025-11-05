@@ -7,7 +7,7 @@ return function(format: types.NumberFormat?): types.Schema<vector>
 	local _spec = formats.get(format, "f32")
 	local write, read, size = _spec.write, _spec.read, _spec.size
 
-	return Schema "vector" {
+	return Schema {
 		write = @native function(b: buffer, offset: number, value: vector)
 			write(b, offset, value.x)
 			write(b, offset + size, value.y)

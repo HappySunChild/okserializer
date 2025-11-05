@@ -2,7 +2,7 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-return Schema "boolean" {
+return Schema {
 	write = @native function(b: buffer, offest: number, value: boolean)
 		buffer.writeu8(b, offest, value and 1 or 0)
 	end,

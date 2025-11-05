@@ -9,7 +9,7 @@ return function(bit_width: number, len_format: types.UIntFormat?): types.Schema<
 	local _len = formats.get(len_format, "u16")
 	local len_write, len_read, len_size = _len.write, _len.read, _len.size
 
-	return Schema "bitarray" {
+	return Schema {
 		write = @native function(b: buffer, offset: number, value: { number })
 			local count = #value
 

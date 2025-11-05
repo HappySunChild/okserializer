@@ -15,7 +15,7 @@ return function<K, V>(schema_dict: StructInfo<K, V>, order: { K }?): types.Schem
 
 	sortWithOrder(keys, order)
 
-	return Schema "struct" {
+	return Schema {
 		write = function(b: buffer, offset: number, input_dict: { [K]: V })
 			for _, key in keys do
 				local schema = schema_dict[key]

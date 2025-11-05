@@ -7,7 +7,7 @@ return function(len_format: types.UIntFormat): types.Schema<buffer>
 	local _len = formats.get(len_format, "u16")
 	local len_write, len_read, len_size = _len.write, _len.read, _len.size
 
-	return Schema "buffer" {
+	return Schema {
 		write = @native function(b: buffer, offset: number, value: buffer)
 			local count = buffer.len(value)
 

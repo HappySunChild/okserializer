@@ -31,7 +31,7 @@ return function(character_set: string, len_format: types.UIntFormat?): types.Sch
 		return filtered
 	end
 
-	return Schema "csetstring" {
+	return Schema {
 		write = function(b: buffer, offset: number, value: string)
 			local filtered = filter(value)
 			local char_count = string.len(filtered)

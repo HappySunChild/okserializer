@@ -7,7 +7,7 @@ return function(enumerator: Enum, format: types.UIntFormat?): types.Schema<EnumI
 	local _info = formats.get(format, "u16")
 	local write, read, size = _info.write, _info.read, _info.size
 
-	return Schema "EnumItem" {
+	return Schema {
 		write = function(b: buffer, offset: number, value: EnumItem)
 			write(b, offset, value.Value)
 		end,

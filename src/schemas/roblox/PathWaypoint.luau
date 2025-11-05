@@ -8,7 +8,7 @@ return function(format: types.NumberFormat?): types.Schema<PathWaypoint>
 	local _pos = Schema_Vector3(format)
 	local pos_write, pos_read, pos_size = _pos.write, _pos.read, _pos.size()
 
-	return Schema "PathWaypoint" {
+	return Schema {
 		write = function(b: buffer, offset: number, waypoint: PathWaypoint)
 			buffer.writeu8(b, offset, waypoint.Action.Value)
 			pos_write(b, offset + 1, waypoint.Position)

@@ -13,7 +13,7 @@ return function(
 	local _rot = formats.get(rot_format, "r16")
 	local rot_write, rot_read, rot_size = _rot.write, _rot.read, _rot.size
 
-	return Schema "CFrame" {
+	return Schema {
 		write = function(b: buffer, offset: number, value: CFrame)
 			local x, y, z = value.X, value.Y, value.Z
 			local rx, ry, rz = value:ToOrientation()

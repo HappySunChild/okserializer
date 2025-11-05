@@ -3,7 +3,7 @@ local types = require "../../types"
 
 local BrickColorLookup = require "@self/Lookup"
 
-return Schema "BrickColor" {
+return Schema {
 	write = function(b: buffer, offset: number, value: BrickColor)
 		local index = BrickColorLookup.indexOf(value)
 

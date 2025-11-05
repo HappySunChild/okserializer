@@ -9,7 +9,7 @@ return function(value_format: types.NumberFormat?, envelope_format: types.Number
 	local _array = Schema_array(Schema_NumberSequenceKeypoint(value_format, envelope_format), "u8")
 	local write, read, size = _array.write, _array.read, _array.size
 
-	return Schema "NumberSequence" {
+	return Schema {
 		write = @native function(b: buffer, offset: number, value: NumberSequence)
 			write(b, offset, value.Keypoints)
 		end,

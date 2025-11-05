@@ -7,7 +7,7 @@ local Schema_string = require "../primitive/string"
 local _uri = Schema_string "u8"
 local uri_write, uri_read, uri_size = _uri.write, _uri.read, _uri.size
 
-return Schema "Content" {
+return Schema {
 	write = function(b: buffer, offset: number, content: Content)
 		local source_type = content.SourceType
 

@@ -9,7 +9,7 @@ local Lookup = require "@self/Lookup"
 -- reasons... This also isn't very future proofed, although I don't think Roblox is going to be adding more than 65536 Enums
 -- to the client anytime soon, so I think we're fine for now. Maybe in the year 5032 if someone is miraculously using this and
 -- runs into issues, atleast they'll know I briefly considered them.
-return Schema "Enum" {
+return Schema {
 	write = function(b: buffer, offset: number, value: EnumItem)
 		-- if we wanted to be *technically* correct we'd use u32, since there is one singular EnumItem that has a value that's 2^19
 		-- but I don't think wasting 2 bytes for an EnumItem that is never going to be used outside of Roblox's internals is a very

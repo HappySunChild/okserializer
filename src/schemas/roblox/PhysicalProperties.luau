@@ -6,7 +6,7 @@ local Schema = require "../Schema"
 local _s16 = formats.get_atomic "s16"
 local s16_write, s16_read, s16_size = _s16.write, _s16.read, _s16.size
 
-return Schema "PhysicalProperties" {
+return Schema {
 	write = function(b: buffer, offset: number, value: PhysicalProperties)
 		s16_write(b, offset, value.Density / 100)
 		s16_write(b, offset + s16_size, value.Friction / 2)

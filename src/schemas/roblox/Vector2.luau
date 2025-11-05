@@ -7,7 +7,7 @@ return function(format: types.NumberFormat?): types.Schema<Vector2>
 	local _info = formats.get(format, "f32")
 	local write, read, size = _info.write, _info.read, _info.size
 
-	return Schema "Vector2" {
+	return Schema {
 		write = function(b: buffer, offset: number, value: Vector2)
 			write(b, offset, value.X)
 			write(b, offset + size, value.Y)

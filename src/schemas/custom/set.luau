@@ -15,7 +15,7 @@ return function<T>(set: { T }): types.Schema<T>
 		keys[value] = key
 	end
 
-	return Schema "set" {
+	return Schema {
 		write = @native function(b: buffer, offset: number, value: T)
 			local index = keys[value]
 

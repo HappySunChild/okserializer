@@ -33,7 +33,7 @@ return function(
 	local repeat_count_write, repeat_count_read, repeat_count_size =
 		_repeat_count.write, _repeat_count.read, _repeat_count.size
 
-	return Schema "TweenInfo" {
+	return Schema {
 		write = function(b: buffer, offset: number, value: TweenInfo)
 			info_write(b, offset, {
 				direction = value.EasingDirection.Value,

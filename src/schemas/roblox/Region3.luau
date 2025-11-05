@@ -8,7 +8,7 @@ return function(format: types.NumberFormat?): types.Schema<Region3>
 	local _schem = Schema_Vector3(format)
 	local write, read, size = _schem.write, _schem.read, _schem.size()
 
-	return Schema "Region3" {
+	return Schema {
 		write = function(b: buffer, offset: number, value: Region3)
 			local reg_cf, reg_size = value.CFrame, value.Size
 			local reg_min, reg_max = reg_cf * -reg_size / 2, reg_cf * reg_size / 2

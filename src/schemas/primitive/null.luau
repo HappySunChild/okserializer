@@ -2,7 +2,7 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-return Schema "null" {
+return Schema {
 	write = @native function() end,
 	read = @native function(): nil
 		return nil

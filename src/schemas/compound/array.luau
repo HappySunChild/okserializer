@@ -9,7 +9,7 @@ return function<T>(schema: types.Schema<T>, len_format: types.UIntFormat?): type
 	local _len = formats.get(len_format, "u16")
 	local len_write, len_read, len_size = _len.write, _len.read, _len.size
 
-	return Schema "array" {
+	return Schema {
 		write = function(b: buffer, offset: number, array: { T })
 			len_write(b, offset, #array)
 

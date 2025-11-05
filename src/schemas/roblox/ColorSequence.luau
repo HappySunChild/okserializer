@@ -8,7 +8,7 @@ local Schema_array = require "../compound/array"
 local _array = Schema_array(Schema_ColorSequenceKeypoint, "u8")
 local write, read, size = _array.write, _array.read, _array.size
 
-return Schema "ColorSequence" {
+return Schema {
 	write = @native function(b: buffer, offset: number, value: ColorSequence)
 		write(b, offset, value.Keypoints)
 	end,

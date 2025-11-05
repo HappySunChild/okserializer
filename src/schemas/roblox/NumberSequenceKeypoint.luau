@@ -17,7 +17,7 @@ return function(
 	local envelope_write, envelope_read, envelope_size =
 		_envelope.write, _envelope.read, _envelope.size
 
-	return Schema "NumberSequenceKeypoint" {
+	return Schema {
 		write = @native function(b: buffer, offset: number, value: NumberSequenceKeypoint)
 			time_write(b, offset, value.Time)
 			value_write(b, offset + time_size, value.Value)

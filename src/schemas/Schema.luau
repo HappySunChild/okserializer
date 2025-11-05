@@ -22,19 +22,15 @@ local CLASS = table.freeze {
 }
 local METATABLE = table.freeze { __index = CLASS }
 
-local function Schema(name: string)
-	return function<T...>(impl: SchemaImpl<T...>): types.Schema<T...>
-		local new_schema: types.Schema<T...> = setmetatable({
-			name = name,
+local function Schema<T...>(impl: SchemaImpl<T...>): types.Schema<T...>
+	local new_schema: types.Schema<T...> = setmetatable({
+		write = impl.write,
+		read = impl.read,
+		size = impl.size,
+		validate = impl.validate,
+	}, METATABLE) :: any
 
-			write = impl.write,
-			read = impl.read,
-			size = impl.size,
-			validate = impl.validate,
-		}, METATABLE) :: any
-
-		return table.freeze(new_schema)
-	end
+	return table.freeze(new_schema)
 end
 
 return Schema

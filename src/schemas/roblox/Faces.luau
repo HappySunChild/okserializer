@@ -7,7 +7,7 @@ local Schema_flags = require "../custom/flags"
 local _schem = Schema_flags(6)
 local write, read = _schem.write, _schem.read
 
-return Schema "Faces" {
+return Schema {
 	write = function(b: buffer, offset: number, value: Faces)
 		write(b, offset, {
 			value.Top,

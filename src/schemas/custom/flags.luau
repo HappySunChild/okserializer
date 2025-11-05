@@ -7,7 +7,7 @@ local isArray = require "../../utility/isArray"
 return function(flag_count: number): types.Schema<{ boolean }>
 	local byte_count = math.ceil(flag_count / 8)
 
-	return Schema "flags" {
+	return Schema {
 		write = function(b: buffer, offset: number, value: { boolean })
 			local bit_offset = offset * 8
 

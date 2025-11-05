@@ -9,7 +9,7 @@ local time_write, time_read, time_size = _time.write, _time.read, _time.size
 local _color = require "./Color3"
 local color_write, color_read, color_size = _color.write, _color.read, _color.size()
 
-return Schema "ColorSequenceKeypoint" {
+return Schema {
 	write = @native function(b: buffer, offset: number, value: ColorSequenceKeypoint)
 		time_write(b, offset, value.Time)
 		color_write(b, offset + color_size, value.Value)

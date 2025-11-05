@@ -8,7 +8,7 @@ return function(format: types.NumberFormat?): types.Schema<Ray>
 	local _schem = Schema_Vector3(format)
 	local write, read, size = _schem.write, _schem.read, _schem.size()
 
-	return Schema "Ray" {
+	return Schema {
 		write = @native function(b: buffer, offset: number, value: Ray)
 			write(b, offset, value.Origin)
 			write(b, offset + size, value.Direction)

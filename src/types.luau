@@ -26,8 +26,6 @@ export type NumberFormatSpec = {
 }
 
 export type Schema<T...> = {
-	read name: string,
-
 	read serialize: (self: Schema<T...>, T...) -> buffer,
 	read deserialize: (self: Schema<T...>, serialized: buffer) -> T...,
 

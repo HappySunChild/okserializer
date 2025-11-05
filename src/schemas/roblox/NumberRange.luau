@@ -7,7 +7,7 @@ return function(format: types.NumberFormat?): types.Schema<NumberRange>
 	local _spec = formats.get(format, "f32")
 	local write, read, size = _spec.write, _spec.read, _spec.size
 
-	return Schema "NumberRange" {
+	return Schema {
 		write = function(b: buffer, offset: number, value: NumberRange)
 			write(b, offset, value.Min)
 			write(b, offset + size, value.Max)

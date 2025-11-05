@@ -2,7 +2,7 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-return Schema "Font" {
+return Schema {
 	write = @native function(b: buffer, offset: number, value: Font)
 		local family = value.Family
 		local family_len = string.len(family)

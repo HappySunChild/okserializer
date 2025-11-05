@@ -2,7 +2,7 @@ local types = require "../../types"
 
 local Schema = require "../Schema"
 
-return Schema "Color3" {
+return Schema {
 	write = function(b: buffer, offset: number, value: Color3)
 		buffer.writeu8(b, offset, value.R * 255)
 		buffer.writeu8(b, offset + 1, value.G * 255)

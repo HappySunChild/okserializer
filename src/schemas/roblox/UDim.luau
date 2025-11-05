@@ -13,7 +13,7 @@ return function(
 	local _offset = formats.get(offset_format, "i16")
 	local offset_write, offset_read, offset_size = _offset.write, _offset.read, _offset.size
 
-	return Schema "UDim" {
+	return Schema {
 		write = function(b: buffer, offset: number, value: UDim)
 			scale_write(b, offset, value.Scale)
 			offset_write(b, offset + scale_size, value.Offset)

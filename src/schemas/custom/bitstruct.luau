@@ -26,7 +26,7 @@ return function<K>(width_dict: BitStructInfo<K>, order: { K }?): types.Schema<{ 
 
 	local byte_count = math.ceil(total_bit_count / 8)
 
-	return Schema "bitstruct" {
+	return Schema {
 		write = function(b: buffer, offset: number, input_dict: { [K]: number })
 			local bit_offset = offset * 8
 

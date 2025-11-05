@@ -14,7 +14,7 @@ return function(className: string)
 		local _schem = Schema_struct(properties)
 		local write, read, size = _schem.write, _schem.read, _schem.size
 
-		return Schema "Instance" {
+		return Schema {
 			write = write,
 			read = function(b: buffer, offset: number): Instance
 				local props = read(b, offset)

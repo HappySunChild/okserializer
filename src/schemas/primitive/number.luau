@@ -7,7 +7,7 @@ return function(format: types.NumberFormat?): types.Schema<number>
 	local _spec = formats.get(format, "f32")
 	local write, read, size = _spec.write, _spec.read, _spec.size
 
-	return Schema "number" {
+	return Schema {
 		write = write,
 		read = read,
 		size = @native function(): number
@@ -17,5 +17,5 @@ return function(format: types.NumberFormat?): types.Schema<number>
 		validate = @native function(value: unknown): boolean
 			return type(value) == "number"
 		end,
-	}
+	} :: types.Schema<number>
 end

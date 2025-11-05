@@ -19,7 +19,7 @@ return function(...: types.Schema<any>): types.Schema<any>
 		return nil, nil
 	end
 
-	return Schema "union" {
+	return Schema {
 		write = function(b: buffer, offset: number, value: any)
 			local index, schema = getSchemaForValue(value)
 

@@ -5,7 +5,7 @@ local Schema = require "../Schema"
 return function<R...>(...: types.Schema<any>): types.Schema<R...>
 	local tuple_order = { ... }
 
-	return Schema "tuple" {
+	return Schema {
 		write = function(b: buffer, offset: number, ...: R...)
 			local current_offset = offset
 

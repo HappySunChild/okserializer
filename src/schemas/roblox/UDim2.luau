@@ -11,7 +11,7 @@ return function(
 	local _schem = Schema_UDim(scale_format, offset_format)
 	local write, read, size = _schem.write, _schem.read, _schem.size(UDim.new())
 
-	return Schema "UDim" {
+	return Schema {
 		write = function(b: buffer, offset: number, value: UDim2)
 			write(b, offset, value.X)
 			write(b, offset + size, value.Y)
