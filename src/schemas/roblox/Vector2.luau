@@ -19,7 +19,7 @@ return function(format: types.NumberFormat?): types.Schema<Vector2>
 			return Vector2.new(x, y)
 		end,
 		size = function(): number
-			return size * 3
+			return size * 2
 		end,
 
 		validate = function(value: unknown): boolean
