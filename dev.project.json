@@ -14,9 +14,9 @@
 			}
 		},
 		"ServerScriptService": {
-			"tests": {
+			"okserializer_tests": {
 				"$ignoreUnknownInstances": true,
-				"$path": "dev/tests"
+				"$path": "dev"
 			}
 		}
 	}

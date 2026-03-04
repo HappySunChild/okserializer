@@ -7,22 +7,23 @@ Based off of athar_adventure's [BufferConverter2](https://devforum.roblox.com/t/
 ```luau
 local okserializer = require "path/to/okserializer"
 local schemas = okserializer.schemas
+local serialize, deserialize = okserializer.serialize, okserializer.deserialize
 
-local person_schema = schemas.struct {
-	name = schemas.string "u8",
-	last_name = schemas.string "u8",
-}
+local person_schema = schemas.struct({
+	name = schemas.string("u8"),
+	last_name = schemas.string("u8"),
+})
 
 local example_person = {
 	name = "John",
 	last_name = "Doe",
 }
 
-local serialized = person_schema:serialize(example_person)
+local serialized = serialize(person_schema, example_person)
 
 print(buffer.len(serialized))
 
-local deserialized = person_schema:deserialize(serialized)
+local deserialized = deserialize(person_schema, serialized)
 
 assert(example_person.name == deserialized.name)
 assert(example_person.last_name == deserialized.last_name)
