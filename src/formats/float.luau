@@ -4,8 +4,8 @@ local FLOAT16_MANTISSA_MASK = 0x03FF -- 0b0000001111111111
 
 local HUGE = math.huge
 
-return table.freeze {
-	f16 = table.freeze {
+return table.freeze({
+	f16 = table.freeze({
 		write = @native function(b: buffer, offset: number, value: number): ()
 			-- Handle zero and NaN
 			if value == 0 then
@@ -95,19 +95,19 @@ return table.freeze {
 		size = 2,
 		min = -HUGE,
 		max = HUGE,
-	},
-	f32 = table.freeze {
+	}),
+	f32 = table.freeze({
 		write = buffer.writef32,
 		read = buffer.readf32,
 		size = 4,
 		min = -HUGE,
 		max = HUGE,
-	},
-	f64 = table.freeze {
+	}),
+	f64 = table.freeze({
 		write = buffer.writef64,
 		read = buffer.readf64,
 		size = 8,
 		min = -HUGE,
 		max = HUGE,
-	},
-}
+	}),
+})

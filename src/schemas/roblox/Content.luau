@@ -1,13 +1,11 @@
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
+local string_schema = require("../primitive/string")
 
-local Schema_string = require "../primitive/string"
+local uri_schema = string_schema("u8")
+local uri_write, uri_read, uri_size = uri_schema.write, uri_schema.read, uri_schema.size
 
-local _uri = Schema_string "u8"
-local uri_write, uri_read, uri_size = _uri.write, _uri.read, _uri.size
-
-return Schema {
+return {
 	write = function(b: buffer, offset: number, content: Content)
 		local source_type = content.SourceType
 
@@ -30,12 +28,11 @@ return Schema {
 		local source_type = content.SourceType
 
 		if source_type == Enum.ContentSourceType.Uri then
-			return 1 + uri_size(content.Uri)
+			return 1 + uri_size(content.Uri or "")
 		end
 
 		return 1
 	end,
-
 	validate = function(content: unknown): boolean
 		return true
 	end,

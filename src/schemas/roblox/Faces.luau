@@ -1,13 +1,11 @@
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
+local flags_schema = require("../custom/flags")
 
-local Schema_flags = require "../custom/flags"
+local data = flags_schema(6)
+local write, read = data.write, data.read
 
-local _schem = Schema_flags(6)
-local write, read = _schem.write, _schem.read
-
-return Schema {
+return {
 	write = function(b: buffer, offset: number, value: Faces)
 		write(b, offset, {
 			value.Top,
@@ -40,7 +38,6 @@ return Schema {
 	size = function(): number
 		return 1
 	end,
-
 	validate = function(value: unknown): boolean
 		return typeof(value) == "Faces"
 	end,

@@ -1,13 +1,12 @@
-local formats = require "../../formats"
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
+local get_format = require("../../utility/get_format")
 
 return function(enumerator: Enum, format: types.UIntFormat?): types.Schema<EnumItem>
-	local _info = formats.get(format, "u16")
+	local _info = get_format(format, "u16")
 	local write, read, size = _info.write, _info.read, _info.size
 
-	return Schema {
+	return {
 		write = function(b: buffer, offset: number, value: EnumItem)
 			write(b, offset, value.Value)
 		end,
@@ -17,7 +16,6 @@ return function(enumerator: Enum, format: types.UIntFormat?): types.Schema<EnumI
 		size = function(): number
 			return size
 		end,
-
 		validate = function(value: unknown): boolean
 			return typeof(value) == "EnumItem" and (value :: EnumItem).EnumType == enumerator
 		end,

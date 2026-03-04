@@ -1,15 +1,13 @@
-local formats = require "../../formats"
-local types = require "../../types"
+local formats = require("../../formats")
+local types = require("../../types")
 
-local Schema = require "../Schema"
+local time = formats.s16
+local time_write, time_read, time_size = time.write, time.read, time.size
 
-local _time = formats.get_atomic "s16"
-local time_write, time_read, time_size = _time.write, _time.read, _time.size
+local color = require("./Color3")
+local color_write, color_read, color_size = color.write, color.read, 3
 
-local _color = require "./Color3"
-local color_write, color_read, color_size = _color.write, _color.read, _color.size()
-
-return Schema {
+return {
 	write = @native function(b: buffer, offset: number, value: ColorSequenceKeypoint)
 		time_write(b, offset, value.Time)
 		color_write(b, offset + color_size, value.Value)
@@ -23,7 +21,6 @@ return Schema {
 	size = @native function(): number
 		return time_size + color_size
 	end,
-
 	validate = @native function(value: unknown): boolean
 		return typeof(value) == "ColorSequenceKeypoint"
 	end,

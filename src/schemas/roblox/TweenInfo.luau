@@ -1,39 +1,39 @@
-local formats = require "../../formats"
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
+local get_format = require("../../utility/get_format")
 
-local Schema_bitstruct = require "../custom/bitstruct"
+local bitstruct_schema = require("../custom/bitstruct")
 
-type TweenInfoCompactInfo = {
+type TweenCompactInfo = {
 	direction: number,
 	style: number,
 	reverses: number,
 	repeats_indefinitely: number,
 }
 
-local _info_schem = Schema_bitstruct(
+local info_schema = bitstruct_schema(
 	{ repeats_indefinitely = 1, reverses = 1, direction = 2, style = 4 },
 	{ "repeats_indefinitely", "reverses", "direction", "style" }
-) :: types.Schema<TweenInfoCompactInfo>
-local info_write, info_read, info_size = _info_schem.write, _info_schem.read, _info_schem.size()
+) :: types.Schema<TweenCompactInfo>
+local info_write, info_read, info_size =
+	info_schema.write, info_schema.read, info_schema.size(nil :: any)
 
 return function(
 	time_format: types.NumberFormat?,
 	delay_format: types.NumberFormat?,
 	repeat_count_format: types.UIntFormat | types.NoneFormat?
 ): types.Schema<TweenInfo>
-	local _time = formats.get(time_format, "f32")
-	local time_write, time_read, time_size = _time.write, _time.read, _time.size
+	local time = get_format(time_format, "f32")
+	local time_write, time_read, time_size = time.write, time.read, time.size
 
-	local _delay = formats.get(delay_format, "f32")
-	local delay_write, delay_read, delay_size = _delay.write, _delay.read, _delay.size
+	local delay = get_format(delay_format, "f32")
+	local delay_write, delay_read, delay_size = delay.write, delay.read, delay.size
 
-	local _repeat_count = formats.get(repeat_count_format, "u8")
+	local repeat_count = get_format(repeat_count_format, "u8")
 	local repeat_count_write, repeat_count_read, repeat_count_size =
-		_repeat_count.write, _repeat_count.read, _repeat_count.size
+		repeat_count.write, repeat_count.read, repeat_count.size
 
-	return Schema {
+	return {
 		write = function(b: buffer, offset: number, value: TweenInfo)
 			info_write(b, offset, {
 				direction = value.EasingDirection.Value,
@@ -75,7 +75,6 @@ return function(
 		size = function(value: TweenInfo): number
 			return info_size + repeat_count_size + delay_size + time_size
 		end,
-
 		validate = function(value: unknown): boolean
 			return typeof(value) == "TweenInfo"
 		end,

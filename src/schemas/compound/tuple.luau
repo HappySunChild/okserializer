@@ -1,19 +1,15 @@
-local types = require "../../types"
-
-local Schema = require "../Schema"
+local types = require("../../types")
 
 return function<R...>(...: types.Schema<any>): types.Schema<R...>
 	local tuple_order = { ... }
 
-	return Schema {
+	return {
 		write = function(b: buffer, offset: number, ...: R...)
 			local current_offset = offset
 
 			for index, schema in tuple_order do
 				local value = select(index, ...)
-
 				schema.write(b, current_offset, value)
-
 				current_offset += schema.size(value)
 			end
 		end,
@@ -42,7 +38,6 @@ return function<R...>(...: types.Schema<any>): types.Schema<R...>
 
 			return total_size
 		end,
-
 		validate = function(...: unknown): boolean
 			for index, schema in tuple_order do
 				if not schema.validate(select(index, ...)) then

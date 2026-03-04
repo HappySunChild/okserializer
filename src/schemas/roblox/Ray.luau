@@ -1,28 +1,22 @@
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
-
-local Schema_Vector3 = require "./Vector3"
+local Vector3_schema = require("./Vector3")
 
 return function(format: types.NumberFormat?): types.Schema<Ray>
-	local _schem = Schema_Vector3(format)
-	local write, read, size = _schem.write, _schem.read, _schem.size()
+	local vec_schema = Vector3_schema(format)
+	local write, read, size = vec_schema.write, vec_schema.read, vec_schema.size(Vector3.zero)
 
-	return Schema {
+	return {
 		write = @native function(b: buffer, offset: number, value: Ray)
 			write(b, offset, value.Origin)
 			write(b, offset + size, value.Direction)
 		end,
 		read = @native function(b: buffer, offset: number): Ray
-			local origin = read(b, offset)
-			local direction = read(b, offset + size)
-
-			return Ray.new(origin, direction)
+			return Ray.new(read(b, offset), read(b, offset + size))
 		end,
 		size = @native function(): number
 			return size * 2
 		end,
-
 		validate = @native function(value: unknown): boolean
 			return typeof(value) == "Ray"
 		end,

@@ -15,24 +15,19 @@ export type NumberFormat =
 	| RadianFormat
 	| NoneFormat
 
-export type NumberFormatSpec = {
+export type NumberSpec = {
 	read write: (b: buffer, offset: number, value: number) -> (),
 	read read: (b: buffer, offset: number) -> number,
-
 	read size: number,
-
 	read min: number,
 	read max: number,
 }
 
 export type Schema<T...> = {
-	read serialize: (self: Schema<T...>, T...) -> buffer,
-	read deserialize: (self: Schema<T...>, serialized: buffer) -> T...,
-
 	read write: (b: buffer, offset: number, T...) -> (),
 	read read: (b: buffer, offset: number) -> T...,
-	read size: (...unknown) -> number,
-	read validate: (...unknown) -> boolean,
+	read size: (T...) -> number,
+	read validate: (T...) -> boolean,
 }
 
 return nil

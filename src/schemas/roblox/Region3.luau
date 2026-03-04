@@ -1,14 +1,12 @@
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
-
-local Schema_Vector3 = require "./Vector3"
+local Vector3_schema = require("./Vector3")
 
 return function(format: types.NumberFormat?): types.Schema<Region3>
-	local _schem = Schema_Vector3(format)
-	local write, read, size = _schem.write, _schem.read, _schem.size()
+	local vec_schema = Vector3_schema(format)
+	local write, read, size = vec_schema.write, vec_schema.read, vec_schema.size(Vector3.zero)
 
-	return Schema {
+	return {
 		write = function(b: buffer, offset: number, value: Region3)
 			local reg_cf, reg_size = value.CFrame, value.Size
 			local reg_min, reg_max = reg_cf * -reg_size / 2, reg_cf * reg_size / 2
@@ -25,7 +23,6 @@ return function(format: types.NumberFormat?): types.Schema<Region3>
 		size = function(value: Region3): number
 			return size * 2
 		end,
-
 		validate = function(value: unknown): boolean
 			return typeof(value) == "Region3"
 		end,

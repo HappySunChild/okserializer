@@ -1,32 +1,29 @@
-local formats = require "../../formats"
-local types = require "../../types"
+local formats = require("../../formats")
+local types = require("../../types")
 
-local Schema = require "../Schema"
+local s16 = formats.s16
+local write, read, size = s16.write, s16.read, s16.size
 
-local _s16 = formats.get_atomic "s16"
-local s16_write, s16_read, s16_size = _s16.write, _s16.read, _s16.size
-
-return Schema {
+return {
 	write = function(b: buffer, offset: number, value: PhysicalProperties)
-		s16_write(b, offset, value.Density / 100)
-		s16_write(b, offset + s16_size, value.Friction / 2)
-		s16_write(b, offset + s16_size * 2, value.Elasticity)
-		s16_write(b, offset + s16_size * 3, value.FrictionWeight / 100)
-		s16_write(b, offset + s16_size * 4, value.ElasticityWeight / 100)
+		write(b, offset, value.Density / 100)
+		write(b, offset + size, value.Friction / 2)
+		write(b, offset + size * 2, value.Elasticity)
+		write(b, offset + size * 3, value.FrictionWeight / 100)
+		write(b, offset + size * 4, value.ElasticityWeight / 100)
 	end,
 	read = function(b: buffer, offset: number): PhysicalProperties
 		return PhysicalProperties.new(
-			s16_read(b, offset) * 100, -- density
-			s16_read(b, offset + s16_size) * 2, -- friction
-			s16_read(b, offset + s16_size * 2), -- elasticity
-			s16_read(b, offset + s16_size * 3) * 100, -- friction weight
-			s16_read(b, offset + s16_size * 4) * 100 -- elasticity weight
+			read(b, offset) * 100, -- density
+			read(b, offset + size) * 2, -- friction
+			read(b, offset + size * 2), -- elasticity
+			read(b, offset + size * 3) * 100, -- friction weight
+			read(b, offset + size * 4) * 100 -- elasticity weight
 		)
 	end,
 	size = function(): number
-		return s16_size * 5
+		return size * 5
 	end,
-
 	validate = function(value: unknown): boolean
 		return typeof(value) == "PhysicalProperties"
 	end,

@@ -1,14 +1,12 @@
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
+local ColorSequenceKeypoint_schema = require("./ColorSequenceKeypoint")
+local array_schema = require("../compound/array")
 
-local Schema_ColorSequenceKeypoint = require "./ColorSequenceKeypoint"
-local Schema_array = require "../compound/array"
+local data = array_schema(ColorSequenceKeypoint_schema, "u8")
+local write, read, size = data.write, data.read, data.size
 
-local _array = Schema_array(Schema_ColorSequenceKeypoint, "u8")
-local write, read, size = _array.write, _array.read, _array.size
-
-return Schema {
+return {
 	write = @native function(b: buffer, offset: number, value: ColorSequence)
 		write(b, offset, value.Keypoints)
 	end,
@@ -18,7 +16,6 @@ return Schema {
 	size = @native function(value: ColorSequence): number
 		return size(value.Keypoints)
 	end,
-
 	validate = @native function(value: unknown): boolean
 		return typeof(value) == "ColorSequence"
 	end,

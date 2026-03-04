@@ -1,19 +1,18 @@
-local formats = require "../../formats"
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
+local get_format = require("../../utility/get_format")
 
 return function(
 	pos_format: types.NumberFormat?,
 	rot_format: types.NumberFormat?
 ): types.Schema<CFrame>
-	local _pos = formats.get(pos_format, "f32")
-	local pos_write, pos_read, pos_size = _pos.write, _pos.read, _pos.size
+	local pos_spec = get_format(pos_format, "f32")
+	local pos_write, pos_read, pos_size = pos_spec.write, pos_spec.read, pos_spec.size
 
-	local _rot = formats.get(rot_format, "r16")
-	local rot_write, rot_read, rot_size = _rot.write, _rot.read, _rot.size
+	local rot_spec = get_format(rot_format, "r16")
+	local rot_write, rot_read, rot_size = rot_spec.write, rot_spec.read, rot_spec.size
 
-	return Schema {
+	return {
 		write = function(b: buffer, offset: number, value: CFrame)
 			local x, y, z = value.X, value.Y, value.Z
 			local rx, ry, rz = value:ToOrientation()
@@ -40,7 +39,6 @@ return function(
 		size = function(): number
 			return pos_size * 3 + rot_size * 3
 		end,
-
 		validate = function(value: unknown): boolean
 			return typeof(value) == "CFrame"
 		end,

@@ -1,8 +1,6 @@
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
-
-return Schema {
+return {
 	write = function(b: buffer, offset: number, value: Color3)
 		buffer.writeu8(b, offset, value.R * 255)
 		buffer.writeu8(b, offset + 1, value.G * 255)
@@ -18,7 +16,6 @@ return Schema {
 	size = function(): number
 		return 3
 	end,
-
 	validate = function(value: unknown): boolean
 		return typeof(value) == "Color3"
 	end,

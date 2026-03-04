@@ -1,13 +1,11 @@
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
-
-local isArray = require "../../utility/isArray"
+local is_array = require("../../utility/is_array")
 
 return function(flag_count: number): types.Schema<{ boolean }>
 	local byte_count = math.ceil(flag_count / 8)
 
-	return Schema {
+	return {
 		write = function(b: buffer, offset: number, value: { boolean })
 			local bit_offset = offset * 8
 
@@ -32,9 +30,8 @@ return function(flag_count: number): types.Schema<{ boolean }>
 		size = function(): number
 			return byte_count
 		end,
-
 		validate = function(value: unknown): boolean
-			if not isArray(value) then
+			if not is_array(value) then
 				return false
 			end
 

@@ -5,8 +5,8 @@ local U8_MAX = (2 ^ 8) - 1
 local U16_MAX = (2 ^ 16) - 1
 local U32_MAX = (2 ^ 32) - 1
 
-return table.freeze {
-	s8 = table.freeze {
+return table.freeze({
+	s8 = table.freeze({
 		write = @native function(b: buffer, offset: number, value: number)
 			buffer.writeu8(b, offset, value * U8_MAX)
 		end,
@@ -16,8 +16,8 @@ return table.freeze {
 		size = 1,
 		min = 0,
 		max = 1,
-	},
-	s16 = table.freeze {
+	}),
+	s16 = table.freeze({
 		write = @native function(b: buffer, offset: number, value: number)
 			buffer.writeu16(b, offset, value * U16_MAX)
 		end,
@@ -27,8 +27,8 @@ return table.freeze {
 		size = 2,
 		min = 0,
 		max = 1,
-	},
-	s32 = table.freeze {
+	}),
+	s32 = table.freeze({
 		write = @native function(b: buffer, offset: number, value: number)
 			buffer.writeu32(b, offset, value * U32_MAX)
 		end,
@@ -38,5 +38,5 @@ return table.freeze {
 		size = 4,
 		min = 0,
 		max = 1,
-	},
-}
+	}),
+})

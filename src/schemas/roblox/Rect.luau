@@ -1,14 +1,12 @@
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
-
-local Schema_Vector2 = require "./Vector2"
+local Vector2_schema = require("./Vector2")
 
 return function(format: types.NumberFormat?): types.Schema<Rect>
-	local _schem = Schema_Vector2(format)
-	local write, read, size = _schem.write, _schem.read, _schem.size()
+	local vec_schema = Vector2_schema(format)
+	local write, read, size = vec_schema.write, vec_schema.read, vec_schema.size(Vector2.zero)
 
-	return Schema {
+	return {
 		write = function(b: buffer, offset: number, value: Rect)
 			local min, max = value.Min, value.Max
 

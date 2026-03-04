@@ -1,8 +1,6 @@
-local types = require "../../types"
+local types = require("../../types")
 
-local sortWithOrder = require "../../utility/sortWithOrder"
-
-local Schema = require "../Schema"
+local sort_with_order = require("../../utility/sort_with_order")
 
 type StructInfo<K, V> = { [K]: types.Schema<V> }
 
@@ -13,9 +11,9 @@ return function<K, V>(schema_dict: StructInfo<K, V>, order: { K }?): types.Schem
 		table.insert(keys, key)
 	end
 
-	sortWithOrder(keys, order)
+	sort_with_order(keys, order)
 
-	return Schema {
+	return {
 		write = function(b: buffer, offset: number, input_dict: { [K]: V })
 			for _, key in keys do
 				local schema = schema_dict[key]
@@ -52,7 +50,6 @@ return function<K, V>(schema_dict: StructInfo<K, V>, order: { K }?): types.Schem
 
 			return byteCount
 		end,
-
 		validate = function(value: unknown): boolean
 			if type(value) ~= "table" then
 				return false

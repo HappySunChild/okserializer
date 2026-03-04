@@ -1,15 +1,13 @@
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
-
-local Schema_NumberSequenceKeypoint = require "./NumberSequenceKeypoint"
-local Schema_array = require "../compound/array"
+local NumberSequenceKeypoint_schema = require("./NumberSequenceKeypoint")
+local array_schema = require("../compound/array")
 
 return function(value_format: types.NumberFormat?, envelope_format: types.NumberFormat?)
-	local _array = Schema_array(Schema_NumberSequenceKeypoint(value_format, envelope_format), "u8")
-	local write, read, size = _array.write, _array.read, _array.size
+	local data = array_schema(NumberSequenceKeypoint_schema(value_format, envelope_format), "u8")
+	local write, read, size = data.write, data.read, data.size
 
-	return Schema {
+	return {
 		write = @native function(b: buffer, offset: number, value: NumberSequence)
 			write(b, offset, value.Keypoints)
 		end,
@@ -19,7 +17,6 @@ return function(value_format: types.NumberFormat?, envelope_format: types.Number
 		size = @native function(value: NumberSequence): number
 			return size(value.Keypoints)
 		end,
-
 		validate = @native function(value: unknown): boolean
 			return typeof(value) == "NumberSequence"
 		end,

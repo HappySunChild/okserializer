@@ -8,8 +8,8 @@ local U8_MAX_INCLUSIVE = 2 ^ 8
 local U16_MAX_INCLUSIVE = 2 ^ 16
 local U32_MAX_INCLUSIVE = 2 ^ 32
 
-return table.freeze {
-	r8 = table.freeze {
+return table.freeze({
+	r8 = table.freeze({
 		write = @native function(b: buffer, offset: number, value: number)
 			buffer.writeu8(b, offset, value / TAU * U8_MAX_INCLUSIVE)
 		end,
@@ -19,8 +19,8 @@ return table.freeze {
 		size = 1,
 		min = 0,
 		max = TAU - 1 / U8_MAX_INCLUSIVE,
-	},
-	r16 = table.freeze {
+	}),
+	r16 = table.freeze({
 		write = @native function(b: buffer, offset: number, value: number)
 			buffer.writeu16(b, offset, value / TAU * U16_MAX_INCLUSIVE)
 		end,
@@ -30,8 +30,8 @@ return table.freeze {
 		size = 2,
 		min = 0,
 		max = TAU - 1 / U16_MAX_INCLUSIVE,
-	},
-	r32 = table.freeze {
+	}),
+	r32 = table.freeze({
 		write = @native function(b: buffer, offset: number, value: number)
 			buffer.writeu32(b, offset, value / TAU * U32_MAX_INCLUSIVE)
 		end,
@@ -41,5 +41,5 @@ return table.freeze {
 		size = 4,
 		min = 0,
 		max = TAU - 1 / U32_MAX_INCLUSIVE,
-	},
-}
+	}),
+})

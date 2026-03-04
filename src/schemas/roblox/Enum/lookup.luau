@@ -5,11 +5,11 @@ for key, value in ENUMS do
 	KEYS[value] = key
 end
 
-return table.freeze {
-	indexOf = function(enum: Enum): number
+return table.freeze({
+	to_index = function(enum: Enum): number
 		return KEYS[enum]
 	end,
-	enumFor = function(index: number): Enum
+	to_enum = function(index: number): Enum
 		return ENUMS[index]
 	end,
-}
+})

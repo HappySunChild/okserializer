@@ -1,8 +1,6 @@
-local types = require "../../types"
+local types = require("../../types")
 
-local sortWithOrder = require "../../utility/sortWithOrder"
-
-local Schema = require "../Schema"
+local sort_with_order = require("../../utility/sort_with_order")
 
 type BitStructInfo<K> = { [K]: number }
 
@@ -22,11 +20,11 @@ return function<K>(width_dict: BitStructInfo<K>, order: { K }?): types.Schema<{ 
 		table.insert(keys, key :: K)
 	end
 
-	sortWithOrder(keys, order)
+	sort_with_order(keys, order)
 
 	local byte_count = math.ceil(total_bit_count / 8)
 
-	return Schema {
+	return {
 		write = function(b: buffer, offset: number, input_dict: { [K]: number })
 			local bit_offset = offset * 8
 
@@ -56,7 +54,6 @@ return function<K>(width_dict: BitStructInfo<K>, order: { K }?): types.Schema<{ 
 		size = function(): number
 			return byte_count
 		end,
-
 		validate = function(value: unknown): boolean
 			if type(value) ~= "table" then
 				return false

@@ -1,15 +1,14 @@
-local formats = require "../../formats"
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
+local determine_format = require("../../utility/determine_format")
 
 return function(...: types.Schema<any>): types.Schema<any>
 	local schemas = { ... }
 
-	local _id = formats.determine(#schemas)
-	local id_write, id_read, id_size = _id.write, _id.read, _id.size
+	local id_spec = determine_format(#schemas)
+	local id_write, id_read, id_size = id_spec.write, id_spec.read, id_spec.size
 
-	local function getSchemaForValue<V>(value: V): (number?, types.Schema<V>?)
+	local function to_schema<V>(value: V): (number?, types.Schema<V>?)
 		for index, schema in schemas do
 			if schema.validate(value) then
 				return index, schema
@@ -19,9 +18,9 @@ return function(...: types.Schema<any>): types.Schema<any>
 		return nil, nil
 	end
 
-	return Schema {
+	return {
 		write = function(b: buffer, offset: number, value: any)
-			local index, schema = getSchemaForValue(value)
+			local index, schema = to_schema(value)
 
 			if index == nil or schema == nil then
 				error(`No available schema for value {value} ({typeof(value)})`)
@@ -38,7 +37,7 @@ return function(...: types.Schema<any>): types.Schema<any>
 			return schema.read(b, offset + id_size)
 		end,
 		size = function(value: any): number
-			local _, schema = getSchemaForValue(value)
+			local _, schema = to_schema(value)
 
 			if schema == nil then
 				error(`No available schema for value {value} ({typeof(value)})`)
@@ -48,9 +47,8 @@ return function(...: types.Schema<any>): types.Schema<any>
 
 			return id_size + size
 		end,
-
 		validate = function(value: unknown): boolean
-			return getSchemaForValue(value) ~= nil
+			return to_schema(value) ~= nil
 		end,
 	}
 end

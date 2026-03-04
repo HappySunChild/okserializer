@@ -1,13 +1,12 @@
-local formats = require "../../formats"
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
+local get_format = require("../../utility/get_format")
 
 return function(format: types.NumberFormat?): types.Schema<vector>
-	local _spec = formats.get(format, "f32")
-	local write, read, size = _spec.write, _spec.read, _spec.size
+	local spec = get_format(format, "f32")
+	local write, read, size = spec.write, spec.read, spec.size
 
-	return Schema {
+	return {
 		write = @native function(b: buffer, offset: number, value: vector)
 			write(b, offset, value.x)
 			write(b, offset + size, value.y)
@@ -23,7 +22,6 @@ return function(format: types.NumberFormat?): types.Schema<vector>
 		size = @native function(): number
 			return size * 3
 		end,
-
 		validate = @native function(value: unknown): boolean
 			return type(value) == "vector"
 		end,

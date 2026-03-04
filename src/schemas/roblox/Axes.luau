@@ -1,13 +1,11 @@
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
+local flags_schema = require("../custom/flags")
 
-local Schema_flags = require "../custom/flags"
+local data = flags_schema(9)
+local write, read = data.write, data.read
 
-local _schem = Schema_flags(9)
-local write, read = _schem.write, _schem.read
-
-return Schema {
+return {
 	write = @native function(b: buffer, offset: number, value: Axes)
 		write(b, offset, {
 			value.X,
@@ -51,7 +49,6 @@ return Schema {
 	size = @native function(): number
 		return 2
 	end,
-
 	validate = @native function(value: unknown): boolean
 		return typeof(value) == "Axes"
 	end,

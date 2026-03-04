@@ -1,4 +1,4 @@
-local function isArray(t: unknown)
+local function is_array(t: unknown)
 	if type(t) ~= "table" then
 		return false
 	end
@@ -6,4 +6,4 @@ local function isArray(t: unknown)
 	return next(t, #t) == nil
 end
 
-return isArray
+return is_array

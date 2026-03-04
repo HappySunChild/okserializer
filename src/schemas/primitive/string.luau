@@ -1,13 +1,12 @@
-local formats = require "../../formats"
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
+local get_format = require("../../utility/get_format")
 
 return function(len_format: types.UIntFormat?): types.Schema<string>
-	local _len = formats.get(len_format, "u16")
-	local len_write, len_read, len_size = _len.write, _len.read, _len.size
+	local len_spec = get_format(len_format, "u16")
+	local len_write, len_read, len_size = len_spec.write, len_spec.read, len_spec.size
 
-	return Schema {
+	return {
 		write = @native function(b: buffer, offset: number, value: string)
 			local count = string.len(value)
 
@@ -20,9 +19,8 @@ return function(len_format: types.UIntFormat?): types.Schema<string>
 			return buffer.readstring(b, offset + len_size, count)
 		end,
 		size = @native function(value: string): number
-			return len_size + string.len(value) % (_len.max + 1)
+			return len_size + string.len(value) % (len_spec.max + 1)
 		end,
-
 		validate = @native function(value: unknown): boolean
 			return type(value) == "string"
 		end,

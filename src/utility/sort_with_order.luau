@@ -1,5 +1,5 @@
-local function sortWithOrder<T>(list: { T }, order: { T }?)
-	if not order then
+local function sort_with_order<T>(list: { T }, order: { T }?)
+	if order == nil then
 		table.sort(list)
 
 		return
@@ -13,4 +13,4 @@ local function sortWithOrder<T>(list: { T }, order: { T }?)
 	end)
 end
 
-return sortWithOrder
+return sort_with_order

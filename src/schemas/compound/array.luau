@@ -1,15 +1,13 @@
-local formats = require "../../formats"
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
-
-local isArray = require "../../utility/isArray"
+local get_format = require("../../utility/get_format")
+local is_array = require("../../utility/is_array")
 
 return function<T>(schema: types.Schema<T>, len_format: types.UIntFormat?): types.Schema<{ T }>
-	local _len = formats.get(len_format, "u16")
-	local len_write, len_read, len_size = _len.write, _len.read, _len.size
+	local len_spec = get_format(len_format, "u16")
+	local len_write, len_read, len_size = len_spec.write, len_spec.read, len_spec.size
 
-	return Schema {
+	return {
 		write = function(b: buffer, offset: number, array: { T })
 			len_write(b, offset, #array)
 
@@ -45,7 +43,7 @@ return function<T>(schema: types.Schema<T>, len_format: types.UIntFormat?): type
 		end,
 
 		validate = function(array: unknown): boolean
-			if not isArray(array) then
+			if not is_array(array) then
 				return false
 			end
 

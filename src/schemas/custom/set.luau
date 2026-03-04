@@ -1,13 +1,10 @@
-local formats = require "../../formats"
-local types = require "../../types"
+local types = require("../../types")
 
-local Schema = require "../Schema"
+local determine_format = require("../../utility/determine_format")
 
 return function<T>(set: { T }): types.Schema<T>
-	-- note to future self, because i got really confused just now,
-	-- sets don't store multiple values, they only store one value from a set of possibilities
-	local _info = formats.determine(#set)
-	local write, read, size = _info.write, _info.read, _info.size
+	local spec = determine_format(#set)
+	local write, read, size = spec.write, spec.read, spec.size
 
 	local keys = {}
 
@@ -15,7 +12,7 @@ return function<T>(set: { T }): types.Schema<T>
 		keys[value] = key
 	end
 
-	return Schema {
+	return {
 		write = @native function(b: buffer, offset: number, value: T)
 			local index = keys[value]
 
@@ -33,7 +30,6 @@ return function<T>(set: { T }): types.Schema<T>
 		size = @native function(): number
 			return size
 		end,
-
 		validate = @native function(value: unknown): boolean
 			return value ~= nil and keys[value] ~= nil
 		end,
