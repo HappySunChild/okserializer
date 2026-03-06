@@ -1,10 +1,11 @@
+local formats = require("../../formats")
 local types = require("../../types")
 
-local get_format = require("../../utility/get_format")
+local DEFAULT_VALUE_SPEC = formats.u16
 
-return function(enumerator: Enum, format: types.UIntFormat?): types.Schema<EnumItem>
-	local _info = get_format(format, "u16")
-	local write, read, size = _info.write, _info.read, _info.size
+return function(enumerator: Enum, value_format: types.UIntFormat?): types.Schema<EnumItem>
+	local value_spec = if value_format == nil then DEFAULT_VALUE_SPEC else formats[value_format]
+	local write, read, size = value_spec.write, value_spec.read, value_spec.size
 
 	return {
 		write = function(b: buffer, offset: number, value: EnumItem)

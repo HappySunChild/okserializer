@@ -6,7 +6,7 @@ local data = flags_schema(9)
 local write, read = data.write, data.read
 
 return {
-	write = @native function(b: buffer, offset: number, value: Axes)
+	write = function(b: buffer, offset: number, value: Axes)
 		write(b, offset, {
 			value.X,
 			value.Y,
@@ -20,7 +20,7 @@ return {
 			value.Back,
 		})
 	end,
-	read = @native function(b: buffer, offset: number): Axes
+	read = function(b: buffer, offset: number): Axes
 		local data = read(b, offset)
 
 		local x = data[1] and Enum.Axis.X or nil
@@ -46,10 +46,10 @@ return {
 			back :: Enum.NormalId
 		)
 	end,
-	size = @native function(): number
+	size = function(): number
 		return 2
 	end,
-	validate = @native function(value: unknown): boolean
+	validate = function(value: unknown): boolean
 		return typeof(value) == "Axes"
 	end,
 } :: types.Schema<Axes>

@@ -1,15 +1,17 @@
+local formats = require("../../formats")
 local types = require("../../types")
 
-local get_format = require("../../utility/get_format")
+local DEFAULT_POS_SPEC = formats.f32
+local DEFAULT_ROT_SPEC = formats.r16
 
 return function(
 	pos_format: types.NumberFormat?,
 	rot_format: types.NumberFormat?
 ): types.Schema<CFrame>
-	local pos_spec = get_format(pos_format, "f32")
+	local pos_spec = if pos_format == nil then DEFAULT_POS_SPEC else formats[pos_format]
 	local pos_write, pos_read, pos_size = pos_spec.write, pos_spec.read, pos_spec.size
 
-	local rot_spec = get_format(rot_format, "r16")
+	local rot_spec = if rot_format == nil then DEFAULT_ROT_SPEC else formats[rot_format]
 	local rot_write, rot_read, rot_size = rot_spec.write, rot_spec.read, rot_spec.size
 
 	return {

@@ -8,16 +8,16 @@ return function(value_format: types.NumberFormat?, envelope_format: types.Number
 	local write, read, size = data.write, data.read, data.size
 
 	return {
-		write = @native function(b: buffer, offset: number, value: NumberSequence)
+		write = function(b: buffer, offset: number, value: NumberSequence)
 			write(b, offset, value.Keypoints)
 		end,
-		read = @native function(b: buffer, offset: number): NumberSequence
+		read = function(b: buffer, offset: number): NumberSequence
 			return NumberSequence.new(read(b, offset))
 		end,
-		size = @native function(value: NumberSequence): number
+		size = function(value: NumberSequence): number
 			return size(value.Keypoints)
 		end,
-		validate = @native function(value: unknown): boolean
+		validate = function(value: unknown): boolean
 			return typeof(value) == "NumberSequence"
 		end,
 	}

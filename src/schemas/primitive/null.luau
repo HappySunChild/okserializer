@@ -1,15 +1,15 @@
 local types = require("../../types")
 
 return {
-	write = @native function() end,
-	read = @native function(): nil
+	write = function() end,
+	read = function(): nil
 		return nil
 	end,
-	size = @native function(): number
+	size = function(): number
 		return 0
 	end,
 
-	validate = @native function(value: unknown): boolean
+	validate = function(value: unknown): boolean
 		return value == nil
 	end,
 } :: types.Schema<nil>

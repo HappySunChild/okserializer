@@ -1,9 +1,10 @@
+local formats = require("../../formats")
 local types = require("../../types")
 
-local get_format = require("../../utility/get_format")
+local DEFAULT_VALUE_SPEC = formats.f32
 
 return function(format: types.NumberFormat?): types.Schema<NumberRange>
-	local _spec = get_format(format, "f32")
+	local _spec = if format == nil then DEFAULT_VALUE_SPEC else formats[format]
 	local write, read, size = _spec.write, _spec.read, _spec.size
 
 	return {

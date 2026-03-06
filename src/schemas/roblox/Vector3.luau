@@ -1,10 +1,11 @@
+local formats = require("../../formats")
 local types = require("../../types")
 
-local get_format = require("../../utility/get_format")
+local DEFAULT_VECTOR_FORMAT = formats.f32
 
 return function(format: types.NumberFormat?): types.Schema<Vector3>
-	local component_spec = get_format(format, "f32")
-	local write, read, size = component_spec.write, component_spec.read, component_spec.size
+	local spec = if format == nil then DEFAULT_VECTOR_FORMAT else formats[format]
+	local write, read, size = spec.write, spec.read, spec.size
 
 	return {
 		write = function(b: buffer, offset: number, value: Vector3)

@@ -11,6 +11,6 @@ return table.freeze({
 
 	schemas = require("@self/schemas"),
 
-	serialize = require("@self/utility/serialize"),
-	deserialize = require("@self/utility/deserialize"),
+	serialize = require("@self/serialize"),
+	deserialize = require("@self/deserialize"),
 })

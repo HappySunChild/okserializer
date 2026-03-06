@@ -1,7 +1,7 @@
 local types = require("../../types")
 
 return {
-	write = @native function(b: buffer, offset: number, value: Font)
+	write = function(b: buffer, offset: number, value: Font)
 		local family = value.Family
 		local family_len = string.len(family)
 
@@ -10,7 +10,7 @@ return {
 		buffer.writeu8(b, offset + 2, family_len)
 		buffer.writestring(b, offset + 3, family, family_len)
 	end,
-	read = @native function(b: buffer, offset: number): Font
+	read = function(b: buffer, offset: number): Font
 		local style = Enum.FontStyle:FromValue(buffer.readu8(b, offset))
 		local weight = Enum.FontWeight:FromValue(buffer.readu8(b, offset + 1) * 100)
 
@@ -19,13 +19,13 @@ return {
 
 		return Font.new(family, weight, style)
 	end,
-	size = @native function(value: Font): number
+	size = function(value: Font): number
 		local family_len = string.len(value.Family) % 256
 
 		return 3 + family_len
 	end,
 
-	validate = @native function(value: unknown): boolean
+	validate = function(value: unknown): boolean
 		return typeof(value) == "Font"
 	end,
 } :: types.Schema<Font>

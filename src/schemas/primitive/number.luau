@@ -1,18 +1,19 @@
+local formats = require("../../formats")
 local types = require("../../types")
 
-local get_format = require("../../utility/get_format")
+local DEFAULT_NUMBER_FORMAT = formats.f32
 
 return function(format: types.NumberFormat?): types.Schema<number>
-	local spec = get_format(format, "f32")
+	local spec = if format == nil then DEFAULT_NUMBER_FORMAT else formats[format]
 	local write, read, size = spec.write, spec.read, spec.size
 
 	return {
 		write = write,
 		read = read,
-		size = @native function(): number
+		size = function(): number
 			return size
 		end,
-		validate = @native function(value: unknown): boolean
+		validate = function(value: unknown): boolean
 			return type(value) == "number"
 		end,
 	} :: types.Schema<number>

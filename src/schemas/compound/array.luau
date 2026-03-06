@@ -1,10 +1,12 @@
+local formats = require("../../formats")
 local types = require("../../types")
 
-local get_format = require("../../utility/get_format")
+local u16 = formats.u16
+
 local is_array = require("../../utility/is_array")
 
 return function<T>(schema: types.Schema<T>, len_format: types.UIntFormat?): types.Schema<{ T }>
-	local len_spec = get_format(len_format, "u16")
+	local len_spec = if len_format == nil then u16 else formats[len_format]
 	local len_write, len_read, len_size = len_spec.write, len_spec.read, len_spec.size
 
 	return {

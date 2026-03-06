@@ -1,15 +1,17 @@
+local formats = require("../../formats")
 local types = require("../../types")
 
-local get_format = require("../../utility/get_format")
+local DEFAULT_SCALE_SPEC = formats.f32
+local DEFAULT_OFFSET_SPEC = formats.i16
 
 return function(
 	scale_format: types.NumberFormat?,
 	offset_format: types.NumberFormat?
 ): types.Schema<UDim>
-	local scale = get_format(scale_format, "f32")
+	local scale = if scale_format == nil then DEFAULT_SCALE_SPEC else formats[scale_format]
 	local scale_write, scale_read, scale_size = scale.write, scale.read, scale.size
 
-	local offset = get_format(offset_format, "i16")
+	local offset = if offset_format == nil then DEFAULT_OFFSET_SPEC else formats[offset_format]
 	local offset_write, offset_read, offset_size = offset.write, offset.read, offset.size
 
 	return {

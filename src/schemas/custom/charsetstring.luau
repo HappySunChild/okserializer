@@ -1,11 +1,12 @@
+local formats = require("../../formats")
 local types = require("../../types")
 
-local get_format = require("../../utility/get_format")
+local DEFAULT_LEN_FORMAT = formats.u16
 
 return function(character_set: string, len_format: types.UIntFormat?): types.Schema<string>
 	assert(string.len(character_set) < 256, "Maximum character set size is 255 characters.")
 
-	local len_spec = get_format(len_format, "u16")
+	local len_spec = if len_format == nil then DEFAULT_LEN_FORMAT else formats[len_format]
 	local len_write, len_read, len_size = len_spec.write, len_spec.read, len_spec.size
 
 	local bits_per_character = math.ceil(math.log(string.len(character_set), 2))

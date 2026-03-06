@@ -7,17 +7,17 @@ return function(format: types.NumberFormat?): types.Schema<Ray>
 	local write, read, size = vec_schema.write, vec_schema.read, vec_schema.size(Vector3.zero)
 
 	return {
-		write = @native function(b: buffer, offset: number, value: Ray)
+		write = function(b: buffer, offset: number, value: Ray)
 			write(b, offset, value.Origin)
 			write(b, offset + size, value.Direction)
 		end,
-		read = @native function(b: buffer, offset: number): Ray
+		read = function(b: buffer, offset: number): Ray
 			return Ray.new(read(b, offset), read(b, offset + size))
 		end,
-		size = @native function(): number
+		size = function(): number
 			return size * 2
 		end,
-		validate = @native function(value: unknown): boolean
+		validate = function(value: unknown): boolean
 			return typeof(value) == "Ray"
 		end,
 	}

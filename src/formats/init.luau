@@ -7,7 +7,7 @@ local float = require("@self/float")
 local int = require("@self/integer")
 local uint = require("@self/uinteger")
 
-return {
+return table.freeze({
 	u8 = uint.u8,
 	u16 = uint.u16,
 	u32 = uint.u32,
@@ -29,4 +29,4 @@ return {
 	r32 = radian.r32, -- tau / 4294967296 ≈ 0.00000008 degrees
 
 	none = require("@self/none"),
-} :: { [types.NumberFormat]: types.NumberSpec }
+}) :: { [types.NumberFormat]: types.NumberSpec }
