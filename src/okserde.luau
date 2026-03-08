@@ -1,4 +1,3 @@
-local specs = require("./specs")
 local types = require("./types")
 
 local function deserialize<T...>(schema: types.Schema<T...>, b: buffer): T...
@@ -11,12 +10,22 @@ local function serialize<T...>(schema: types.Schema<T...>, ...: T...): buffer
 	return b
 end
 
-local function okserde(schemas)
+type Options<Schemas, Specs> = {
+	schemas: Schemas,
+	specs: Specs,
+}
+
+type Configured<Schemas, Specs> = {
+	schemas: Schemas,
+	specs: Specs,
+}
+
+local function okserde<Schemas, Specs>(options: Options<Schemas, Specs>): Configured<Schemas, Specs>
 	local new_okserde = {
 		serialize = serialize,
 		deserialize = deserialize,
-		schemas = schemas,
-		specs = specs,
+		schemas = options.schemas,
+		specs = options.specs,
 	}
 
 	return new_okserde
