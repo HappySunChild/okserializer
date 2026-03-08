@@ -1,0 +1,13 @@
+{
+	"name": "okserde",
+	"globIgnorePaths": [
+		"src/okserde_for_luau.luau"
+	],
+	"tree": {
+		"$className": "ModuleScript",
+		"$properties": {
+			"Source": "return require(\"@self/okserde_for_roblox\")"
+		},
+		"$path": "src"
+	}
+}
