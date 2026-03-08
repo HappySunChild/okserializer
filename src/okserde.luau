@@ -16,6 +16,8 @@ type Options<Schemas, Specs> = {
 }
 
 type Configured<Schemas, Specs> = {
+	serialize: <T...>(schema: types.Schema<T...>, T...) -> buffer,
+	deserialize: <T...>(schema: types.Schema<T...>, buffer) -> T...,
 	schemas: Schemas,
 	specs: Specs,
 }
