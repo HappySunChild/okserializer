@@ -1,24 +1,21 @@
-local formats = require("../../formats")
+local specs = require("../../specs")
 local types = require("../../types")
 
-local DEFAULT_VALUE_SPEC = formats.f32
-local DEFAULT_ENVELOPE_SPEC = formats.f16
+local DEFAULT_VALUE_SPEC = specs.f32
+local DEFAULT_ENVELOPE_SPEC = specs.f16
 
-local time = formats.s16
+local time = specs.s16
 local time_write, time_read, time_size = time.write, time.read, time.size
 
 return function(
-	value_format: types.NumberFormat?,
-	envelope_format: types.NumberFormat?
+	value_spec: types.NumberTypeSpec?,
+	envelope_spec: types.NumberTypeSpec?
 ): types.Schema<NumberSequenceKeypoint>
-	local value = if value_format == nil then DEFAULT_VALUE_SPEC else formats[value_format]
+	local value = if value_spec == nil then DEFAULT_VALUE_SPEC else value_spec
 	local value_write, value_read, value_size = value.write, value.read, value.size
 
-	local envelope = if envelope_format == nil
-		then DEFAULT_ENVELOPE_SPEC
-		else formats[envelope_format]
-	local envelope_write, envelope_read, envelope_size =
-		envelope.write, envelope.read, envelope.size
+	local envelope = if envelope_spec == nil then DEFAULT_ENVELOPE_SPEC else envelope_spec
+	local envelope_write, envelope_read, envelope_size = envelope.write, envelope.read, envelope.size
 
 	return {
 		write = function(b: buffer, offset: number, value: NumberSequenceKeypoint)

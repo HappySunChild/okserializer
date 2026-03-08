@@ -1,8 +1,9 @@
+local specs = require("../../specs")
 local types = require("../../types")
 
-local string_schema = require("../primitive/string")
+local string_schema = require("../language/string")
 
-local uri_schema = string_schema("u8")
+local uri_schema = string_schema(specs.u8)
 local uri_write, uri_read, uri_size = uri_schema.write, uri_schema.read, uri_schema.size
 
 return {

@@ -1,21 +1,21 @@
-local formats = require("../formats")
+local specs = require("../specs")
 local types = require("../types")
 
-local i32 = formats.i32
-local i16 = formats.i16
+local i32 = specs.i32
+local i16 = specs.i16
 local i16_limit = i16.max
-local i8 = formats.i8
+local i8 = specs.i8
 local i8_limit = i8.max
 
-local u32 = formats.u32
-local u16 = formats.u16
+local u32 = specs.u32
+local u16 = specs.u16
 local u16_limit = u16.max
-local u8 = formats.u8
+local u8 = specs.u8
 local u8_limit = u8.max
 
-local f32 = formats.f32
+local f32 = specs.f32
 
-local function determine_format(n: number): types.NumberSpec
+local function determine_type(n: number): types.NumberTypeSpec
 	local whole, frac = math.modf(n)
 
 	if frac == 0 then -- integer
@@ -41,4 +41,4 @@ local function determine_format(n: number): types.NumberSpec
 	return f32
 end
 
-return determine_format
+return determine_type

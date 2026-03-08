@@ -1,17 +1,14 @@
-local formats = require("../../formats")
+local specs = require("../../specs")
 local types = require("../../types")
 
-local DEFAULT_SCALE_SPEC = formats.f32
-local DEFAULT_OFFSET_SPEC = formats.i16
+local DEFAULT_SCALE_SPEC = specs.f32
+local DEFAULT_OFFSET_SPEC = specs.i16
 
-return function(
-	scale_format: types.NumberFormat?,
-	offset_format: types.NumberFormat?
-): types.Schema<UDim>
-	local scale = if scale_format == nil then DEFAULT_SCALE_SPEC else formats[scale_format]
+return function(scale_spec: types.NumberTypeSpec?, offset_spec: types.NumberTypeSpec?): types.Schema<UDim>
+	local scale = if scale_spec == nil then DEFAULT_SCALE_SPEC else scale_spec
 	local scale_write, scale_read, scale_size = scale.write, scale.read, scale.size
 
-	local offset = if offset_format == nil then DEFAULT_OFFSET_SPEC else formats[offset_format]
+	local offset = if offset_spec == nil then DEFAULT_OFFSET_SPEC else offset_spec
 	local offset_write, offset_read, offset_size = offset.write, offset.read, offset.size
 
 	return {

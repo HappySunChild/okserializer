@@ -1,25 +1,22 @@
-local formats = require("../../formats")
+local specs = require("../../specs")
 local types = require("../../types")
 
-local DEFAULT_VECTOR_FORMAT = formats.f32
+local DEFAULT_VECTOR_SPEC = specs.f32
 
-return function(format: types.NumberFormat?): types.Schema<Vector2>
-	local spec = if format == nil then DEFAULT_VECTOR_FORMAT else formats[format]
-	local write, read, size = spec.write, spec.read, spec.size
+return function(component_spec: types.NumberTypeSpec?): types.Schema<Vector2>
+	local component = if component_spec == nil then DEFAULT_VECTOR_SPEC else component_spec
+	local component_write, component_read, component_size = component.write, component.read, component.size
 
 	return {
 		write = function(b: buffer, offset: number, value: Vector2)
-			write(b, offset, value.X)
-			write(b, offset + size, value.Y)
+			component_write(b, offset, value.X)
+			component_write(b, offset + component_size, value.Y)
 		end,
 		read = function(b: buffer, offset: number): Vector2
-			local x = read(b, offset)
-			local y = read(b, offset + size)
-
-			return Vector2.new(x, y)
+			return Vector2.new(component_read(b, offset), component_read(b, offset + component_size))
 		end,
 		size = function(): number
-			return size * 2
+			return component_size * 2
 		end,
 		validate = function(value: unknown): boolean
 			return typeof(value) == "Vector2"

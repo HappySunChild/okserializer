@@ -1,13 +1,13 @@
-local formats = require("../../formats")
+local specs = require("../../specs")
 local types = require("../../types")
 
-local DEFAULT_LEN_FORMAT = formats.u16
+local DEFAULT_LEN_SPEC = specs.u16
 
-return function(character_set: string, len_format: types.UIntFormat?): types.Schema<string>
+return function(character_set: string, len_spec: types.NumberTypeSpec?): types.Schema<string>
 	assert(string.len(character_set) < 256, "Maximum character set size is 255 characters.")
 
-	local len_spec = if len_format == nil then DEFAULT_LEN_FORMAT else formats[len_format]
-	local len_write, len_read, len_size = len_spec.write, len_spec.read, len_spec.size
+	local len = if len_spec == nil then DEFAULT_LEN_SPEC else len_spec
+	local len_write, len_read, len_size = len.write, len.read, len.size
 
 	local bits_per_character = math.ceil(math.log(string.len(character_set), 2))
 
@@ -38,7 +38,7 @@ return function(character_set: string, len_format: types.UIntFormat?): types.Sch
 
 			len_write(b, offset, char_count)
 
-			local bit_offset = (offset + len_spec.size) * 8
+			local bit_offset = (offset + len_size) * 8
 
 			for i = 1, char_count do
 				local char = string.sub(filtered, i, i)
@@ -53,7 +53,7 @@ return function(character_set: string, len_format: types.UIntFormat?): types.Sch
 			local output = ""
 			local char_count = len_read(b, offset)
 
-			local bit_offset = (offset + len_spec.size) * 8
+			local bit_offset = (offset + len_size) * 8
 
 			for _ = 1, char_count do
 				local index = buffer.readbits(b, bit_offset, bits_per_character) + 1
@@ -69,7 +69,7 @@ return function(character_set: string, len_format: types.UIntFormat?): types.Sch
 		size = function(value: string): number
 			local filtered = filter(value)
 			local char_count = string.len(filtered)
-			local byte_count = math.ceil(bits_per_character * char_count / 8) % (len_spec.max + 1)
+			local byte_count = math.ceil(bits_per_character * char_count / 8) % (len.max + 1)
 
 			return len_size + byte_count
 		end,

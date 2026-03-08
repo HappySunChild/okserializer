@@ -1,11 +1,11 @@
-local formats = require("../../formats")
+local specs = require("../../specs")
 local types = require("../../types")
 
-local bitstruct_schema = require("../custom/bitstruct")
+local bitstruct_schema = require("../extra/bitstruct")
 
-local DEFAULT_TIME_SPEC = formats.f32
-local DEFAULT_DELAY_SPEC = formats.f32
-local DEFAULT_REPEAT_COUNT_SPEC = formats.u8
+local DEFAULT_TIME_SPEC = specs.f32
+local DEFAULT_DELAY_SPEC = specs.f32
+local DEFAULT_REPEAT_COUNT_SPEC = specs.u8
 
 type TweenCompactInfo = {
 	direction: number,
@@ -18,23 +18,20 @@ local info_schema = bitstruct_schema(
 	{ repeats_indefinitely = 1, reverses = 1, direction = 2, style = 4 },
 	{ "repeats_indefinitely", "reverses", "direction", "style" }
 ) :: types.Schema<TweenCompactInfo>
-local info_write, info_read, info_size =
-	info_schema.write, info_schema.read, info_schema.size(nil :: any)
+local info_write, info_read, info_size = info_schema.write, info_schema.read, info_schema.size(nil :: any)
 
 return function(
-	time_format: types.NumberFormat?,
-	delay_format: types.NumberFormat?,
-	repeat_count_format: types.UIntFormat | types.NoneFormat?
+	time_spec: types.NumberTypeSpec?,
+	delay_spec: types.NumberTypeSpec?,
+	repeat_count_spec: types.NumberTypeSpec?
 ): types.Schema<TweenInfo>
-	local time = if time_format == nil then DEFAULT_TIME_SPEC else formats[time_format]
+	local time = if time_spec == nil then DEFAULT_TIME_SPEC else time_spec
 	local time_write, time_read, time_size = time.write, time.read, time.size
 
-	local delay = if delay_format == nil then DEFAULT_DELAY_SPEC else formats[delay_format]
+	local delay = if delay_spec == nil then DEFAULT_DELAY_SPEC else delay_spec
 	local delay_write, delay_read, delay_size = delay.write, delay.read, delay.size
 
-	local repeat_count = if repeat_count_format == nil
-		then DEFAULT_REPEAT_COUNT_SPEC
-		else formats[repeat_count_format]
+	local repeat_count = if repeat_count_spec == nil then DEFAULT_REPEAT_COUNT_SPEC else repeat_count_spec
 	local repeat_count_write, repeat_count_read, repeat_count_size =
 		repeat_count.write, repeat_count.read, repeat_count.size
 

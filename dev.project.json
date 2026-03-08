@@ -1,5 +1,5 @@
 {
-	"name": "okserializer",
+	"name": "okserde",
 	"tree": {
 		"$className": "DataModel",
 		"$ignoreUnknownInstances": true,
@@ -8,15 +8,15 @@
 			"Libraries": {
 				"$ignoreUnknownInstances": true,
 				"$className": "Folder",
-				"okserializer": {
+				"okserde": {
 					"$path": "src"
 				}
 			}
 		},
 		"ServerScriptService": {
-			"okserializer_tests": {
+			"okserde_tests": {
 				"$ignoreUnknownInstances": true,
-				"$path": "dev"
+				"$path": "dev/roblox"
 			}
 		}
 	}

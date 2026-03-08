@@ -1,18 +1,15 @@
-local formats = require("../../formats")
+local specs = require("../../specs")
 local types = require("../../types")
 
-local DEFAULT_POS_SPEC = formats.f32
-local DEFAULT_ROT_SPEC = formats.r16
+local DEFAULT_POS_SPEC = specs.f32
+local DEFAULT_ROT_SPEC = specs.r16
 
-return function(
-	pos_format: types.NumberFormat?,
-	rot_format: types.NumberFormat?
-): types.Schema<CFrame>
-	local pos_spec = if pos_format == nil then DEFAULT_POS_SPEC else formats[pos_format]
-	local pos_write, pos_read, pos_size = pos_spec.write, pos_spec.read, pos_spec.size
+return function(pos_spec: types.NumberTypeSpec?, rot_spec: types.NumberTypeSpec?): types.Schema<CFrame>
+	local pos = if pos_spec == nil then DEFAULT_POS_SPEC else pos_spec
+	local pos_write, pos_read, pos_size = pos.write, pos.read, pos.size
 
-	local rot_spec = if rot_format == nil then DEFAULT_ROT_SPEC else formats[rot_format]
-	local rot_write, rot_read, rot_size = rot_spec.write, rot_spec.read, rot_spec.size
+	local rot = if rot_spec == nil then DEFAULT_ROT_SPEC else rot_spec
+	local rot_write, rot_read, rot_size = rot.write, rot.read, rot.size
 
 	return {
 		write = function(b: buffer, offset: number, value: CFrame)

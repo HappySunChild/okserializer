@@ -1,20 +1,21 @@
+local specs = require("../../specs")
 local types = require("../../types")
 
 local ColorSequenceKeypoint_schema = require("./ColorSequenceKeypoint")
 local array_schema = require("../compound/array")
 
-local data = array_schema(ColorSequenceKeypoint_schema, "u8")
-local write, read, size = data.write, data.read, data.size
+local data = array_schema(ColorSequenceKeypoint_schema, specs.u8)
+local data_write, data_read, data_size = data.write, data.read, data.size
 
 return {
 	write = function(b: buffer, offset: number, value: ColorSequence)
-		write(b, offset, value.Keypoints)
+		data_write(b, offset, value.Keypoints)
 	end,
 	read = function(b: buffer, offset: number): ColorSequence
-		return ColorSequence.new(read(b, offset))
+		return ColorSequence.new(data_read(b, offset))
 	end,
 	size = function(value: ColorSequence): number
-		return size(value.Keypoints)
+		return data_size(value.Keypoints)
 	end,
 	validate = function(value: unknown): boolean
 		return typeof(value) == "ColorSequence"

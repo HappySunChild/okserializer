@@ -1,13 +1,16 @@
-local formats = require("../../formats")
+local specs = require("../../specs")
 local types = require("../../types")
 
-local u16 = formats.u16
+local DEFAULT_LEN_SPEC = specs.u16
 
 local is_array = require("../../utility/is_array")
 
-return function<T>(schema: types.Schema<T>, len_format: types.UIntFormat?): types.Schema<{ T }>
-	local len_spec = if len_format == nil then u16 else formats[len_format]
-	local len_write, len_read, len_size = len_spec.write, len_spec.read, len_spec.size
+return function<T>(schema: types.Schema<T>, len_spec: types.NumberTypeSpec?): types.Schema<{ T }>
+	local len = if len_spec == nil then DEFAULT_LEN_SPEC else len_spec
+	local len_write, len_read, len_size = len.write, len.read, len.size
+
+	local schema_write, schema_read, schema_size, schema_validate =
+		schema.write, schema.read, schema.size, schema.validate
 
 	return {
 		write = function(b: buffer, offset: number, array: { T })
@@ -16,8 +19,8 @@ return function<T>(schema: types.Schema<T>, len_format: types.UIntFormat?): type
 			offset += len_size
 
 			for _, value in array do
-				schema.write(b, offset, value)
-				offset += schema.size(value)
+				schema_write(b, offset, value)
+				offset += schema_size(value)
 			end
 		end,
 		read = function(b: buffer, offset: number): { T }
@@ -28,8 +31,8 @@ return function<T>(schema: types.Schema<T>, len_format: types.UIntFormat?): type
 			local array = table.create(count)
 
 			for i = 1, count do
-				array[i] = schema.read(b, offset)
-				offset += schema.size(array[i])
+				array[i] = schema_read(b, offset)
+				offset += schema_size(array[i])
 			end
 
 			return array
@@ -38,19 +41,18 @@ return function<T>(schema: types.Schema<T>, len_format: types.UIntFormat?): type
 			local byte_count = len_size
 
 			for _, value in array do
-				byte_count += schema.size(value)
+				byte_count += schema_size(value)
 			end
 
 			return byte_count
 		end,
-
 		validate = function(array: unknown): boolean
 			if not is_array(array) then
 				return false
 			end
 
 			for _, value in array :: { T } do
-				if not schema.validate(value) then
+				if not schema_validate(value) then
 					return false
 				end
 			end

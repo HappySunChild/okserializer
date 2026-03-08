@@ -1,13 +1,13 @@
 local types = require("../../types")
 
-local flags_schema = require("../custom/flags")
+local flags_schema = require("../extra/flags")
 
 local data = flags_schema(6)
-local write, read = data.write, data.read
+local data_write, data_read = data.write, data.read
 
 return {
 	write = function(b: buffer, offset: number, value: Faces)
-		write(b, offset, {
+		data_write(b, offset, {
 			value.Top,
 			value.Bottom,
 			value.Left,
@@ -17,7 +17,7 @@ return {
 		})
 	end,
 	read = function(b: buffer, offset: number): Faces
-		local data = read(b, offset)
+		local data = data_read(b, offset)
 
 		local top = data[1] and Enum.NormalId.Top or nil
 		local bottom = data[2] and Enum.NormalId.Bottom or nil

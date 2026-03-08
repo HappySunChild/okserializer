@@ -1,9 +1,9 @@
 local types = require("../../types")
 
-local determine_format = require("../../utility/determine_format")
+local determine_spec = require("../../utility/determine_spec")
 
 return function<T>(set: { T }): types.Schema<T>
-	local spec = determine_format(#set)
+	local spec = determine_spec(#set)
 	local write, read, size = spec.write, spec.read, spec.size
 
 	local keys = {}

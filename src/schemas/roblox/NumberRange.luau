@@ -1,25 +1,22 @@
-local formats = require("../../formats")
+local specs = require("../../specs")
 local types = require("../../types")
 
-local DEFAULT_VALUE_SPEC = formats.f32
+local DEFAULT_VALUE_SPEC = specs.f32
 
-return function(format: types.NumberFormat?): types.Schema<NumberRange>
-	local _spec = if format == nil then DEFAULT_VALUE_SPEC else formats[format]
-	local write, read, size = _spec.write, _spec.read, _spec.size
+return function(value_spec: types.NumberTypeSpec?): types.Schema<NumberRange>
+	local value = if value_spec == nil then DEFAULT_VALUE_SPEC else value_spec
+	local value_write, value_read, value_size = value.write, value.read, value.size
 
 	return {
 		write = function(b: buffer, offset: number, value: NumberRange)
-			write(b, offset, value.Min)
-			write(b, offset + size, value.Max)
+			value_write(b, offset, value.Min)
+			value_write(b, offset + value_size, value.Max)
 		end,
 		read = function(b: buffer, offset: number): NumberRange
-			local min = read(b, offset)
-			local max = read(b, offset + size)
-
-			return NumberRange.new(min, max)
+			return NumberRange.new(value_read(b, offset), value_read(b, offset + value_size))
 		end,
 		size = function(): number
-			return size * 2
+			return value_size * 2
 		end,
 		validate = function(value: unknown): boolean
 			return typeof(value) == "NumberRange"

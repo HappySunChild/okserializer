@@ -2,25 +2,20 @@ local types = require("../../types")
 
 local Vector2_schema = require("./Vector2")
 
-return function(format: types.NumberFormat?): types.Schema<Rect>
-	local vec_schema = Vector2_schema(format)
-	local write, read, size = vec_schema.write, vec_schema.read, vec_schema.size(Vector2.zero)
+return function(vec_spec: types.NumberTypeSpec?): types.Schema<Rect>
+	local vec = Vector2_schema(vec_spec)
+	local vec_write, vec_read, vec_size = vec.write, vec.read, vec.size(Vector2.zero)
 
 	return {
 		write = function(b: buffer, offset: number, value: Rect)
-			local min, max = value.Min, value.Max
-
-			write(b, offset, min)
-			write(b, offset + size, max)
+			vec_write(b, offset, value.Min)
+			vec_write(b, offset + vec_size, value.Max)
 		end,
 		read = function(b: buffer, offset: number): Rect
-			local min = read(b, offset)
-			local max = read(b, offset + size)
-
-			return Rect.new(min, max)
+			return Rect.new(vec_read(b, offset), vec_read(b, offset + vec_size))
 		end,
 		size = function(value: Rect): number
-			return size * 2
+			return vec_size * 2
 		end,
 
 		validate = function(value: unknown): boolean

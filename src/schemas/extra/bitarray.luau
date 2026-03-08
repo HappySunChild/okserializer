@@ -1,13 +1,13 @@
-local formats = require("../../formats")
+local specs = require("../../specs")
 local types = require("../../types")
 
 local is_array = require("../../utility/is_array")
 
-local DEFAULT_LEN_FORMAT = formats.u8
+local DEFAULT_LEN_SPEC = specs.u8
 
-return function(bit_width: number, len_format: types.UIntFormat?): types.Schema<{ number }>
-	local len_spec = if len_format == nil then DEFAULT_LEN_FORMAT else formats[len_format]
-	local len_write, len_read, len_size = len_spec.write, len_spec.read, len_spec.size
+return function(bit_width: number, len_spec: types.NumberTypeSpec?): types.Schema<{ number }>
+	local len = if len_spec == nil then DEFAULT_LEN_SPEC else len_spec
+	local len_write, len_read, len_size = len.write, len.read, len.size
 
 	return {
 		write = function(b: buffer, offset: number, value: { number })
@@ -34,7 +34,7 @@ return function(bit_width: number, len_format: types.UIntFormat?): types.Schema<
 			return output
 		end,
 		size = function(value: { number }): number
-			return len_size + math.ceil(#value * bit_width / 8) % (len_spec.max + 1)
+			return len_size + math.ceil(#value * bit_width / 8) % (len.max + 1)
 		end,
 		validate = function(value: unknown): boolean
 			if not is_array(value) then

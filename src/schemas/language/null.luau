@@ -8,7 +8,6 @@ return {
 	size = function(): number
 		return 0
 	end,
-
 	validate = function(value: unknown): boolean
 		return value == nil
 	end,

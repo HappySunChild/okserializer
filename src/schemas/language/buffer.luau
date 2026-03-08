@@ -1,11 +1,11 @@
-local formats = require("../../formats")
+local specs = require("../../specs")
 local types = require("../../types")
 
-local DEFAULT_LEN_FORMAT = formats.u16
+local DEFAULT_LEN_SPEC = specs.u16
 
-return function(len_format: types.UIntFormat?): types.Schema<buffer>
-	local len_spec = if len_format == nil then DEFAULT_LEN_FORMAT else formats[len_format]
-	local len_write, len_read, len_size = len_spec.write, len_spec.read, len_spec.size
+return function(len_spec: types.NumberTypeSpec?): types.Schema<buffer>
+	local len = if len_spec == nil then DEFAULT_LEN_SPEC else len_spec
+	local len_write, len_read, len_size = len.write, len.read, len.size
 
 	return {
 		write = function(b: buffer, offset: number, value: buffer)
@@ -21,7 +21,7 @@ return function(len_format: types.UIntFormat?): types.Schema<buffer>
 			return new_buffer
 		end,
 		size = function(value: buffer): number
-			return len_size + buffer.len(value) % (len_spec.max + 1)
+			return len_size + buffer.len(value) % (len.max + 1)
 		end,
 		validate = function(value: unknown): boolean
 			return type(value) == "buffer"

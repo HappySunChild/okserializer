@@ -5,8 +5,7 @@ return {
 		buffer.writef64(b, offset, value.UnixTimestampMillis)
 	end,
 	read = function(b: buffer, offset: number): DateTime
-		local milliseconds = buffer.readf64(b, offset)
-		return DateTime.fromUnixTimestampMillis(milliseconds)
+		return DateTime.fromUnixTimestampMillis(buffer.readf64(b, offset))
 	end,
 	size = function(value: DateTime): number
 		return 8

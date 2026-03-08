@@ -1,11 +1,11 @@
 local types = require("../../types")
 
-local determine_format = require("../../utility/determine_format")
+local determine_spec = require("../../utility/determine_spec")
 
 return function(...: types.Schema<any>): types.Schema<any>
 	local schemas = { ... }
 
-	local id_spec = determine_format(#schemas)
+	local id_spec = determine_spec(#schemas)
 	local id_write, id_read, id_size = id_spec.write, id_spec.read, id_spec.size
 
 	local function to_schema<V>(value: V): (number?, types.Schema<V>?)

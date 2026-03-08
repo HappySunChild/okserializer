@@ -1,7 +1,7 @@
-local formats = require("../../formats")
+local specs = require("../../specs")
 local types = require("../../types")
 
-local time = formats.s16
+local time = specs.s16
 local time_write, time_read, time_size = time.write, time.read, time.size
 
 local color = require("./Color3")
