@@ -15,7 +15,7 @@ return {
 		array = require("@self/schemas/compound/array"),
 		optional = require("@self/schemas/compound/optional"),
 		struct = require("@self/schemas/compound/struct"),
-		tuple = require("@self/schemas/compound/array"),
+		tuple = require("@self/schemas/compound/tuple"),
 		union = require("@self/schemas/compound/union"),
 
 		bitarray = require("@self/schemas/extra/bitarray"),
