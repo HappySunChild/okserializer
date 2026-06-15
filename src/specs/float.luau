@@ -74,7 +74,7 @@ return {
 				if mantissa == 0 then
 					return sign * math.huge -- Infinity
 				else
-					return 0 / 0 -- NaN
+					return math.nan -- NaN
 				end
 			end
 
