@@ -10,7 +10,7 @@ export type Schema<T...> = {
 	read write: (b: buffer, offset: number, T...) -> (),
 	read read: (b: buffer, offset: number) -> T...,
 	read size: (T...) -> number,
-	read validate: (T...) -> boolean,
+	read validate: (T...) -> (boolean, string?),
 }
 
 return nil
