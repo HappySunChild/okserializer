@@ -1,22 +1,22 @@
-local specs = require("../specs")
-local types = require("../types")
+const specs = require("../specs")
+const types = require("../types")
 
-local i32 = specs.i32
-local i16 = specs.i16
-local i16_limit = i16.max
-local i8 = specs.i8
-local i8_limit = i8.max
+const i32 = specs.i32
+const i16 = specs.i16
+const i16_limit = i16.max
+const i8 = specs.i8
+const i8_limit = i8.max
 
-local u32 = specs.u32
-local u16 = specs.u16
-local u16_limit = u16.max
-local u8 = specs.u8
-local u8_limit = u8.max
+const u32 = specs.u32
+const u16 = specs.u16
+const u16_limit = u16.max
+const u8 = specs.u8
+const u8_limit = u8.max
 
-local f32 = specs.f32
+const f32 = specs.f32
 
-local function determine_type(n: number): types.NumberTypeSpec
-	local whole, frac = math.modf(n)
+const function determine_type(n: number): types.NumberTypeSpec
+	const whole, frac = math.modf(n)
 
 	if frac == 0 then -- integer
 		if whole < 0 then -- signed
