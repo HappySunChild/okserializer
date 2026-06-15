@@ -14,9 +14,13 @@
 			}
 		},
 		"ServerScriptService": {
-			"okserde_tests": {
+			"devtests": {
+				"$className": "Folder",
 				"$ignoreUnknownInstances": true,
-				"$path": "dev/roblox"
+				"okserde": {
+					"$className": "Folder",
+					"$path": "dev/rbx"
+				}
 			}
 		}
 	}
