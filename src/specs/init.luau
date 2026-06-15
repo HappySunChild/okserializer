@@ -1,13 +1,16 @@
-local types = require("./types")
+const types = require("./types")
 
-local radian = require("@self/radian")
-local small = require("@self/small")
+const radian = require("@self/radian")
+const small = require("@self/small")
 
-local float = require("@self/float")
-local int = require("@self/integer")
-local uint = require("@self/uinteger")
+const none = require("@self/none")
+const constant = require("@self/constant")
 
-return table.freeze({
+const float = require("@self/float")
+const int = require("@self/int")
+const uint = require("@self/uint")
+
+return {
 	u8 = uint.u8 :: types.NumberTypeSpec,
 	u16 = uint.u16 :: types.NumberTypeSpec,
 	u32 = uint.u32 :: types.NumberTypeSpec,
@@ -28,5 +31,6 @@ return table.freeze({
 	r16 = radian.r16 :: types.NumberTypeSpec, -- tau / 65536      ≈ 0.00549316 degrees
 	r32 = radian.r32 :: types.NumberTypeSpec, -- tau / 4294967296 ≈ 0.00000008 degrees
 
-	none = require("@self/none") :: types.NumberTypeSpec,
-})
+	none = none :: types.NumberTypeSpec,
+	constant = constant,
+}

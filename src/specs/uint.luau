@@ -1,23 +1,27 @@
-return table.freeze({
-	u8 = table.freeze({
+const U8_MAX = (2 ^ 8) - 1
+const U16_MAX = (2 ^ 16) - 1
+const U32_MAX = (2 ^ 32) - 1
+
+return {
+	u8 = {
 		write = buffer.writeu8,
 		read = buffer.readu8,
 		size = 1,
 		min = 0,
-		max = (2 ^ 8) - 1,
-	}),
-	u16 = table.freeze({
+		max = U8_MAX,
+	},
+	u16 = {
 		write = buffer.writeu16,
 		read = buffer.readu16,
 		size = 2,
 		min = 0,
-		max = (2 ^ 16) - 1,
-	}),
-	u32 = table.freeze({
+		max = U16_MAX,
+	},
+	u32 = {
 		write = buffer.writeu32,
 		read = buffer.readu32,
 		size = 4,
 		min = 0,
-		max = (2 ^ 32) - 1,
-	}),
-})
+		max = U32_MAX,
+	},
+}
