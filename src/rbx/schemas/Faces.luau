@@ -1,0 +1,50 @@
+local types = require("../../types")
+
+local flags_schema = require("../../schemas/extra/flags")
+
+local data = flags_schema(6)
+local data_write, data_read = data.write, data.read
+
+const Faces_schema = {
+	write = function(b: buffer, offset: number, value: Faces)
+		data_write(b, offset, {
+			value.Top,
+			value.Bottom,
+			value.Left,
+			value.Right,
+			value.Front,
+			value.Back,
+		})
+	end,
+	read = function(b: buffer, offset: number): Faces
+		local data = data_read(b, offset)
+
+		local top = data[1] and Enum.NormalId.Top or nil
+		local bottom = data[2] and Enum.NormalId.Bottom or nil
+		local left = data[3] and Enum.NormalId.Left or nil
+		local right = data[4] and Enum.NormalId.Right or nil
+		local front = data[5] and Enum.NormalId.Front or nil
+		local back = data[6] and Enum.NormalId.Back or nil
+
+		return Faces.new(
+			top :: Enum.NormalId,
+			bottom :: Enum.NormalId,
+			left :: Enum.NormalId,
+			right :: Enum.NormalId,
+			front :: Enum.NormalId,
+			back :: Enum.NormalId
+		)
+	end,
+	size = function(): number
+		return 1
+	end,
+	validate = function(value: unknown): (boolean, string?)
+		if typeof(value) ~= "Faces" then
+			return false, `expected value of type Faces, got {typeof(value)}`
+		end
+
+		return true, nil
+	end,
+} :: types.Schema<Faces>
+
+return Faces_schema

@@ -1,0 +1,33 @@
+local types = require("../../types")
+
+local Vector3_schema = require("./Vector3")
+
+const function PathWaypoint_schema(format: types.NumberTypeSpec?): types.Schema<PathWaypoint>
+	local pos = Vector3_schema(format)
+	local pos_write, pos_read, pos_size = pos.write, pos.read, pos.size(Vector3.zero)
+
+	return {
+		write = function(b: buffer, offset: number, waypoint: PathWaypoint)
+			buffer.writeu8(b, offset, waypoint.Action.Value)
+			pos_write(b, offset + 1, waypoint.Position)
+		end,
+		read = function(b: buffer, offset: number): PathWaypoint
+			return PathWaypoint.new(
+				pos_read(b, offset + 1),
+				Enum.PathWaypointAction:FromValue(buffer.readu8(b, offset)) or Enum.PathWaypointAction.Walk
+			)
+		end,
+		size = function(waypoint: PathWaypoint): number
+			return pos_size + 1
+		end,
+		validate = function(value: unknown): (boolean, string?)
+			if typeof(value) ~= "PathWaypoint" then
+				return false, `expected value of type PathWaypoint, got {typeof(value)}`
+			end
+
+			return true, nil
+		end,
+	}
+end
+
+return PathWaypoint_schema

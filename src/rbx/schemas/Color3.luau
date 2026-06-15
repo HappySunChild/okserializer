@@ -1,0 +1,28 @@
+local types = require("../../types")
+
+const Color3_schema = {
+	write = function(b: buffer, offset: number, value: Color3)
+		buffer.writeu8(b, offset, value.R * 255)
+		buffer.writeu8(b, offset + 1, value.G * 255)
+		buffer.writeu8(b, offset + 2, value.B * 255)
+	end,
+	read = function(b: buffer, offset: number): Color3
+		return Color3.fromRGB(
+			buffer.readu8(b, offset),
+			buffer.readu8(b, offset + 1),
+			buffer.readu8(b, offset + 2)
+		)
+	end,
+	size = function(): number
+		return 3
+	end,
+	validate = function(value: unknown): (boolean, string?)
+		if typeof(value) ~= "Color3" then
+			return false, `expected value of type Color3, got {typeof(value)}`
+		end
+
+		return true, nil
+	end,
+} :: types.Schema<Color3>
+
+return Color3_schema
