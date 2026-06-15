@@ -1,15 +1,15 @@
-local specs = require("../../specs")
-local types = require("../../types")
+const specs = require("../../specs")
+const types = require("../../types")
 
-local DEFAULT_LEN_SPEC = specs.u16
+const DEFAULT_LEN_SPEC = specs.u16
 
-local is_array = require("../../utility/is_array")
+const is_array = require("../../utility/is_array")
 
-return function<T>(schema: types.Schema<T>, len_spec: types.NumberTypeSpec?): types.Schema<{ T }>
-	local len = if len_spec == nil then DEFAULT_LEN_SPEC else len_spec
-	local len_write, len_read, len_size = len.write, len.read, len.size
+const function array_schema<T>(schema: types.Schema<T>, len_spec: types.NumberTypeSpec?): types.Schema<{ T }>
+	const len = if len_spec == nil then DEFAULT_LEN_SPEC else len_spec
+	const len_write, len_read, len_size = len.write, len.read, len.size
 
-	local schema_write, schema_read, schema_size, schema_validate =
+	const schema_write, schema_read, schema_size, schema_validate =
 		schema.write, schema.read, schema.size, schema.validate
 
 	return {
@@ -24,18 +24,18 @@ return function<T>(schema: types.Schema<T>, len_spec: types.NumberTypeSpec?): ty
 			end
 		end,
 		read = function(b: buffer, offset: number): { T }
-			local count = len_read(b, offset)
+			const count = len_read(b, offset)
 
 			offset += len_size
 
-			local array = table.create(count)
+			const output = table.create(count)
 
 			for i = 1, count do
-				array[i] = schema_read(b, offset)
-				offset += schema_size(array[i])
+				output[i] = schema_read(b, offset)
+				offset += schema_size(output[i])
 			end
 
-			return array
+			return output
 		end,
 		size = function(array: { T }): number
 			local byte_count = len_size
@@ -46,18 +46,22 @@ return function<T>(schema: types.Schema<T>, len_spec: types.NumberTypeSpec?): ty
 
 			return byte_count
 		end,
-		validate = function(array: unknown): boolean
+		validate = function(array: unknown): (boolean, string?)
 			if not is_array(array) then
-				return false
+				return false, "expected array value"
 			end
 
-			for _, value in array :: { T } do
-				if not schema_validate(value) then
-					return false
+			for index, element in array :: { T } do
+				local ok, err = schema_validate(element)
+
+				if not ok then
+					return false, `invalid array element at index {index}:\n\t{err}`
 				end
 			end
 
-			return true
+			return true, nil
 		end,
 	}
 end
+
+return array_schema

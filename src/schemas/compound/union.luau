@@ -1,29 +1,29 @@
-local types = require("../../types")
+const types = require("../../types")
 
-local determine_spec = require("../../utility/determine_spec")
+const determine_spec = require("../../utility/determine_spec")
 
-return function(...: types.Schema<any>): types.Schema<any>
-	local schemas = { ... }
-
-	local id_spec = determine_spec(#schemas)
-	local id_write, id_read, id_size = id_spec.write, id_spec.read, id_spec.size
-
-	local function to_schema<V>(value: V): (number?, types.Schema<V>?)
-		for index, schema in schemas do
-			if schema.validate(value) then
-				return index, schema
-			end
+const function determine_schema<T>(value: T, schemas: { types.Schema<any> }): (number?, types.Schema<T>?)
+	for index, schema in schemas do
+		if schema.validate(value) then
+			return index, schema
 		end
-
-		return nil, nil
 	end
+
+	return nil, nil
+end
+
+const function union_schema(...: types.Schema<any>): types.Schema<any>
+	const schemas = { ... }
+
+	const id = determine_spec(#schemas)
+	const id_write, id_read, id_size = id.write, id.read, id.size
 
 	return {
 		write = function(b: buffer, offset: number, value: any)
-			local index, schema = to_schema(value)
+			const index, schema = determine_schema(value, schemas)
 
 			if index == nil or schema == nil then
-				error(`No available schema for value {value} ({typeof(value)})`)
+				error(`no valid schema available in union for value of type {typeof(value)} (value: {value})`)
 			end
 
 			id_write(b, offset, index)
@@ -31,24 +31,33 @@ return function(...: types.Schema<any>): types.Schema<any>
 			schema.write(b, offset + id_size, value)
 		end,
 		read = function(b: buffer, offset: number): any
-			local index = id_read(b, offset)
-			local schema = schemas[index]
+			const index = id_read(b, offset)
+			const schema = schemas[index]
 
 			return schema.read(b, offset + id_size)
 		end,
 		size = function(value: any): number
-			local _, schema = to_schema(value)
+			const index, schema = determine_schema(value, schemas)
 
-			if schema == nil then
-				error(`No available schema for value {value} ({typeof(value)})`)
+			if index == nil or schema == nil then
+				error(`no valid schema available in union for value of type {typeof(value)} (value: {value})`)
 			end
 
-			local size = schema.size(value)
+			const size = schema.size(value)
 
 			return id_size + size
 		end,
 		validate = function(value: unknown): boolean
-			return to_schema(value) ~= nil
+			const index, schema = determine_schema(value, schemas)
+
+			if index == nil or schema == nil then
+				return false,
+					`no valid schema available in union for value of type {typeof(value)} (value: {value})`
+			end
+
+			return true, nil
 		end,
 	}
 end
+
+return union_schema

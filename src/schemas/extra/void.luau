@@ -1,6 +1,6 @@
-local types = require("../../types")
+const types = require("../../types")
 
-return function(void_count: number): types.Schema<nil>
+const function void_schema(void_count: number): types.Schema<nil>
 	return {
 		write = function() end,
 		read = function()
@@ -9,8 +9,10 @@ return function(void_count: number): types.Schema<nil>
 		size = function(): number
 			return void_count
 		end,
-		validate = function(value: unknown): boolean
-			return value == nil
+		validate = function(value: unknown): (boolean, string?)
+			return value == nil, nil
 		end,
 	}
 end
+
+return void_schema

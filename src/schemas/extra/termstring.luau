@@ -1,7 +1,7 @@
-local types = require("../../types")
+const types = require("../../types")
 
-local function next_terminator(value: string, term: string, offset: number?): number
-	local index = string.find(value, term, offset or 0, false)
+const function next_terminator(value: string, term: string, offset: number?): number
+	const index = string.find(value, term, offset or 0, false)
 
 	if index then
 		return index - 1
@@ -10,13 +10,13 @@ local function next_terminator(value: string, term: string, offset: number?): nu
 	return string.len(value)
 end
 
-return function(term: string?): types.Schema<string>
-	local n_term: string = term or "\0"
-	local term_len = string.len(n_term)
+const function termstring_schema(term: string?): types.Schema<string>
+	const n_term: string = term or "\0"
+	const term_len = string.len(n_term)
 
 	return {
 		write = function(b: buffer, offset: number, value: string)
-			local count = next_terminator(value, n_term)
+			const count = next_terminator(value, n_term)
 
 			buffer.writestring(b, offset, value, count)
 			buffer.writestring(b, offset + count, n_term) -- terminator
@@ -24,15 +24,21 @@ return function(term: string?): types.Schema<string>
 		read = function(b: buffer, offset: number): string
 			-- is this better than progressively reading the buffer and then stopping at the terminator?
 			-- it'd sure be a lot easier to understand than whatever nonsense this is
-			local count = next_terminator(buffer.tostring(b), n_term, offset + 1) - offset
+			const count = next_terminator(buffer.tostring(b), n_term, offset + 1) - offset
 
 			return buffer.readstring(b, offset, count)
 		end,
-		size = function(value: string)
+		size = function(value: string): number
 			return next_terminator(value, n_term) + term_len
 		end,
-		validate = function(value: unknown)
-			return type(value) == "string"
+		validate = function(value: unknown): (boolean, string?)
+			if type(value) ~= "string" then
+				return false, `expected value of type string, got {type(value)}`
+			end
+
+			return true, nil
 		end,
 	}
 end
+
+return termstring_schema

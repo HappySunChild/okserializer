@@ -1,8 +1,10 @@
-local types = require("../../types")
+const types = require("../../types")
 
-local null = require("../language/null")
-local union = require("./union")
+const null = require("../primitive/null")
+const union = require("./union")
 
-return function<T>(schema: types.Schema<T>): types.Schema<T | nil>
-	return union(null, schema)
+const function optional_schema<T>(schema: types.Schema<T>): types.Schema<T?>
+	return union(schema, null)
 end
+
+return optional_schema

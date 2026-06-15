@@ -1,35 +1,36 @@
-local types = require("../../types")
+const types = require("../../types")
 
-local sort_with_order = require("../../utility/sort_with_order")
+const sort_with_order = require("../../utility/sort_with_order")
 
-type StructInfo<K, V> = { [K]: types.Schema<V> }
-
-return function<K, V>(schema_dict: StructInfo<K, V>, order: { K }?): types.Schema<{ [K]: V }>
-	local keys = {}
+const function struct_schema<T>(
+	schema_dict: { [keyof<T>]: types.Schema<any> },
+	order: { keyof<T> }?
+): types.Schema<T>
+	const ordered_keys: { keyof<T> } = {}
 
 	for key in schema_dict do
-		table.insert(keys, key)
+		table.insert(ordered_keys, key)
 	end
 
-	sort_with_order(keys, order)
+	sort_with_order(ordered_keys, order)
 
 	return {
-		write = function(b: buffer, offset: number, input_dict: { [K]: V })
-			for _, key in keys do
-				local schema = schema_dict[key]
-				local value = input_dict[key]
+		write = function(b: buffer, offset: number, struct: T)
+			for _, key in ordered_keys do
+				const value_schema = schema_dict[key]
+				const value = struct[key]
 
-				schema.write(b, offset, value)
+				value_schema.write(b, offset, value)
 
-				offset += schema.size(value)
+				offset += value_schema.size(value)
 			end
 		end,
-		read = function(b: buffer, offset: number): { [K]: V }
-			local output_dict = {}
+		read = function(b: buffer, offset: number): T
+			const output_dict = {}
 
-			for _, key in keys do
-				local schema = schema_dict[key]
-				local value = schema.read(b, offset)
+			for _, key in ordered_keys do
+				const schema = schema_dict[key]
+				const value = schema.read(b, offset)
 
 				output_dict[key] = value
 
@@ -38,28 +39,30 @@ return function<K, V>(schema_dict: StructInfo<K, V>, order: { K }?): types.Schem
 
 			return output_dict
 		end,
-		size = function(input_dict: { [K]: V }): number
-			local byteCount = 0
+		size = function(struct: T): number
+			local byte_count = 0
 
-			for _, key in keys do
-				local schema = schema_dict[key]
-				local value = input_dict[key]
+			for _, key in ordered_keys do
+				const schema = schema_dict[key]
+				const value = struct[key]
 
-				byteCount += schema.size(value)
+				byte_count += schema.size(value)
 			end
 
-			return byteCount
+			return byte_count
 		end,
-		validate = function(value: unknown): boolean
-			if type(value) ~= "table" then
-				return false
+		validate = function(struct: unknown): (boolean, string?)
+			if type(struct) ~= "table" then
+				return false, `expected value of type table, got {type(struct)}`
 			end
 
-			value = value :: { [K]: V }
+			struct = struct :: T
 
-			for key, schema in schema_dict do
-				if not schema.validate(value[key]) then
-					return false
+			for key, value_schema in schema_dict do
+				local ok, err = value_schema.validate(struct[key])
+
+				if not ok then
+					return false, `invalid value for key {key}:\n\t{err}`
 				end
 			end
 
@@ -67,3 +70,5 @@ return function<K, V>(schema_dict: StructInfo<K, V>, order: { K }?): types.Schem
 		end,
 	}
 end
+
+return struct_schema
