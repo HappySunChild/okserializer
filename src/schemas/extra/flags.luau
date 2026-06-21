@@ -3,10 +3,12 @@ const types = require("../../types")
 const is_array = require("../../utility/is_array")
 
 const function flags_schema(flag_count: number): types.Schema<{ boolean }>
-	assert(flag_count <= 32, "Can't have more than 32 flags per flags schema.")
+	assert(flag_count <= 32, "can't have more than 32 flags per flags schema")
+
+	const byte_count = math.ceil(flag_count / 8)
 
 	return {
-		write = function(b: buffer, offset: number, flags_value: { boolean })
+		write = @native function(b: buffer, offset: number, flags_value: { boolean }): number
 			local value = 0
 
 			for i = 1, flag_count do
@@ -18,8 +20,10 @@ const function flags_schema(flag_count: number): types.Schema<{ boolean }>
 			end
 
 			buffer.writebits(b, offset * 8, flag_count, value)
+
+			return byte_count
 		end,
-		read = function(b: buffer, offset: number): { boolean }
+		read = @native function(b: buffer, offset: number): (number, { boolean })
 			const flags = table.create(flag_count, false) :: { boolean }
 			const value = buffer.readbits(b, offset * 8, flag_count)
 
@@ -27,10 +31,10 @@ const function flags_schema(flag_count: number): types.Schema<{ boolean }>
 				flags[i] = bit32.btest(value, 2 ^ (i - 1))
 			end
 
-			return flags
+			return byte_count, flags
 		end,
-		size = function(): number
-			return math.ceil(flag_count / 8)
+		alloc_size = @native function(): number
+			return byte_count
 		end,
 		validate = function(value: unknown): (boolean, string?)
 			if not is_array(value) then

@@ -1,21 +1,26 @@
-local types = require("../../types")
+const types = require("../../types")
 
-local Vector3_schema = require("./Vector3")
+const Vector3_schema = require("./Vector3")
 
 const function Ray_schema(vec_spec: types.NumberTypeSpec?): types.Schema<Ray>
-	local vec = Vector3_schema(vec_spec)
-	local vec_write, vec_read, vec_size = vec.write, vec.read, vec.size(Vector3.zero)
+	const vec = Vector3_schema(vec_spec)
+	const vec_write, vec_read, vec_size = vec.write, vec.read, vec.alloc_size(Vector3.zero)
+
+	const schema_size = vec_size * 2
 
 	return {
-		write = function(b: buffer, offset: number, value: Ray)
+		write = @native function(b: buffer, offset: number, value: Ray): number
 			vec_write(b, offset, value.Origin)
 			vec_write(b, offset + vec_size, value.Direction)
+			return schema_size
 		end,
-		read = function(b: buffer, offset: number): Ray
-			return Ray.new(vec_read(b, offset), vec_read(b, offset + vec_size))
+		read = @native function(b: buffer, offset: number): (number, Ray)
+			const _, origin = vec_read(b, offset)
+			const _, direction = vec_read(b, offset + vec_size)
+			return schema_size, Ray.new(origin, direction)
 		end,
-		size = function(): number
-			return vec_size * 2
+		alloc_size = @native function(): number
+			return schema_size
 		end,
 		validate = function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "Ray" then

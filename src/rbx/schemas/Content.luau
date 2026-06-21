@@ -1,35 +1,38 @@
-local specs = require("../../specs")
-local types = require("../../types")
+const specs = require("../../specs")
+const types = require("../../types")
 
-local string_schema = require("../../schemas/primitive/string")
+const string_schema = require("../../schemas/primitive/string")
 
-local uri_schema = string_schema(specs.u8)
-local uri_write, uri_read, uri_size = uri_schema.write, uri_schema.read, uri_schema.size
+const uri_schema = string_schema(specs.u8)
+const uri_write, uri_read, uri_alloc_size = uri_schema.write, uri_schema.read, uri_schema.alloc_size
 
-const Content_schema = {
-	write = function(b: buffer, offset: number, value: Content)
-		local source_type = value.SourceType
+const Content_schema: types.Schema<Content> = {
+	write = @native function(b: buffer, offset: number, value: Content): number
+		const source_type = value.SourceType
 
 		buffer.writeu8(b, offset, value.SourceType.Value)
 
 		if source_type == Enum.ContentSourceType.Uri then
-			uri_write(b, offset + 1, value.Uri or "")
-		end
-	end,
-	read = function(b: buffer, offset: number): Content
-		local source_type = Enum.ContentSourceType:FromValue(buffer.readu8(b, offset))
-
-		if source_type == Enum.ContentSourceType.Uri then
-			return Content.fromUri(uri_read(b, offset + 1))
+			return 1 + uri_write(b, offset + 1, value.Uri or "")
 		end
 
-		return Content.none
+		return 1
 	end,
-	size = function(value: Content): number
-		local source_type = value.SourceType
+	read = @native function(b: buffer, offset: number): (number, Content)
+		const source_type = Enum.ContentSourceType:FromValue(buffer.readu8(b, offset))
 
 		if source_type == Enum.ContentSourceType.Uri then
-			return 1 + uri_size(value.Uri or "")
+			const bytes_read, uri = uri_read(b, offset + 1)
+			return 1 + bytes_read, Content.fromUri(uri)
+		end
+
+		return 1, Content.none
+	end,
+	alloc_size = @native function(value: Content): number
+		const source_type = value.SourceType
+
+		if source_type == Enum.ContentSourceType.Uri then
+			return 1 + uri_alloc_size(value.Uri or "")
 		end
 
 		return 1
@@ -41,6 +44,6 @@ const Content_schema = {
 
 		return true, nil
 	end,
-} :: types.Schema<Content>
+}
 
 return Content_schema

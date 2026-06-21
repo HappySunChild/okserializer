@@ -8,19 +8,23 @@ const function buffer_schema(len_spec: types.NumberTypeSpec?): types.Schema<buff
 	const len_write, len_read, len_size = len.write, len.read, len.size
 
 	return {
-		write = function(b: buffer, offset: number, value: buffer)
-			len_write(b, offset, buffer.len(value))
-			buffer.writestring(b, offset + len_size, buffer.tostring(value))
+		write = @native function(b: buffer, offset: number, value: buffer): number
+			const count = buffer.len(value)
+
+			len_write(b, offset, count)
+			buffer.copy(b, offset + len_size, value)
+
+			return len_size + count
 		end,
-		read = function(b: buffer, offset: number): buffer
+		read = @native function(b: buffer, offset: number): (number, buffer)
 			const count = len_read(b, offset)
 			const new_buffer = buffer.create(count)
 
 			buffer.copy(new_buffer, 0, b, offset, count)
 
-			return new_buffer
+			return len_size + count, new_buffer
 		end,
-		size = function(value: buffer): number
+		alloc_size = @native function(value: buffer): number
 			return len_size + buffer.len(value) % (len.max + 1)
 		end,
 		validate = function(value: unknown): (boolean, string?)

@@ -1,13 +1,13 @@
-local types = require("../../types")
+const types = require("../../types")
 
-local flags_schema = require("../../schemas/extra/flags")
+const flags_schema = require("../../schemas/extra/flags")
 
-local data = flags_schema(6)
-local data_write, data_read = data.write, data.read
+const data = flags_schema(6)
+const data_write, data_read = data.write, data.read
 
-const Faces_schema = {
-	write = function(b: buffer, offset: number, value: Faces)
-		data_write(b, offset, {
+const Faces_schema: types.Schema<Faces> = {
+	write = function(b: buffer, offset: number, value: Faces): number
+		return data_write(b, offset, {
 			value.Top,
 			value.Bottom,
 			value.Left,
@@ -16,26 +16,27 @@ const Faces_schema = {
 			value.Back,
 		})
 	end,
-	read = function(b: buffer, offset: number): Faces
-		local data = data_read(b, offset)
+	read = function(b: buffer, offset: number): (number, Faces)
+		const bytes_read, data = data_read(b, offset)
 
-		local top = data[1] and Enum.NormalId.Top or nil
-		local bottom = data[2] and Enum.NormalId.Bottom or nil
-		local left = data[3] and Enum.NormalId.Left or nil
-		local right = data[4] and Enum.NormalId.Right or nil
-		local front = data[5] and Enum.NormalId.Front or nil
-		local back = data[6] and Enum.NormalId.Back or nil
+		const top = data[1] and Enum.NormalId.Top or nil
+		const bottom = data[2] and Enum.NormalId.Bottom or nil
+		const left = data[3] and Enum.NormalId.Left or nil
+		const right = data[4] and Enum.NormalId.Right or nil
+		const front = data[5] and Enum.NormalId.Front or nil
+		const back = data[6] and Enum.NormalId.Back or nil
 
-		return Faces.new(
-			top :: Enum.NormalId,
-			bottom :: Enum.NormalId,
-			left :: Enum.NormalId,
-			right :: Enum.NormalId,
-			front :: Enum.NormalId,
-			back :: Enum.NormalId
-		)
+		return bytes_read,
+			Faces.new(
+				top :: Enum.NormalId,
+				bottom :: Enum.NormalId,
+				left :: Enum.NormalId,
+				right :: Enum.NormalId,
+				front :: Enum.NormalId,
+				back :: Enum.NormalId
+			)
 	end,
-	size = function(): number
+	alloc_size = function(): number
 		return 1
 	end,
 	validate = function(value: unknown): (boolean, string?)
@@ -45,6 +46,6 @@ const Faces_schema = {
 
 		return true, nil
 	end,
-} :: types.Schema<Faces>
+}
 
 return Faces_schema

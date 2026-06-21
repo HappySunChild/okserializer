@@ -10,7 +10,7 @@ const function bitarray_schema(bit_width: number, len_spec: types.NumberTypeSpec
 	const len_write, len_read, len_size = len.write, len.read, len.size
 
 	return {
-		write = function(b: buffer, offset: number, value: { number })
+		write = @native function(b: buffer, offset: number, value: { number }): number
 			len_write(b, offset, #value)
 
 			local bit_offset = (offset + len_size) * 8
@@ -19,8 +19,10 @@ const function bitarray_schema(bit_width: number, len_spec: types.NumberTypeSpec
 				buffer.writebits(b, bit_offset, bit_width, num)
 				bit_offset += bit_width
 			end
+
+			return math.ceil(bit_offset / 8)
 		end,
-		read = function(b: buffer, offset: number): { number }
+		read = @native function(b: buffer, offset: number): (number, { number })
 			const count = len_read(b, offset)
 			const output = table.create(count, 0)
 
@@ -31,9 +33,9 @@ const function bitarray_schema(bit_width: number, len_spec: types.NumberTypeSpec
 				bit_offset += bit_width
 			end
 
-			return output
+			return math.ceil(bit_offset / 8), output
 		end,
-		size = function(value: { number }): number
+		alloc_size = @native function(value: { number }): number
 			return len_size + math.ceil(#value * bit_width / 8) % (len.max + 1)
 		end,
 		validate = function(value: unknown): (boolean, string?)

@@ -1,20 +1,21 @@
-local specs = require("../../specs")
-local types = require("../../types")
+const specs = require("../../specs")
+const types = require("../../types")
 
-local DEFAULT_VALUE_SPEC = specs.u16
+const DEFAULT_VALUE_SPEC = specs.u16
 
 const function EnumItem_schema(enumerator: Enum, value_spec: types.NumberTypeSpec?): types.Schema<EnumItem>
-	local value = if value_spec == nil then DEFAULT_VALUE_SPEC else value_spec
-	local value_write, value_read, value_size = value.write, value.read, value.size
+	const value = if value_spec == nil then DEFAULT_VALUE_SPEC else value_spec
+	const value_write, value_read, value_size = value.write, value.read, value.size
 
 	return {
-		write = function(b: buffer, offset: number, value: EnumItem)
+		write = @native function(b: buffer, offset: number, value: EnumItem): number
 			value_write(b, offset, value.Value)
+			return value_size
 		end,
-		read = function(b: buffer, offset: number): EnumItem
-			return enumerator:FromValue(value_read(b, offset))
+		read = @native function(b: buffer, offset: number): (number, EnumItem)
+			return value_size, enumerator:FromValue(value_read(b, offset))
 		end,
-		size = function(): number
+		alloc_size = @native function(): number
 			return value_size
 		end,
 		validate = function(value: unknown): (boolean, string?)

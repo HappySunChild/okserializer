@@ -1,11 +1,13 @@
-local types = require("../../types")
+const types = require("../../types")
 
-const null_schema = {
-	write = function() end,
-	read = function(): nil
-		return nil
+const null_schema: types.Schema<nil> = {
+	write = @native function(): number
+		return 0
 	end,
-	size = function(): number
+	read = @native function(): (number, nil)
+		return 0, nil
+	end,
+	alloc_size = @native function(): number
 		return 0
 	end,
 	validate = function(value: unknown): (boolean, string?)
@@ -13,8 +15,8 @@ const null_schema = {
 			return false, `expected value of type nil, got {type(value)}`
 		end
 
-		return true
+		return true, nil
 	end,
-} :: types.Schema<nil>
+}
 
 return null_schema

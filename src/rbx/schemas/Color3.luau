@@ -1,19 +1,21 @@
 local types = require("../../types")
 
-const Color3_schema = {
-	write = function(b: buffer, offset: number, value: Color3)
+const Color3_schema: types.Schema<Color3> = {
+	write = @native function(b: buffer, offset: number, value: Color3): number
 		buffer.writeu8(b, offset, value.R * 255)
 		buffer.writeu8(b, offset + 1, value.G * 255)
 		buffer.writeu8(b, offset + 2, value.B * 255)
+		return 3
 	end,
-	read = function(b: buffer, offset: number): Color3
-		return Color3.fromRGB(
-			buffer.readu8(b, offset),
-			buffer.readu8(b, offset + 1),
-			buffer.readu8(b, offset + 2)
-		)
+	read = @native function(b: buffer, offset: number): (number, Color3)
+		return 3,
+			Color3.fromRGB(
+				buffer.readu8(b, offset),
+				buffer.readu8(b, offset + 1),
+				buffer.readu8(b, offset + 2)
+			)
 	end,
-	size = function(): number
+	alloc_size = @native function(): number
 		return 3
 	end,
 	validate = function(value: unknown): (boolean, string?)
@@ -23,6 +25,6 @@ const Color3_schema = {
 
 		return true, nil
 	end,
-} :: types.Schema<Color3>
+}
 
 return Color3_schema

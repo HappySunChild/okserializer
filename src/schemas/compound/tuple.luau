@@ -4,41 +4,40 @@ const function tuple_schema<T...>(...: types.Schema<any>): types.Schema<T...>
 	const tuple_order = { ... }
 
 	return {
-		write = function(b: buffer, offset: number, ...: T...)
+		write = @native function(b: buffer, offset: number, ...: T...): number
 			local current_offset = offset
 
 			for index, schema in tuple_order do
 				const value = select(index, ...)
-				schema.write(b, current_offset, value)
-				current_offset += schema.size(value)
+				current_offset += schema.write(b, current_offset, value)
 			end
+
+			return current_offset - offset
 		end,
-		read = function(b: buffer, offset: number): T...
+		read = @native function(b: buffer, offset: number): (number, T...)
 			const output = {}
 			local current_offset = offset
 
 			for index, schema in tuple_order do
-				const value = schema.read(b, current_offset)
+				const bytes_read, value = schema.read(b, current_offset)
 
 				output[index] = value
-
-				current_offset += schema.size(value)
+				current_offset += bytes_read
 			end
 
-			return unpack(output, 1, #tuple_order)
+			return current_offset - offset, unpack(output, 1, #tuple_order)
 		end,
-		size = function(...: T...): number
+		alloc_size = @native function(...: T...): number
 			local total_size = 0
 
 			for index, schema in tuple_order do
 				const value = select(index, ...)
-
-				total_size += schema.size(value)
+				total_size += schema.alloc_size(value)
 			end
 
 			return total_size
 		end,
-		validate = function(...: unknown): boolean
+		validate = function(...: unknown): (boolean, string?)
 			for index, schema in tuple_order do
 				local ok, err = schema.validate(select(index, ...))
 
@@ -47,7 +46,7 @@ const function tuple_schema<T...>(...: types.Schema<any>): types.Schema<T...>
 				end
 			end
 
-			return true
+			return true, nil
 		end,
 	}
 end

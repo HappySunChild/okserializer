@@ -1,24 +1,29 @@
-local types = require("../../types")
+const types = require("../../types")
 
-local Vector3_schema = require("./Vector3")
+const Vector3_schema = require("./Vector3")
 
 const function Region3_schema(vec_spec: types.NumberTypeSpec?): types.Schema<Region3>
-	local vec = Vector3_schema(vec_spec)
-	local vec_write, vec_read, vec_size = vec.write, vec.read, vec.size(Vector3.zero)
+	const vec = Vector3_schema(vec_spec)
+	const vec_write, vec_read, vec_size = vec.write, vec.read, vec.alloc_size(Vector3.zero)
+
+	const schema_size = vec_size * 2
 
 	return {
-		write = function(b: buffer, offset: number, value: Region3)
-			local reg_cf, reg_size = value.CFrame, value.Size
-			local reg_min, reg_max = reg_cf * -reg_size / 2, reg_cf * reg_size / 2
+		write = @native function(b: buffer, offset: number, value: Region3): number
+			const reg_cf, reg_size = value.CFrame, value.Size
+			const reg_min, reg_max = reg_cf * -reg_size / 2, reg_cf * reg_size / 2
 
 			vec_write(b, offset, reg_min)
 			vec_write(b, offset + vec_size, reg_max)
+			return schema_size
 		end,
-		read = function(b: buffer, offset: number): Region3
-			return Region3.new(vec_read(b, offset), vec_read(b, offset + vec_size))
+		read = @native function(b: buffer, offset: number): (number, Region3)
+			const _, min = vec_read(b, offset)
+			const _, max = vec_read(b, offset + vec_size)
+			return schema_size, Region3.new(min, max)
 		end,
-		size = function(value: Region3): number
-			return vec_size * 2
+		alloc_size = @native function(value: Region3): number
+			return schema_size
 		end,
 		validate = function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "Region3" then

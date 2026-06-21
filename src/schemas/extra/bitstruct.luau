@@ -14,46 +14,56 @@ const function bitstruct_schema<T>(width_dict: { [keyof<T>]: number }, order: { 
 
 	for key, width in width_dict do
 		total_bit_count += width
-		table.insert(keys, key :: keyof<T>)
+		table.insert(keys, key :: any)
 	end
 
-	sort_with_order(keys, order)
+	sort_with_order(keys :: { any }, order)
 
 	const byte_count = math.ceil(total_bit_count / 8)
 
 	return {
-		write = function(b: buffer, offset: number, input_dict: T)
+		write = @native function(b: buffer, offset: number, in_struct: T | any): number
 			local bit_offset = offset * 8
 
 			for _, key in keys do
 				const bit_width = width_dict[key]
-				const value = input_dict[key] or 0 -- false/nil is encoded as 0
+				const value = in_struct[key] or 0 -- false/nil is encoded as 0
 
 				buffer.writebits(b, bit_offset, bit_width, value)
 
 				bit_offset += bit_width
 			end
+
+			return byte_count
 		end,
-		read = function(b: buffer, offset: number): T
-			const output_dict = {}
+		read = @native function(b: buffer, offset: number): (number, T)
+			const out_struct = {}
 			local bit_offset = offset * 8
 
 			for _, key in keys do
 				const bit_width = width_dict[key]
 
-				output_dict[key] = buffer.readbits(b, bit_offset, bit_width)
-
+				out_struct[key] = buffer.readbits(b, bit_offset, bit_width)
 				bit_offset += bit_width
 			end
 
-			return output_dict
+			return byte_count, out_struct
 		end,
-		size = function(): number
+		alloc_size = @native function(): number
 			return byte_count
 		end,
-		validate = function(value: unknown): (boolean, string?)
-			if type(value) ~= "table" then
-				return false, `expected value of type table, got {type(value)}`
+		validate = function(in_struct: any): (boolean, string?)
+			if type(in_struct) ~= "table" then
+				return false, `expected value of type table, got {type(in_struct)}`
+			end
+
+			for key in width_dict do
+				const value_type = type(in_struct[key])
+
+				if value_type ~= "number" then
+					return false,
+						`invalid value for key {key}; expected value of type number, got {value_type}`
+				end
 			end
 
 			return true, nil

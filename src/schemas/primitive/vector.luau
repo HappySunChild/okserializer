@@ -8,19 +8,21 @@ const function vector_schema(component_spec: types.NumberTypeSpec?): types.Schem
 	const component_write, component_read, component_size = component.write, component.read, component.size
 
 	return {
-		write = function(b: buffer, offset: number, value: vector)
+		write = @native function(b: buffer, offset: number, value: vector): number
 			component_write(b, offset, value.x)
 			component_write(b, offset + component_size, value.y)
 			component_write(b, offset + component_size * 2, value.z)
+			return component_size * 3
 		end,
-		read = function(b: buffer, offset: number): vector
-			return vector.create(
-				component_read(b, offset),
-				component_read(b, offset + component_size),
-				component_read(b, offset + component_size * 2)
-			)
+		read = @native function(b: buffer, offset: number): (number, vector)
+			return component_size * 3,
+				vector.create(
+					component_read(b, offset),
+					component_read(b, offset + component_size),
+					component_read(b, offset + component_size * 2)
+				)
 		end,
-		size = function(): number
+		alloc_size = @native function(): number
 			return component_size * 3
 		end,
 		validate = function(value: unknown): (boolean, string?)

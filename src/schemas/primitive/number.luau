@@ -8,9 +8,14 @@ const function number_schema(num_spec: types.NumberTypeSpec?): types.Schema<numb
 	const num_write, num_read, num_size, num_min, num_max = num.write, num.read, num.size, num.min, num.max
 
 	return {
-		write = num_write,
-		read = num_read,
-		size = function(): number
+		write = @native function(b: buffer, offset: number, value: number): number
+			num_write(b, offset, value)
+			return num_size
+		end,
+		read = @native function(b: buffer, offset: number): (number, number)
+			return num_size, num_read(b, offset)
+		end,
+		alloc_size = function(): number
 			return num_size
 		end,
 		validate = function(value: unknown): (boolean, string?)

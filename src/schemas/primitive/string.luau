@@ -8,16 +8,20 @@ const function string_schema(len_spec: types.NumberTypeSpec?): types.Schema<stri
 	const len_write, len_read, len_size, len_max = len.write, len.read, len.size, len.max
 
 	return {
-		write = function(b: buffer, offset: number, value: string)
+		write = @native function(b: buffer, offset: number, value: string): number
 			const count = string.len(value)
 
 			len_write(b, offset, count)
 			buffer.writestring(b, offset + len_size, value, count)
+
+			return len_size + count
 		end,
-		read = function(b: buffer, offset: number): string
-			return buffer.readstring(b, offset + len_size, len_read(b, offset))
+		read = @native function(b: buffer, offset: number): (number, string)
+			const count = len_read(b, offset)
+
+			return len_size + count, buffer.readstring(b, offset + len_size, count)
 		end,
-		size = function(value: string): number
+		alloc_size = @native function(value: string): number
 			return len_size + string.len(value) % (len_max + 1)
 		end,
 		validate = function(value: unknown): (boolean, string?)

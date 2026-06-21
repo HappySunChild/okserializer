@@ -1,25 +1,28 @@
-local specs = require("../../specs")
-local types = require("../../types")
+const specs = require("../../specs")
+const types = require("../../types")
 
-local time = specs.s16
-local time_write, time_read, time_size = time.write, time.read, time.size
+const time = specs.s16
+const time_write, time_read, time_size = time.write, time.read, time.size
 
-local color = require("./Color3")
-local color_write, color_read, color_size = color.write, color.read, 3
+const color = require("./Color3")
+const color_write, color_read, color_size = color.write, color.read, 3
 
-const ColorSequenceKeypoint_schema = {
-	write = function(b: buffer, offset: number, value: ColorSequenceKeypoint)
+const schema_size = time_size + color_size
+
+const ColorSequenceKeypoint_schema: types.Schema<ColorSequenceKeypoint> = {
+	write = @native function(b: buffer, offset: number, value: ColorSequenceKeypoint): number
 		time_write(b, offset, value.Time)
 		color_write(b, offset + color_size, value.Value)
+		return schema_size
 	end,
-	read = function(b: buffer, offset: number): ColorSequenceKeypoint
-		local keypoint_time = time_read(b, offset)
-		local keypoint_color = color_read(b, offset + time_size)
+	read = @native function(b: buffer, offset: number): (number, ColorSequenceKeypoint)
+		const keypoint_time = time_read(b, offset)
+		const _, keypoint_color = color_read(b, offset + time_size)
 
-		return ColorSequenceKeypoint.new(keypoint_time, keypoint_color)
+		return schema_size, ColorSequenceKeypoint.new(keypoint_time, keypoint_color)
 	end,
-	size = function(): number
-		return time_size + color_size
+	alloc_size = @native function(): number
+		return schema_size
 	end,
 	validate = function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "ColorSequenceKeypoint" then
@@ -28,6 +31,6 @@ const ColorSequenceKeypoint_schema = {
 
 		return true, nil
 	end,
-} :: types.Schema<ColorSequenceKeypoint>
+}
 
 return ColorSequenceKeypoint_schema

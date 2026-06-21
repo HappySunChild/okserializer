@@ -1,21 +1,26 @@
-local types = require("../../types")
+const types = require("../../types")
 
-local Vector2_schema = require("./Vector2")
+const Vector2_schema = require("./Vector2")
 
 const function Rect_schema(component_spec: types.NumberTypeSpec?): types.Schema<Rect>
-	local vec = Vector2_schema(component_spec)
-	local vec_write, vec_read, vec_size = vec.write, vec.read, vec.size(Vector2.zero)
+	const vec = Vector2_schema(component_spec)
+	const vec_write, vec_read, vec_size = vec.write, vec.read, vec.alloc_size(Vector2.zero)
+
+	const schema_size = vec_size * 2
 
 	return {
-		write = function(b: buffer, offset: number, value: Rect)
+		write = function(b: buffer, offset: number, value: Rect): number
 			vec_write(b, offset, value.Min)
 			vec_write(b, offset + vec_size, value.Max)
+			return schema_size
 		end,
-		read = function(b: buffer, offset: number): Rect
-			return Rect.new(vec_read(b, offset), vec_read(b, offset + vec_size))
+		read = function(b: buffer, offset: number): (number, Rect)
+			const _, min = vec_read(b, offset)
+			const _, max = vec_read(b, offset + vec_size)
+			return schema_size, Rect.new(min, max)
 		end,
-		size = function(value: Rect): number
-			return vec_size * 2
+		alloc_size = function(value: Rect): number
+			return schema_size
 		end,
 
 		validate = function(value: unknown): (boolean, string?)

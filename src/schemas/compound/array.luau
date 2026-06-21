@@ -9,42 +9,45 @@ const function array_schema<T>(schema: types.Schema<T>, len_spec: types.NumberTy
 	const len = if len_spec == nil then DEFAULT_LEN_SPEC else len_spec
 	const len_write, len_read, len_size = len.write, len.read, len.size
 
-	const schema_write, schema_read, schema_size, schema_validate =
-		schema.write, schema.read, schema.size, schema.validate
+	const schema_write, schema_read, schema_alloc_size, schema_validate =
+		schema.write, schema.read, schema.alloc_size, schema.validate
 
 	return {
-		write = function(b: buffer, offset: number, array: { T })
+		write = @native function(b: buffer, offset: number, array: { T }): number
 			len_write(b, offset, #array)
 
-			offset += len_size
+			local current_offset = offset + len_size
 
 			for _, value in array do
-				schema_write(b, offset, value)
-				offset += schema_size(value)
+				const bytes_written = schema_write(b, current_offset, value)
+				current_offset += bytes_written
 			end
+
+			return current_offset - offset
 		end,
-		read = function(b: buffer, offset: number): { T }
+		read = @native function(b: buffer, offset: number): (number, { T })
 			const count = len_read(b, offset)
-
-			offset += len_size
-
 			const output = table.create(count)
 
+			local current_offset = offset + len_size
+
 			for i = 1, count do
-				output[i] = schema_read(b, offset)
-				offset += schema_size(output[i])
+				const bytes_read, value = schema_read(b, current_offset)
+				output[i] = value
+
+				current_offset += bytes_read
 			end
 
-			return output
+			return current_offset - offset, output
 		end,
-		size = function(array: { T }): number
-			local byte_count = len_size
+		alloc_size = @native function(array: { T }): number
+			local total_byte_count = len_size
 
 			for _, value in array do
-				byte_count += schema_size(value)
+				total_byte_count += schema_alloc_size(value)
 			end
 
-			return byte_count
+			return total_byte_count
 		end,
 		validate = function(array: unknown): (boolean, string?)
 			if not is_array(array) then

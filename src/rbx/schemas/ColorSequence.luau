@@ -1,21 +1,22 @@
-local specs = require("../../specs")
-local types = require("../../types")
+const specs = require("../../specs")
+const types = require("../../types")
 
-local ColorSequenceKeypoint_schema = require("./ColorSequenceKeypoint")
-local array_schema = require("../../schemas/compound/array")
+const ColorSequenceKeypoint_schema = require("./ColorSequenceKeypoint")
+const array_schema = require("../../schemas/compound/array")
 
-local data = array_schema(ColorSequenceKeypoint_schema, specs.u8)
-local data_write, data_read, data_size = data.write, data.read, data.size
+const data = array_schema(ColorSequenceKeypoint_schema, specs.u8)
+const data_write, data_read, data_alloc_size = data.write, data.read, data.alloc_size
 
-const ColorSequence_schema = {
-	write = function(b: buffer, offset: number, value: ColorSequence)
-		data_write(b, offset, value.Keypoints)
+const ColorSequence_schema: types.Schema<ColorSequence> = {
+	write = @native function(b: buffer, offset: number, value: ColorSequence): number
+		return data_write(b, offset, value.Keypoints)
 	end,
-	read = function(b: buffer, offset: number): ColorSequence
-		return ColorSequence.new(data_read(b, offset))
+	read = @native function(b: buffer, offset: number): (number, ColorSequence)
+		const bytes_read, keypoints = data_read(b, offset)
+		return bytes_read, ColorSequence.new(keypoints)
 	end,
-	size = function(value: ColorSequence): number
-		return data_size(value.Keypoints)
+	alloc_size = @native function(value: ColorSequence): number
+		return data_alloc_size(value.Keypoints)
 	end,
 	validate = function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "ColorSequence" then
@@ -24,6 +25,6 @@ const ColorSequence_schema = {
 
 		return true, nil
 	end,
-} :: types.Schema<ColorSequence>
+}
 
 return ColorSequence_schema

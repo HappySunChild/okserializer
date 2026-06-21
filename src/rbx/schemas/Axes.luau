@@ -1,13 +1,13 @@
-local types = require("../../types")
+const types = require("../../types")
 
-local flags_schema = require("../../schemas/extra/flags")
+const flags_schema = require("../../schemas/extra/flags")
 
-local data = flags_schema(9)
-local data_write, data_read = data.write, data.read
+const data = flags_schema(9)
+const data_write, data_read = data.write, data.read
 
-const Axes_schema = {
-	write = function(b: buffer, offset: number, value: Axes)
-		data_write(b, offset, {
+const Axes_schema: types.Schema<Axes> = {
+	write = @native function(b: buffer, offset: number, value: Axes): number
+		return data_write(b, offset, {
 			value.X,
 			value.Y,
 			value.Z,
@@ -20,33 +20,34 @@ const Axes_schema = {
 			value.Back,
 		})
 	end,
-	read = function(b: buffer, offset: number): Axes
-		local data = data_read(b, offset)
+	read = @native function(b: buffer, offset: number): (number, Axes)
+		const bytes_read, data = data_read(b, offset)
 
-		local x = data[1] and Enum.Axis.X or nil
-		local y = data[2] and Enum.Axis.Y or nil
-		local z = data[3] and Enum.Axis.Z or nil
+		const x = data[1] and Enum.Axis.X or nil
+		const y = data[2] and Enum.Axis.Y or nil
+		const z = data[3] and Enum.Axis.Z or nil
 
-		local top = data[4] and Enum.NormalId.Top or nil
-		local bottom = data[5] and Enum.NormalId.Bottom or nil
-		local left = data[6] and Enum.NormalId.Left or nil
-		local right = data[7] and Enum.NormalId.Right or nil
-		local front = data[8] and Enum.NormalId.Front or nil
-		local back = data[9] and Enum.NormalId.Back or nil
+		const top = data[4] and Enum.NormalId.Top or nil
+		const bottom = data[5] and Enum.NormalId.Bottom or nil
+		const left = data[6] and Enum.NormalId.Left or nil
+		const right = data[7] and Enum.NormalId.Right or nil
+		const front = data[8] and Enum.NormalId.Front or nil
+		const back = data[9] and Enum.NormalId.Back or nil
 
-		return Axes.new(
-			x :: Enum.Axis,
-			y :: Enum.Axis,
-			z :: Enum.Axis,
-			top :: Enum.NormalId,
-			bottom :: Enum.NormalId,
-			left :: Enum.NormalId,
-			right :: Enum.NormalId,
-			front :: Enum.NormalId,
-			back :: Enum.NormalId
-		)
+		return bytes_read,
+			Axes.new(
+				x :: Enum.Axis,
+				y :: Enum.Axis,
+				z :: Enum.Axis,
+				top :: Enum.NormalId,
+				bottom :: Enum.NormalId,
+				left :: Enum.NormalId,
+				right :: Enum.NormalId,
+				front :: Enum.NormalId,
+				back :: Enum.NormalId
+			)
 	end,
-	size = function(): number
+	alloc_size = @native function(): number
 		return 2
 	end,
 	validate = function(value: unknown): (boolean, string?)
@@ -56,6 +57,6 @@ const Axes_schema = {
 
 		return true, nil
 	end,
-} :: types.Schema<Axes>
+}
 
 return Axes_schema

@@ -1,27 +1,28 @@
-local types = require("../../types")
+const types = require("../../types")
 
-local lookup = require("@self/lookup")
-local to_index, to_enum = lookup.to_index, lookup.to_enum
+const lookup = require("@self/lookup")
+const to_index, to_enum = lookup.to_index, lookup.to_enum
 
-const Enum_schema = {
-	write = function(b: buffer, offset: number, value: EnumItem)
+const Enum_schema: types.Schema<EnumItem> = {
+	write = @native function(b: buffer, offset: number, value: EnumItem): number
 		buffer.writeu16(b, offset, to_index(value.EnumType))
 		buffer.writeu16(b, offset + 2, value.Value)
+		return 4
 	end,
-	read = function(b: buffer, offset: number): EnumItem
-		return to_enum(buffer.readu16(b, offset)):FromValue(buffer.readu16(b, offset + 2))
+	read = @native function(b: buffer, offset: number): (number, EnumItem)
+		return 4, to_enum(buffer.readu16(b, offset)):FromValue(buffer.readu16(b, offset + 2))
 	end,
-	size = function(): number
+	alloc_size = @native function(): number
 		return 4
 	end,
 
-	validate = function(value: unknown): (boolean, string)
+	validate = function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "EnumItem" then
 			return false, `expected value of type EnumItem, got {typeof(value)}`
 		end
 
 		return true, nil
 	end,
-} :: types.Schema<EnumItem>
+}
 
 return Enum_schema

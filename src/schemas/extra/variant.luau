@@ -13,7 +13,7 @@ const function variant_schema<T>(set: { T }): types.Schema<T>
 	end
 
 	return {
-		write = function(b: buffer, offset: number, value: T)
+		write = @native function(b: buffer, offset: number, value: T): number
 			const index = values_to_index[value]
 
 			if index == nil then
@@ -21,8 +21,10 @@ const function variant_schema<T>(set: { T }): types.Schema<T>
 			end
 
 			write(b, offset, index)
+
+			return size
 		end,
-		read = function(b: buffer, offset: number): T
+		read = @native function(b: buffer, offset: number): (number, T)
 			const index = read(b, offset)
 			const value = set[index]
 
@@ -30,9 +32,9 @@ const function variant_schema<T>(set: { T }): types.Schema<T>
 				error(`invalid set index read {index}`)
 			end
 
-			return value
+			return size, value
 		end,
-		size = function(): number
+		alloc_size = @native function(): number
 			return size
 		end,
 		validate = function(value: unknown): (boolean, string?)
@@ -40,7 +42,7 @@ const function variant_schema<T>(set: { T }): types.Schema<T>
 				return false, "cannot store nil in a variant"
 			end
 
-			if values_to_index[value] == nil then
+			if values_to_index[value :: any] == nil then
 				return false, `value of type {type(value)} ({value}) not in variant`
 			end
 

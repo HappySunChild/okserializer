@@ -19,7 +19,7 @@ const function union_schema(...: types.Schema<any>): types.Schema<any>
 	const id_write, id_read, id_size = id.write, id.read, id.size
 
 	return {
-		write = function(b: buffer, offset: number, value: any)
+		write = @native function(b: buffer, offset: number, value: any): number
 			const index, schema = determine_schema(value, schemas)
 
 			if index == nil or schema == nil then
@@ -28,26 +28,28 @@ const function union_schema(...: types.Schema<any>): types.Schema<any>
 
 			id_write(b, offset, index)
 
-			schema.write(b, offset + id_size, value)
+			return id_size + schema.write(b, offset + id_size, value)
 		end,
-		read = function(b: buffer, offset: number): any
+		read = @native function(b: buffer, offset: number): (number, ...any)
 			const index = id_read(b, offset)
 			const schema = schemas[index]
 
-			return schema.read(b, offset + id_size)
+			const info = { schema.read(b, offset + id_size) }
+
+			return id_size + info[1], table.unpack(info, 2)
 		end,
-		size = function(value: any): number
+		alloc_size = @native function(value: any): number
 			const index, schema = determine_schema(value, schemas)
 
 			if index == nil or schema == nil then
 				error(`no valid schema available in union for value of type {typeof(value)} (value: {value})`)
 			end
 
-			const size = schema.size(value)
+			const value_size = schema.alloc_size(value)
 
-			return id_size + size
+			return id_size + value_size
 		end,
-		validate = function(value: unknown): boolean
+		validate = function(value: unknown): (boolean, string?)
 			const index, schema = determine_schema(value, schemas)
 
 			if index == nil or schema == nil then

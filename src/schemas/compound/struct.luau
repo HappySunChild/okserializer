@@ -12,61 +12,64 @@ const function struct_schema<T>(
 		table.insert(ordered_keys, key)
 	end
 
-	sort_with_order(ordered_keys, order)
+	sort_with_order(ordered_keys :: { any }, order) -- casting to any because i don't know what it wants from me
 
 	return {
-		write = function(b: buffer, offset: number, struct: T)
+		write = @native function(b: buffer, offset: number, in_struct: T | any): number
+			local current_offset = offset
+
 			for _, key in ordered_keys do
 				const value_schema = schema_dict[key]
-				const value = struct[key]
+				const value = in_struct[key]
 
-				value_schema.write(b, offset, value)
-
-				offset += value_schema.size(value)
+				current_offset += value_schema.write(b, current_offset, value)
 			end
+
+			return current_offset - offset
 		end,
-		read = function(b: buffer, offset: number): T
-			const output_dict = {}
+		read = @native function(b: buffer, offset: number): (number, T)
+			const out_struct = {}
+
+			local current_offset = offset
 
 			for _, key in ordered_keys do
 				const schema = schema_dict[key]
-				const value = schema.read(b, offset)
+				const bytes_read, value = schema.read(b, current_offset)
 
-				output_dict[key] = value
-
-				offset += schema.size(value)
+				out_struct[key] = value
+				current_offset += bytes_read
 			end
 
-			return output_dict
+			return current_offset - offset, out_struct
 		end,
-		size = function(struct: T): number
-			local byte_count = 0
+		alloc_size = @native function(in_struct: T | any): number
+			local total_byte_count = 0
 
 			for _, key in ordered_keys do
-				const schema = schema_dict[key]
-				const value = struct[key]
+				const value_schema = schema_dict[key]
+				const value = in_struct[key]
 
-				byte_count += schema.size(value)
+				total_byte_count += value_schema.alloc_size(value)
 			end
 
-			return byte_count
+			return total_byte_count
 		end,
-		validate = function(struct: unknown): (boolean, string?)
-			if type(struct) ~= "table" then
-				return false, `expected value of type table, got {type(struct)}`
+		validate = function(in_struct: unknown): (boolean, string?)
+			if type(in_struct) ~= "table" then
+				return false, `expected value of type table, got {type(in_struct)}`
 			end
 
-			struct = struct :: T
+			in_struct = in_struct :: T | any
 
 			for key, value_schema in schema_dict do
-				local ok, err = value_schema.validate(struct[key])
+				local ok, err = value_schema.validate(in_struct[key])
 
 				if not ok then
 					return false, `invalid value for key {key}:\n\t{err}`
 				end
 			end
 
-			return true
+			return true, nil
 		end,
 	}
 end

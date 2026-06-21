@@ -1,24 +1,29 @@
-local types = require("../../types")
+const types = require("../../types")
 
-local UDim_schema = require("./UDim")
+const UDim_schema = require("./UDim")
 
 const function UDim2_schema(
 	scale_spec: types.NumberTypeSpec?,
 	offset_spec: types.NumberTypeSpec?
 ): types.Schema<UDim2>
-	local udim = UDim_schema(scale_spec, offset_spec)
-	local udim_write, udim_read, udim_size = udim.write, udim.read, udim.size(UDim.new())
+	const udim = UDim_schema(scale_spec, offset_spec)
+	const udim_write, udim_read, udim_size = udim.write, udim.read, udim.alloc_size(UDim.new())
+
+	const schema_size = udim_size * 2
 
 	return {
-		write = function(b: buffer, offset: number, value: UDim2)
+		write = @native function(b: buffer, offset: number, value: UDim2): number
 			udim_write(b, offset, value.X)
 			udim_write(b, offset + udim_size, value.Y)
+			return schema_size
 		end,
-		read = function(b: buffer, offset: number): UDim2
-			return UDim2.new(udim_read(b, offset), udim_read(b, offset + udim_size))
+		read = @native function(b: buffer, offset: number): (number, UDim2)
+			const _, x = udim_read(b, offset)
+			const _, y = udim_read(b, offset + udim_size)
+			return schema_size, UDim2.new(x, y)
 		end,
-		size = function(value: UDim2): number
-			return udim_size * 2
+		alloc_size = @native function(value: UDim2): number
+			return schema_size
 		end,
 		validate = function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "UDim2" then

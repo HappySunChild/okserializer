@@ -2,15 +2,21 @@ const types = require("../../types")
 
 const function void_schema(void_count: number): types.Schema<nil>
 	return {
-		write = function() end,
-		read = function()
-			return nil
+		write = function(): number
+			return void_count
 		end,
-		size = function(): number
+		read = function(): (number, nil)
+			return void_count, nil
+		end,
+		alloc_size = function(): number
 			return void_count
 		end,
 		validate = function(value: unknown): (boolean, string?)
-			return value == nil, nil
+			if value ~= nil then
+				return false, `can't write to void`
+			end
+
+			return true, nil
 		end,
 	}
 end
