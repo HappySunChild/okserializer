@@ -54,7 +54,7 @@ const function struct_schema<T>(
 
 			return total_byte_count
 		end,
-		validate = function(in_struct: unknown): (boolean, string?)
+		validate = @native function(in_struct: unknown): (boolean, string?)
 			if type(in_struct) ~= "table" then
 				return false, `expected value of type table, got {type(in_struct)}`
 			end

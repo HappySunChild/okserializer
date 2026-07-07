@@ -39,7 +39,7 @@ const function TweenInfo_schema(
 	const schema_size = tweeninfo_size + repeat_count_size + delay_size + time_size
 
 	return {
-		write = function(b: buffer, offset: number, value: TweenInfo): number
+		write = @native function(b: buffer, offset: number, value: TweenInfo): number
 			tweeninfo_write(b, offset, {
 				direction = value.EasingDirection.Value,
 				style = value.EasingStyle.Value,
@@ -58,7 +58,7 @@ const function TweenInfo_schema(
 
 			return schema_size
 		end,
-		read = function(b: buffer, offset: number): (number, TweenInfo)
+		read = @native function(b: buffer, offset: number): (number, TweenInfo)
 			const _, info = tweeninfo_read(b, offset)
 			offset += tweeninfo_size
 
@@ -80,10 +80,10 @@ const function TweenInfo_schema(
 					delay_time
 				)
 		end,
-		alloc_size = function(value: TweenInfo): number
+		alloc_size = @native function(value: TweenInfo): number
 			return schema_size
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "TweenInfo" then
 				return false, `expected value of type TweenInfo, got {typeof(value)}`
 			end

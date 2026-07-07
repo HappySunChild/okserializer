@@ -52,7 +52,7 @@ const function bitstruct_schema<T>(width_dict: { [keyof<T>]: number }, order: { 
 		alloc_size = @native function(): number
 			return byte_count
 		end,
-		validate = function(in_struct: any): (boolean, string?)
+		validate = @native function(in_struct: any): (boolean, string?)
 			if type(in_struct) ~= "table" then
 				return false, `expected value of type table, got {type(in_struct)}`
 			end

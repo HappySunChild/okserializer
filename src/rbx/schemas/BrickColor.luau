@@ -216,26 +216,28 @@ for index, id in BRICKCOLOR_IDS do
 	BRICKCOLOR_ID_TO_INDEX[id] = index
 end
 
+@native
 const function to_index(brickcolor: BrickColor): number
 	return BRICKCOLOR_ID_TO_INDEX[brickcolor.Number]
 end
 
+@native
 const function to_brickcolor(index: number): BrickColor
 	return BrickColor.new(BRICKCOLOR_IDS[index])
 end
 
 const BrickColor_schema: types.Schema<BrickColor> = {
-	write = function(b: buffer, offset: number, value: BrickColor): number
+	write = @native function(b: buffer, offset: number, value: BrickColor): number
 		buffer.writeu8(b, offset, to_index(value))
 		return 1
 	end,
-	read = function(b: buffer, offset: number): (number, BrickColor)
+	read = @native function(b: buffer, offset: number): (number, BrickColor)
 		return 1, to_brickcolor(buffer.readu8(b, offset))
 	end,
-	alloc_size = function(): number
+	alloc_size = @native function(): number
 		return 1
 	end,
-	validate = function(value: unknown): (boolean, string?)
+	validate = @native function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "BrickColor" then
 			return false, `expected value of type BrickColor, got {typeof(value)}`
 		end

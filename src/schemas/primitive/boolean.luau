@@ -11,7 +11,7 @@ const boolean_schema: types.Schema<boolean> = {
 	alloc_size = @native function(): number
 		return 1
 	end,
-	validate = function(value: unknown): (boolean, string?)
+	validate = @native function(value: unknown): (boolean, string?)
 		if type(value) ~= "boolean" then
 			return false, `expected value of type boolean, got {type(value)}`
 		end

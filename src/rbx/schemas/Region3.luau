@@ -25,7 +25,7 @@ const function Region3_schema(vec_spec: types.NumberTypeSpec?): types.Schema<Reg
 		alloc_size = @native function(value: Region3): number
 			return schema_size
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "Region3" then
 				return false, `expected value of type Region3, got {typeof(value)}`
 			end

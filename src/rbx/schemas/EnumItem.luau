@@ -18,7 +18,7 @@ const function EnumItem_schema(enumerator: Enum, value_spec: types.NumberTypeSpe
 		alloc_size = @native function(): number
 			return value_size
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "EnumItem" then
 				return false, `expected value of type EnumItem, got {typeof(value)}`
 			end

@@ -33,7 +33,7 @@ const function termstring_schema(term: string?): types.Schema<string>
 		alloc_size = @native function(value: string): number
 			return term_len + next_terminator(value, n_term)
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			if type(value) ~= "string" then
 				return false, `expected value of type string, got {type(value)}`
 			end

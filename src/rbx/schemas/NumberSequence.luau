@@ -24,7 +24,7 @@ const function NumberSequence_schema(
 		alloc_size = @native function(value: NumberSequence): number
 			return data_alloc_size(value.Keypoints)
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "NumberSequence" then
 				return false, `expected value of type NumberSequence, got {typeof(value)}`
 			end

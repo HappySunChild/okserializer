@@ -24,7 +24,7 @@ const function string_schema(len_spec: types.NumberTypeSpec?): types.Schema<stri
 		alloc_size = @native function(value: string): number
 			return len_size + string.len(value) % (len_max + 1)
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			if type(value) ~= "string" then
 				return false, `expected value of type string, got {type(value)}`
 			end

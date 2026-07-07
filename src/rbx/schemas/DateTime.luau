@@ -10,7 +10,7 @@ const DateTime_schema: types.Schema<DateTime> = {
 	alloc_size = @native function(value: DateTime): number
 		return 8
 	end,
-	validate = function(value: unknown): (boolean, string?)
+	validate = @native function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "DateTime" then
 			return false, `expected value of type DateTime, got {typeof(value)}`
 		end

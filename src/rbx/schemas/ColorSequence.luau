@@ -18,7 +18,7 @@ const ColorSequence_schema: types.Schema<ColorSequence> = {
 	alloc_size = @native function(value: ColorSequence): number
 		return data_alloc_size(value.Keypoints)
 	end,
-	validate = function(value: unknown): (boolean, string?)
+	validate = @native function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "ColorSequence" then
 			return false, `expected value of type ColorSequence, got {typeof(value)}`
 		end

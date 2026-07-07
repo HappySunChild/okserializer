@@ -37,7 +37,7 @@ const Content_schema: types.Schema<Content> = {
 
 		return 1
 	end,
-	validate = function(value: unknown): (boolean, string?)
+	validate = @native function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "Content" then
 			return false, `expected value of type Content, got {typeof(value)}`
 		end

@@ -27,7 +27,7 @@ const Font_schema: types.Schema<Font> = {
 		return 3 + family_len
 	end,
 
-	validate = function(value: unknown): (boolean, string?)
+	validate = @native function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "Font" then
 			return false, `expected value of type Font, got {typeof(value)}`
 		end

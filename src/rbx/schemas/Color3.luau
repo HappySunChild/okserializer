@@ -18,7 +18,7 @@ const Color3_schema: types.Schema<Color3> = {
 	alloc_size = @native function(): number
 		return 3
 	end,
-	validate = function(value: unknown): (boolean, string?)
+	validate = @native function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "Color3" then
 			return false, `expected value of type Color3, got {typeof(value)}`
 		end

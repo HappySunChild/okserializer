@@ -28,7 +28,7 @@ const PhysicalProperties_schema: types.Schema<PhysicalProperties> = {
 	alloc_size = @native function(): number
 		return schema_size
 	end,
-	validate = function(value: unknown): (boolean, string?)
+	validate = @native function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "PhysicalProperties" then
 			return false, `expected value of type PhysicalProperties, got {typeof(value)}`
 		end

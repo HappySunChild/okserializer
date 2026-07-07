@@ -50,7 +50,7 @@ const Axes_schema: types.Schema<Axes> = {
 	alloc_size = @native function(): number
 		return 2
 	end,
-	validate = function(value: unknown): (boolean, string?)
+	validate = @native function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "Axes" then
 			return false, `expected value of type Axes, got {typeof(value)}`
 		end

@@ -22,7 +22,7 @@ const function Ray_schema(vec_spec: types.NumberTypeSpec?): types.Schema<Ray>
 		alloc_size = @native function(): number
 			return schema_size
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "Ray" then
 				return false, `expected value of type Ray, got {typeof(value)}`
 			end

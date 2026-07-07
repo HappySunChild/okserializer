@@ -37,7 +37,7 @@ const function variant_schema<T>(set: { T }): types.Schema<T>
 		alloc_size = @native function(): number
 			return size
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			if value == nil then
 				return false, "cannot store nil in a variant"
 			end

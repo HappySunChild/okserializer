@@ -43,7 +43,7 @@ const function CFrame_schema(
 		alloc_size = @native function(): number
 			return pos_size * 3 + rot_size * 3
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "CFrame" then
 				return false, `expected value of type CFrame, got {typeof(value)}`
 			end

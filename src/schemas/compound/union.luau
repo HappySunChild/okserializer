@@ -49,7 +49,7 @@ const function union_schema(...: types.Schema<any>): types.Schema<any>
 
 			return id_size + value_size
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			const index, schema = determine_schema(value, schemas)
 
 			if index == nil or schema == nil then

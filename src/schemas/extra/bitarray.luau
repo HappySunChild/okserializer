@@ -38,7 +38,7 @@ const function bitarray_schema(bit_width: number, len_spec: types.NumberTypeSpec
 		alloc_size = @native function(value: { number }): number
 			return len_size + math.ceil(#value * bit_width / 8) % (len.max + 1)
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			if not is_array(value) then
 				return false, "expected array value"
 			end

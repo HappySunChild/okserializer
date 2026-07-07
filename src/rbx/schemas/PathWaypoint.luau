@@ -24,7 +24,7 @@ const function PathWaypoint_schema(format: types.NumberTypeSpec?): types.Schema<
 		alloc_size = @native function(waypoint: PathWaypoint): number
 			return schema_size
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "PathWaypoint" then
 				return false, `expected value of type PathWaypoint, got {typeof(value)}`
 			end

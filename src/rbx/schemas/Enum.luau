@@ -7,10 +7,12 @@ for key, value in ENUMS do
 	ENUM_TO_INDEX[value] = key
 end
 
+@native
 const function to_index(enum: Enum): number
 	return ENUM_TO_INDEX[enum]
 end
 
+@native
 const function to_enum(index: number): Enum
 	return ENUMS[index]
 end
@@ -28,7 +30,7 @@ const Enum_schema: types.Schema<EnumItem> = {
 		return 4
 	end,
 
-	validate = function(value: unknown): (boolean, string?)
+	validate = @native function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "EnumItem" then
 			return false, `expected value of type EnumItem, got {typeof(value)}`
 		end

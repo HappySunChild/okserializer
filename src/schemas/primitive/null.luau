@@ -10,7 +10,7 @@ const null_schema: types.Schema<nil> = {
 	alloc_size = @native function(): number
 		return 0
 	end,
-	validate = function(value: unknown): (boolean, string?)
+	validate = @native function(value: unknown): (boolean, string?)
 		if value ~= nil then
 			return false, `expected value of type nil, got {type(value)}`
 		end

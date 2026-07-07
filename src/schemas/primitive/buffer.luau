@@ -27,7 +27,7 @@ const function buffer_schema(len_spec: types.NumberTypeSpec?): types.Schema<buff
 		alloc_size = @native function(value: buffer): number
 			return len_size + buffer.len(value) % (len.max + 1)
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			if type(value) ~= "buffer" then
 				return false, `expected value of type buffer, got {type(value)}`
 			end

@@ -37,7 +37,7 @@ const function tuple_schema<T...>(...: types.Schema<any>): types.Schema<T...>
 
 			return total_size
 		end,
-		validate = function(...: unknown): (boolean, string?)
+		validate = @native function(...: unknown): (boolean, string?)
 			for index, schema in tuple_order do
 				local ok, err = schema.validate(select(index, ...))
 

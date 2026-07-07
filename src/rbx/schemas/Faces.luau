@@ -6,7 +6,7 @@ const data = flags_schema(6)
 const data_write, data_read = data.write, data.read
 
 const Faces_schema: types.Schema<Faces> = {
-	write = function(b: buffer, offset: number, value: Faces): number
+	write = @native function(b: buffer, offset: number, value: Faces): number
 		return data_write(b, offset, {
 			value.Top,
 			value.Bottom,
@@ -16,7 +16,7 @@ const Faces_schema: types.Schema<Faces> = {
 			value.Back,
 		})
 	end,
-	read = function(b: buffer, offset: number): (number, Faces)
+	read = @native function(b: buffer, offset: number): (number, Faces)
 		const bytes_read, data = data_read(b, offset)
 
 		const top = data[1] and Enum.NormalId.Top or nil
@@ -36,10 +36,10 @@ const Faces_schema: types.Schema<Faces> = {
 				back :: Enum.NormalId
 			)
 	end,
-	alloc_size = function(): number
+	alloc_size = @native function(): number
 		return 1
 	end,
-	validate = function(value: unknown): (boolean, string?)
+	validate = @native function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "Faces" then
 			return false, `expected value of type Faces, got {typeof(value)}`
 		end

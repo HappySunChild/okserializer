@@ -25,7 +25,7 @@ const function vector_schema(component_spec: types.NumberTypeSpec?): types.Schem
 		alloc_size = @native function(): number
 			return component_size * 3
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			if type(value) ~= "vector" then
 				return false, `expected value of type vector, got {type(value)}`
 			end

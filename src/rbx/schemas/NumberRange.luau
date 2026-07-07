@@ -21,7 +21,7 @@ const function NumberRange_schema(value_spec: types.NumberTypeSpec?): types.Sche
 		alloc_size = @native function(): number
 			return schema_size
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "NumberRange" then
 				return false, `expected value of type NumberRange, got {typeof(value)}`
 			end

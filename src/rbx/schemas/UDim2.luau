@@ -25,7 +25,7 @@ const function UDim2_schema(
 		alloc_size = @native function(value: UDim2): number
 			return schema_size
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "UDim2" then
 				return false, `expected value of type UDim2, got {typeof(value)}`
 			end

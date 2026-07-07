@@ -49,7 +49,7 @@ const function array_schema<T>(schema: types.Schema<T>, len_spec: types.NumberTy
 
 			return total_byte_count
 		end,
-		validate = function(array: unknown): (boolean, string?)
+		validate = @native function(array: unknown): (boolean, string?)
 			if not is_array(array) then
 				return false, "expected array value"
 			end

@@ -36,7 +36,7 @@ const function flags_schema(flag_count: number): types.Schema<{ boolean }>
 		alloc_size = @native function(): number
 			return byte_count
 		end,
-		validate = function(value: unknown): (boolean, string?)
+		validate = @native function(value: unknown): (boolean, string?)
 			if not is_array(value) then
 				return false, "expected array value"
 			end
