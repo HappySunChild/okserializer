@@ -15,7 +15,7 @@ const u8_limit = u8.max
 
 const f32 = specs.f32
 
-const function determine_type(n: number): types.NumberTypeSpec
+const function determine_spec(n: number): types.NumberTypeSpec
 	const whole, frac = math.modf(n)
 
 	if frac == 0 then -- integer
@@ -41,4 +41,4 @@ const function determine_type(n: number): types.NumberTypeSpec
 	return f32
 end
 
-return determine_type
+return determine_spec
