@@ -1,7 +1,19 @@
 const types = require("../../types")
 
-const lookup = require("@self/lookup")
-const to_index, to_enum = lookup.to_index, lookup.to_enum
+const ENUMS = Enum:GetEnums()
+const ENUM_TO_INDEX = {}
+
+for key, value in ENUMS do
+	ENUM_TO_INDEX[value] = key
+end
+
+const function to_index(enum: Enum): number
+	return ENUM_TO_INDEX[enum]
+end
+
+const function to_enum(index: number): Enum
+	return ENUMS[index]
+end
 
 const Enum_schema: types.Schema<EnumItem> = {
 	write = @native function(b: buffer, offset: number, value: EnumItem): number
