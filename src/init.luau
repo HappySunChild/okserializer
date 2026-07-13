@@ -1,3 +1,7 @@
+const types = require("@self/types")
+
+export type Schema<T...> = types.Schema<T...>
+
 return {
 	serialize = require("@self/utility/serialize"),
 	deserialize = require("@self/utility/deserialize"),
