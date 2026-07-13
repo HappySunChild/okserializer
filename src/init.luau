@@ -25,7 +25,7 @@ return {
 		bitarray = require("@self/schemas/extra/bitarray"),
 		bitstruct = require("@self/schemas/extra/bitstruct"),
 		flags = require("@self/schemas/extra/flags"),
-		variant = require("@self/schemas/extra/variant"),
+		literalvariant = require("@self/schemas/extra/literalvariant"),
 		termstring = require("@self/schemas/extra/termstring"),
 		void = require("@self/schemas/extra/void"),
 	},

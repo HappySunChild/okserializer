@@ -2,13 +2,13 @@ const types = require("../../types")
 
 const determine_spec = require("../../utility/determine_spec")
 
-const function variant_schema<T>(set: { T }): types.Schema<T>
-	const spec = determine_spec(#set)
+const function literalvariant_schema<T>(variants: { T }): types.Schema<T>
+	const spec = determine_spec(#variants)
 	const write, read, size = spec.write, spec.read, spec.size
 
 	const values_to_index = {}
 
-	for key, value in set do
+	for key, value in variants do
 		values_to_index[value] = key
 	end
 
@@ -26,7 +26,7 @@ const function variant_schema<T>(set: { T }): types.Schema<T>
 		end,
 		read = @native function(b: buffer, offset: number): (number, T)
 			const index = read(b, offset)
-			const value = set[index]
+			const value = variants[index]
 
 			if value == nil then
 				error(`invalid set index read {index}`)
@@ -51,4 +51,4 @@ const function variant_schema<T>(set: { T }): types.Schema<T>
 	}
 end
 
-return variant_schema
+return literalvariant_schema
