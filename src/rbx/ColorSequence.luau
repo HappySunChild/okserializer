@@ -1,8 +1,8 @@
-const specs = require("../../specs")
-const types = require("../../types")
+const specs = require("../specs")
+const types = require("../types")
 
 const ColorSequenceKeypoint_schema = require("./ColorSequenceKeypoint")
-const array_schema = require("../../schemas/compound/array")
+const array_schema = require("../schemas/compound/array")
 
 const data = array_schema(ColorSequenceKeypoint_schema, specs.u8)
 const data_write, data_read, data_alloc_size = data.write, data.read, data.alloc_size

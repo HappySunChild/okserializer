@@ -1,4 +1,4 @@
-const types = require("../../types")
+const types = require("../types")
 
 const Vector2_schema = require("./Vector2")
 

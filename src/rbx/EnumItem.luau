@@ -1,5 +1,5 @@
-const specs = require("../../specs")
-const types = require("../../types")
+const specs = require("../specs")
+const types = require("../types")
 
 const DEFAULT_VALUE_SPEC = specs.u16
 

@@ -1,4 +1,4 @@
-const types = require("../../types")
+const types = require("../types")
 
 const DateTime_schema: types.Schema<DateTime> = {
 	write = @native function(b: buffer, offset: number, value: DateTime): number

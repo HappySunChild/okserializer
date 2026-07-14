@@ -1,5 +1,5 @@
-const specs = require("../../specs")
-const types = require("../../types")
+const specs = require("../specs")
+const types = require("../types")
 
 const DEFAULT_POS_SPEC = specs.f32
 const DEFAULT_ROT_SPEC = specs.r16

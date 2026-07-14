@@ -1,4 +1,4 @@
-local types = require("../../types")
+local types = require("../types")
 
 const Color3_schema: types.Schema<Color3> = {
 	write = @native function(b: buffer, offset: number, value: Color3): number

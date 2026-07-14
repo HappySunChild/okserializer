@@ -1,7 +1,7 @@
-const specs = require("../../specs")
-const types = require("../../types")
+const specs = require("../specs")
+const types = require("../types")
 
-const bitstruct_schema = require("../../schemas/extra/bitstruct")
+const bitstruct_schema = require("../schemas/extra/bitstruct")
 
 const DEFAULT_TIME_SPEC = specs.f32
 const DEFAULT_DELAY_SPEC = specs.f32

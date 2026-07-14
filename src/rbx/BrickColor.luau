@@ -1,4 +1,4 @@
-const types = require("../../types")
+const types = require("../types")
 
 const BRICKCOLOR_IDS = {
 	1, -- White

@@ -1,5 +1,5 @@
-local specs = require("../../specs")
-local types = require("../../types")
+local specs = require("../specs")
+local types = require("../types")
 
 local s16 = specs.s16
 local s16_write, s16_read, s16_size = s16.write, s16.read, s16.size

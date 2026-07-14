@@ -1,4 +1,4 @@
-local types = require("../../types")
+local types = require("../types")
 
 local Vector3_schema = require("./Vector3")
 

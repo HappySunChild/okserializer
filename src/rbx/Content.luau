@@ -1,7 +1,7 @@
-const specs = require("../../specs")
-const types = require("../../types")
+const specs = require("../specs")
+const types = require("../types")
 
-const string_schema = require("../../schemas/primitive/string")
+const string_schema = require("../schemas/primitive/string")
 
 const uri_schema = string_schema(specs.u8)
 const uri_write, uri_read, uri_alloc_size = uri_schema.write, uri_schema.read, uri_schema.alloc_size

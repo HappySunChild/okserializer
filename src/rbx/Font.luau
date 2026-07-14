@@ -1,4 +1,4 @@
-const types = require("../../types")
+const types = require("../types")
 
 const Font_schema: types.Schema<Font> = {
 	write = @native function(b: buffer, offset: number, value: Font): number

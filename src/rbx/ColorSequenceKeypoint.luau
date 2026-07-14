@@ -1,5 +1,5 @@
-const specs = require("../../specs")
-const types = require("../../types")
+const specs = require("../specs")
+const types = require("../types")
 
 const time = specs.s16
 const time_write, time_read, time_size = time.write, time.read, time.size

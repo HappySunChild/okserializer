@@ -1,6 +1,6 @@
-const types = require("../../types")
+const types = require("../types")
 
-const flags_schema = require("../../schemas/extra/flags")
+const flags_schema = require("../schemas/extra/flags")
 
 const data = flags_schema(6)
 const data_write, data_read = data.write, data.read

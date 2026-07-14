@@ -1,4 +1,4 @@
-const types = require("../../types")
+const types = require("../types")
 
 const ENUMS = Enum:GetEnums()
 const ENUM_TO_INDEX = {}

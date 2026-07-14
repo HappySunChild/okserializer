@@ -1,5 +1,5 @@
-const specs = require("../../specs")
-const types = require("../../types")
+const specs = require("../specs")
+const types = require("../types")
 
 const DEFAULT_SCALE_SPEC = specs.f32
 const DEFAULT_OFFSET_SPEC = specs.i16

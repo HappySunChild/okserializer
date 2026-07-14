@@ -1,4 +1,4 @@
-const types = require("../../types")
+const types = require("../types")
 
 const UDim_schema = require("./UDim")
 

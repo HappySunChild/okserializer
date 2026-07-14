@@ -1,8 +1,8 @@
-const specs = require("../../specs")
-const types = require("../../types")
+const specs = require("../specs")
+const types = require("../types")
 
 const NumberSequenceKeypoint_schema = require("./NumberSequenceKeypoint")
-const array_schema = require("../../schemas/compound/array")
+const array_schema = require("../schemas/compound/array")
 
 const array_len_spec = specs.u8
 
