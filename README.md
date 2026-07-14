@@ -21,6 +21,7 @@ type Person = {
 	age: number,
 }
 
+-- defining a schema
 const person_schema = schemas.struct<<Person>>({
 	first_name = schemas.string(),
 	last_name = schemas.string(specs.u8), -- you can specify how the length header for strings are encoded, defaults to u16
@@ -29,9 +30,11 @@ const person_schema = schemas.struct<<Person>>({
 
 const candidate: Person = { first_name = "John", last_name = "Doe", age = 20 }
 
+-- serialization
 const serialized_person = serialize(person_schema, candidate)
 print(buffer.len(serialized_person), buffer.tostring(serialized_person))
 
+-- deserialization
 const deserialized_person = deserialize(person_schema, serialized_person)
 assert(deserialized_person.first_name == candidate.first_name)
 assert(deserialized_person.last_name == candidate.last_name)
