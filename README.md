@@ -21,7 +21,7 @@ type Person = {
 	age: number,
 }
 
--- defining a schema
+-- defining a composite schema
 const person_schema = schemas.struct<<Person>>({
 	first_name = schemas.string(),
 	last_name = schemas.string(specs.u8), -- you can specify how the length header for strings are encoded, defaults to u16
