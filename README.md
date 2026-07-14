@@ -75,7 +75,8 @@ return {
 You can then use this schema in other composite schemas or by itself:
 
 ```luau
-const okserde = require("../../src")
+-- /main.luau
+const okserde = require("okserde")
 const schemas, specs = okserde.schemas, okserde.specs
 const serialize, deserialize = okserde.serialize, okserde.deserialize
 
