@@ -131,13 +131,13 @@ assert(deserialized_colors[1] == colors[1])
 assert(deserialized_colors[2] == colors[2])
 assert(deserialized_colors[3] == colors[3])
 
--- you can also be sent across RemoteEvents and RemoteFunctions for less bandwidth usage
+-- you can also send serialized data across RemoteEvents and RemoteFunctions for less bandwidth usage
+-- note that the receiving side must also have the same schema to deserialize the incoming data
 const some_remote = ReplicatedStorage:WaitForChild("SomeRemote") :: RemoteEvent
 some_remote:FireServer(serialized_colors)
 
 -- server side:
 some_remote.OnServerEvent:Connect(function(player: Player, serialized_colors: buffer)
-	-- you will also have to define the same schema on the receiving context to deserialize properly
 	const deserialized_colors = deserialize(colors_schema, serialized_colors)
 
 	print("received colors from ", player, deserialized_colors)
