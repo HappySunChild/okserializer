@@ -1,31 +1,104 @@
 # okserde
-A low-abstraction, schema-based Luau buffer serializer. Comes with some premade `Schema` for Roblox userdata types as well.
+A low-abstraction, schema-based Luau buffer serializer/deserializer.
+This library provides a lot of schemas for serializing common datatypes in Luau.
+It also provides some runtime-specific schemas for Roblox datatypes that can be found under the `okserde/rbx` module.
 
-Based off of athar_adventure's [BufferConverter2](https://devforum.roblox.com/t/temporarily-archived-bufferconverter2-blazingly-fast-schema-based-buffer-serialization/3429040).
+Initially based off of athar_adventure's [BufferConverter2](https://devforum.roblox.com/t/temporarily-archived-bufferconverter2-blazingly-fast-schema-based-buffer-serialization/3429040).
 
 ## Usage Example
+
+Here's a simple example that creates a `Person` schema, then using that schema serializes and deserializes a person,
+and finally asserts that the pre-deserialization and post-deserialization values are similar.
+
 ```luau
-local okserde = require("path/to/okserde")
-local schemas, specs = okserde.schemas, okserde.specs
-local serialize, deserialize = okserde.serialize, okserde.deserialize
+const okserde = require("okserde")
+const schemas, specs = okserde.schemas, okserde.specs
+const serialize, deserialize = okserde.serialize, okserde.deserialize
 
-local person_schema = schemas.struct({
-	name = schemas.string(specs.u8),
-	last_name = schemas.string(specs.u8),
-})
-
-local example_person = {
-	name = "John",
-	last_name = "Doe",
+type Person = {
+	first_name: string,
+	last_name: string,
+	age: number,
 }
 
-local serialized = serialize(person_schema, example_person)
+const person_schema = schemas.struct<<Person>>({
+	first_name = schemas.string(),
+	last_name = schemas.string(specs.u8), -- you can specify how the length header for strings are encoded, defaults to u16
+	age = schemas.number(specs.u8), -- same for numbers, defaults to f32
+})
 
-print(buffer.len(serialized))
+const candidate: Person = { first_name = "John", last_name = "Doe", age = 20 }
 
-local deserialized = deserialize(person_schema, serialized)
+const serialized_person = serialize(person_schema, candidate)
+print(buffer.len(serialized_person), buffer.tostring(serialized_person))
 
-assert(example_person.name == deserialized.name)
-assert(example_person.last_name == deserialized.last_name)
+const deserialized_person = deserialize(person_schema, serialized_person)
+assert(deserialized_person.first_name == candidate.first_name)
+assert(deserialized_person.last_name == candidate.last_name)
+assert(deserialized_person.age == candidate.age)
 
 ```
+
+### Custom Schemas
+The design of this library is supposed to be as simple as possible, so that creating your own custom schemas is super simple and easy.
+Here's a quick example showing how to create a **uniform** schema (not composed of other preexisting schemas, like `struct`):
+
+```luau
+-- /integer.luau
+const okserde = require("okserde")
+
+const INTEGER_BYTE_SIZE = 8
+
+return {
+	write = function(b: buffer, offset: number, value: integer): number
+		buffer.writeinteger(b, offset, value)
+
+		return INTEGER_BYTE_SIZE
+	end,
+	read = function(b: buffer, offset: number): (number, integer)
+		return INTEGER_BYTE_SIZE, buffer.readinteger(b, offset)
+	end,
+	alloc_size = function()
+		return INTEGER_BYTE_SIZE
+	end,
+	validate = function(value: unknown): (boolean, string?)
+		if type(value) ~= "integer" then
+			return false, `expected value of type integer, got {type(value)}`
+		end
+
+		return true, nil
+	end,
+} :: okserde.Schema<integer>
+
+```
+
+You can then use this schema in other composite schemas or by itself:
+
+```luau
+const okserde = require("../../src")
+const schemas, specs = okserde.schemas, okserde.specs
+const serialize, deserialize = okserde.serialize, okserde.deserialize
+
+const integer_schema = require("./integer")
+
+-- use by itself
+const serialized_integer = serialize(integer_schema, 1i)
+print(buffer.len(serialized_integer)) --> 8
+
+const deserialized_integer = deserialize(integer_schema, serialized_integer)
+assert(deserialized_integer == 1i)
+
+-- use in composite schemas
+const composite_schema = schemas.array(integer_schema, specs.u8)
+
+const serialized_composite = serialize(composite_schema, { 3i, 31i, 3141592i })
+print(buffer.len(serialized_composite)) --> 25
+
+const deserialized_composite = deserialize(composite_schema, serialized_composite)
+assert(deserialized_composite[1] == 3i)
+assert(deserialized_composite[2] == 31i)
+assert(deserialized_composite[3] == 3141592i)
+
+```
+
+<!-- ###  -->
