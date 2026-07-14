@@ -8,7 +8,7 @@ Initially based off of athar_adventure's [BufferConverter2](https://devforum.rob
 ## Usage Example
 
 Here's a simple example that creates a `Person` schema, then using that schema, serializes and deserializes a person,
-and finally asserts that the pre-deserialization and post-deserialization values are similar.
+and finally asserts that the pre-serialization and post-deserialization values are similar.
 
 ```luau
 const okserde = require("okserde")
