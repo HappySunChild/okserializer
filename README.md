@@ -7,7 +7,7 @@ Initially based off of athar_adventure's [BufferConverter2](https://devforum.rob
 
 ## Usage Example
 
-Here's a simple example that creates a `Person` schema, then using that schema serializes and deserializes a person,
+Here's a simple example that creates a `Person` schema, then using that schema, serializes and deserializes a person,
 and finally asserts that the pre-deserialization and post-deserialization values are similar.
 
 ```luau
@@ -43,6 +43,7 @@ assert(deserialized_person.age == candidate.age)
 ```
 
 ### Custom Schemas
+
 The design of this library is supposed to be as simple as possible, so that creating your own custom schemas is super simple and easy.
 Here's a quick example showing how to create a **uniform** schema (not composed of other preexisting schemas, like `struct`):
 
@@ -105,4 +106,41 @@ assert(deserialized_composite[3] == 3141592i)
 
 ```
 
-<!-- ###  -->
+### Roblox Example
+
+```luau
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+const okserde = require(ReplicatedStorage.Libraries.okserde)
+const okserde_rbx = require(ReplicatedStorage.Libraries.okserde.rbx)
+const schemas, specs = okserde.schemas, okserde.specs
+const serialize, deserialize = okserde.serialize, okserde.deserialize
+
+-- defining a composite schema
+const colors_schema = schemas.array(okserde_rbx.Color3, specs.u8)
+
+const colors = { Color3.new(1, 0, 0), Color3.new(0, 0, 1), Color3.new(1, 0, 1) }
+
+-- serialization
+const serialized_colors = serialize(colors_schema, colors)
+print(buffer.len(serialized_colors)) --> 10
+
+-- deserialization
+const deserialized_colors = deserialize(colors_schema, serialized_colors)
+assert(deserialized_colors[1] == colors[1])
+assert(deserialized_colors[2] == colors[2])
+assert(deserialized_colors[3] == colors[3])
+
+-- you can also be sent across RemoteEvents and RemoteFunctions for less bandwidth usage
+const some_remote = ReplicatedStorage:WaitForChild("SomeRemote") :: RemoteEvent
+some_remote:FireServer(serialized_colors)
+
+-- server side:
+some_remote.OnServerEvent:Connect(function(player: Player, serialized_colors: buffer)
+	-- you will also have to define the same schema on the receiving context to deserialize properly
+	const deserialized_colors = deserialize(colors_schema, serialized_colors)
+
+	print("received colors from ", player, deserialized_colors)
+end)
+
+```
