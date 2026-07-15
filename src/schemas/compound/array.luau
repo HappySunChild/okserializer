@@ -58,7 +58,7 @@ const function array_schema<T>(schema: types.Schema<T>, len_spec: types.NumberTy
 				local ok, err = schema_validate(element)
 
 				if not ok then
-					return false, `invalid array element at index {index}:\n\t{err}`
+					return false, `invalid array element at index {index}:\n\t{err:gsub("\t", "\t\t")}`
 				end
 			end
 
