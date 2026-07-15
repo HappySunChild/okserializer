@@ -13,4 +13,6 @@ export type Schema<T... = ...any> = {
 	read validate: (...any) -> (boolean, string?),
 }
 
+export type UnresolvedSchema = (self: Schema) -> Schema
+
 return nil
