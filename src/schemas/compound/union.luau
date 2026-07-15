@@ -1,10 +1,11 @@
 const types = require("../../types")
 
 const determine_spec = require("../../utility/determine_spec")
+const vararg_repr = require("../../utility/vararg_repr")
 
-const function determine_schema<T>(value: T, schemas: { types.Schema<any> }): (number?, types.Schema<T>?)
+const function determine_schema<T...>(schemas: { types.Schema }, ...: T...): (number?, types.Schema<T...>?)
 	for index, schema in schemas do
-		if schema.validate(value) then
+		if schema.validate(...) then
 			return index, schema
 		end
 	end
@@ -19,42 +20,41 @@ const function union_schema(...: types.Schema<any>): types.Schema<any>
 	const id_write, id_read, id_size = id.write, id.read, id.size
 
 	return {
-		write = @native function(b: buffer, offset: number, value: any): number
-			const index, schema = determine_schema(value, schemas)
+		write = @native function(b: buffer, offset: number, ...: any): number
+			const index, schema = determine_schema(schemas, ...)
 
 			if index == nil or schema == nil then
-				error(`no valid schema available in union for value of type {typeof(value)} (value: {value})`)
+				error(`no valid schema available in union for value(s) of type {vararg_repr(...)}`)
 			end
 
 			id_write(b, offset, index)
 
-			return id_size + schema.write(b, offset + id_size, value)
+			return id_size + schema.write(b, offset + id_size, ...)
 		end,
 		read = @native function(b: buffer, offset: number): (number, ...any)
 			const index = id_read(b, offset)
 			const schema = schemas[index]
 
-			const info = { schema.read(b, offset + id_size) }
+			const read_data = { schema.read(b, offset + id_size) }
 
-			return id_size + info[1], table.unpack(info, 2)
+			return id_size + read_data[1], unpack(read_data, 2)
 		end,
-		alloc_size = @native function(value: any): number
-			const index, schema = determine_schema(value, schemas)
+		alloc_size = @native function(...: any): number
+			const index, schema = determine_schema(schemas, ...)
 
 			if index == nil or schema == nil then
-				error(`no valid schema available in union for value of type {typeof(value)} (value: {value})`)
+				error(`no valid schema available in union for value(s) of type {vararg_repr(...)}`)
 			end
 
-			const value_size = schema.alloc_size(value)
+			const value_size = schema.alloc_size(...)
 
 			return id_size + value_size
 		end,
-		validate = @native function(value: unknown): (boolean, string?)
-			const index, schema = determine_schema(value, schemas)
+		validate = @native function(...: unknown): (boolean, string?)
+			const index, schema = determine_schema(schemas, ...)
 
 			if index == nil or schema == nil then
-				return false,
-					`no valid schema available in union for value of type {typeof(value)} (value: {value})`
+				return false, `no valid schema available in union for value(s) of type {vararg_repr(...)}`
 			end
 
 			return true, nil
