@@ -1,6 +1,6 @@
 const types = require("@self/types")
 
-export type Schema<T...> = types.Schema<T...>
+export type Schema<T... = ...any> = types.Schema<T...>
 
 return {
 	serialize = require("@self/utility/serialize"),

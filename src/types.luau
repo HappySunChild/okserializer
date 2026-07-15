@@ -6,7 +6,7 @@ export type NumberTypeSpec = {
 	read max: number,
 }
 
-export type Schema<T...> = {
+export type Schema<T... = ...any> = {
 	read write: (b: buffer, offset: number, T...) -> number,
 	read read: (b: buffer, offset: number) -> (number, T...),
 	read alloc_size: (T...) -> number,
