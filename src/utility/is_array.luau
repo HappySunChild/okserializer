@@ -3,7 +3,9 @@ const function is_array(t: unknown): boolean
 		return false
 	end
 
-	return next(t, #t) == nil
+	const len = #t
+
+	return next(t, if len > 0 then len else nil) == nil
 end
 
 return is_array
