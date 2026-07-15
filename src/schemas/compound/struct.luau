@@ -1,9 +1,10 @@
 const types = require("../../types")
 
 const sort_with_order = require("../../utility/sort_with_order")
+const resolve_schemas = require("../../utility/resolve_schemas")
 
 const function struct_schema<T>(
-	schema_dict: { [keyof<T>]: types.Schema<any> },
+	schema_dict: { [keyof<T>]: types.Schema<any> | types.UnresolvedSchema },
 	order: { keyof<T> }?
 ): types.Schema<T>
 	const ordered_keys: { keyof<T> } = {}
@@ -14,7 +15,7 @@ const function struct_schema<T>(
 
 	sort_with_order(ordered_keys :: { any }, order) -- casting to any because i don't know what it wants from me
 
-	return {
+	const new_schema = {
 		write = @native function(b: buffer, offset: number, in_struct: T | any): number
 			local current_offset = offset
 
@@ -65,13 +66,17 @@ const function struct_schema<T>(
 				local ok, err = value_schema.validate(in_struct[key])
 
 				if not ok then
-					return false, `invalid value for key {key}:\n\t{err}`
+					return false, `invalid value for key {key}:\n\t{err:gsub("\t", "\t\t")}`
 				end
 			end
 
 			return true, nil
 		end,
 	}
+
+	resolve_schemas(new_schema, schema_dict)
+
+	return new_schema
 end
 
 return struct_schema

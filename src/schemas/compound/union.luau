@@ -1,6 +1,7 @@
 const types = require("../../types")
 
 const determine_spec = require("../../utility/determine_spec")
+const resolve_schemas = require("../../utility/resolve_schemas")
 const vararg_repr = require("../../utility/vararg_repr")
 
 const function determine_schema<T...>(schemas: { types.Schema }, ...: T...): (number?, types.Schema<T...>?)
@@ -13,13 +14,13 @@ const function determine_schema<T...>(schemas: { types.Schema }, ...: T...): (nu
 	return nil, nil
 end
 
-const function union_schema(...: types.Schema<any>): types.Schema<any>
+const function union_schema(...: types.Schema | types.UnresolvedSchema): types.Schema
 	const schemas = { ... }
 
 	const id = determine_spec(#schemas)
 	const id_write, id_read, id_size = id.write, id.read, id.size
 
-	return {
+	const new_union_schema: types.Schema = {
 		write = @native function(b: buffer, offset: number, ...: any): number
 			const index, schema = determine_schema(schemas, ...)
 
@@ -60,6 +61,10 @@ const function union_schema(...: types.Schema<any>): types.Schema<any>
 			return true, nil
 		end,
 	}
+
+	resolve_schemas(new_union_schema, schemas)
+
+	return new_union_schema
 end
 
 return union_schema

@@ -1,15 +1,16 @@
 const types = require("../../types")
 
-const function tuple_schema<T...>(...: types.Schema<any>): types.Schema<T...>
+const resolve_schemas = require("../../utility/resolve_schemas")
+
+const function tuple_schema<T...>(...: types.Schema | types.UnresolvedSchema): types.Schema<T...>
 	const tuple_order = { ... }
 
-	return {
+	const new_schema = {
 		write = @native function(b: buffer, offset: number, ...: T...): number
 			local current_offset = offset
 
 			for index, schema in tuple_order do
-				const value = select(index, ...)
-				current_offset += schema.write(b, current_offset, value)
+				current_offset += schema.write(b, current_offset, select(index, ...))
 			end
 
 			return current_offset - offset
@@ -19,20 +20,20 @@ const function tuple_schema<T...>(...: types.Schema<any>): types.Schema<T...>
 			local current_offset = offset
 
 			for index, schema in tuple_order do
-				const bytes_read, value = schema.read(b, current_offset)
+				const read_data = { schema.read(b, current_offset) }
 
-				output[index] = value
-				current_offset += bytes_read
+				table.move(read_data, 2, #read_data, #output + 1, output)
+
+				current_offset += read_data[1]
 			end
 
-			return current_offset - offset, unpack(output, 1, #tuple_order)
+			return current_offset - offset, unpack(output)
 		end,
 		alloc_size = @native function(...: T...): number
 			local total_size = 0
 
 			for index, schema in tuple_order do
-				const value = select(index, ...)
-				total_size += schema.alloc_size(value)
+				total_size += schema.alloc_size(select(index, ...))
 			end
 
 			return total_size
@@ -42,13 +43,17 @@ const function tuple_schema<T...>(...: types.Schema<any>): types.Schema<T...>
 				local ok, err = schema.validate(select(index, ...))
 
 				if not ok then
-					return false, `invalid tuple item at index {index}:\n\t{err}`
+					return false, `invalid tuple item at index {index}:\n\t{err:gsub("\t", "\t\t")}`
 				end
 			end
 
 			return true, nil
 		end,
 	}
+
+	resolve_schemas(new_schema, tuple_order)
+
+	return new_schema
 end
 
 return tuple_schema
