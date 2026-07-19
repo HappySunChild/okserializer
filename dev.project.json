@@ -5,12 +5,8 @@
 		"$ignoreUnknownInstances": true,
 		"ReplicatedStorage": {
 			"$ignoreUnknownInstances": true,
-			"Libraries": {
-				"$ignoreUnknownInstances": true,
-				"$className": "Folder",
-				"okserde": {
-					"$path": "src"
-				}
+			"okserde": {
+				"$path": "src"
 			}
 		},
 		"ServerScriptService": {
