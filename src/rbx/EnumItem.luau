@@ -1,10 +1,10 @@
-const specs = require("../specs")
-const types = require("../types")
+const encodings = require("../encodings")
+const okserde = require("../types")
 
-const DEFAULT_VALUE_SPEC = specs.u16
+const DEFAULT_VALUE_ENCODING = encodings.u16
 
-const function EnumItem_schema(enumerator: Enum, value_spec: types.NumberTypeSpec?): types.Schema<EnumItem>
-	const value = if value_spec == nil then DEFAULT_VALUE_SPEC else value_spec
+const function EnumItem_schema(enumerator: Enum, value_enc: okserde.NumberEncoding?): okserde.Schema<EnumItem>
+	const value = if value_enc == nil then DEFAULT_VALUE_ENCODING else value_enc
 	const value_write, value_read, value_size = value.write, value.read, value.size
 
 	return {

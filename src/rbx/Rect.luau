@@ -1,9 +1,9 @@
-const types = require("../types")
+const okserde = require("../types")
 
 const Vector2_schema = require("./Vector2")
 
-const function Rect_schema(component_spec: types.NumberTypeSpec?): types.Schema<Rect>
-	const vec = Vector2_schema(component_spec)
+const function Rect_schema(component_enc: okserde.NumberEncoding?): okserde.Schema<Rect>
+	const vec = Vector2_schema(component_enc)
 	const vec_write, vec_read, vec_size = vec.write, vec.read, vec.size(Vector2.zero)
 
 	const schema_size = vec_size * 2

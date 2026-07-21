@@ -1,21 +1,21 @@
-const specs = require("../specs")
+const encodings = require("../encodings")
 const types = require("../types")
 
-const i32 = specs.i32
-const i16 = specs.i16
+const i32 = encodings.i32
+const i16 = encodings.i16
 const i16_limit = i16.max
-const i8 = specs.i8
+const i8 = encodings.i8
 const i8_limit = i8.max
 
-const u32 = specs.u32
-const u16 = specs.u16
+const u32 = encodings.u32
+const u16 = encodings.u16
 const u16_limit = u16.max
-const u8 = specs.u8
+const u8 = encodings.u8
 const u8_limit = u8.max
 
-const f32 = specs.f32
+const f32 = encodings.f32
 
-const function determine_spec(n: number): types.NumberTypeSpec
+const function determine_encoding(n: number): types.NumberEncoding
 	const whole, frac = math.modf(n)
 
 	if frac == 0 then -- integer
@@ -41,4 +41,4 @@ const function determine_spec(n: number): types.NumberTypeSpec
 	return f32
 end
 
-return determine_spec
+return determine_encoding

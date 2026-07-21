@@ -1,12 +1,12 @@
-const types = require("../types")
+const okserde = require("../types")
 
 const UDim_schema = require("./UDim")
 
 const function UDim2_schema(
-	scale_spec: types.NumberTypeSpec?,
-	offset_spec: types.NumberTypeSpec?
-): types.Schema<UDim2>
-	const udim = UDim_schema(scale_spec, offset_spec)
+	scale_enc: okserde.NumberEncoding?,
+	offset_enc: okserde.NumberEncoding?
+): okserde.Schema<UDim2>
+	const udim = UDim_schema(scale_enc, offset_enc)
 	const udim_write, udim_read, udim_size = udim.write, udim.read, udim.size(UDim.new())
 
 	const schema_size = udim_size * 2

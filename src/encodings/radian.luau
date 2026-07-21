@@ -1,4 +1,4 @@
--- "radian" number byte format
+-- "radian" encoding
 -- stores radians with even spacing. Useful for storing rotations. (is this better than floats? I'm not sure...)
 
 -- I am aware that storing 2pi (math.tau) loops back around to 0, this is intentional.

@@ -1,4 +1,4 @@
--- "snorm" number byte format
+-- "snorm" encoding
 -- like unorm, but signed. stores decimals between -1, 1 with even spacing.
 
 const I8_MAX = (2 ^ 8) / 2 - 1

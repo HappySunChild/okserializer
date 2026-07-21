@@ -1,15 +1,15 @@
-const specs = require("../specs")
+const encodings = require("../encodings")
 const okserde = require("../types")
 
 const is_array = require("../utility/is_array")
 
-const DEFAULT_LEN_SPEC = specs.u16
+const DEFAULT_LEN_ENCODING = encodings.u16
 
 const function array_schema<T>(
 	element_schema: okserde.Schema<T>,
-	len_spec: okserde.NumberTypeSpec?
+	len_enc: okserde.NumberEncoding?
 ): okserde.Schema<{ T }>
-	const len = if len_spec == nil then DEFAULT_LEN_SPEC else len_spec
+	const len = if len_enc == nil then DEFAULT_LEN_ENCODING else len_enc
 	const len_write, len_read, len_size = len.write, len.read, len.size
 
 	const element_write, element_read, element_size, element_validate =

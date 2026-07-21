@@ -1,15 +1,15 @@
-const specs = require("../specs")
+const encodings = require("../encodings")
 const okserde = require("../types")
 
 const is_array = require("../utility/is_array")
 
-const DEFAULT_LEN_SPEC = specs.u8
+const DEFAULT_LEN_ENCODING = encodings.u8
 
 const function bitarray_schema(
-	bit_width: number,
-	len_spec: okserde.NumberTypeSpec?
+	element_bit_width: number,
+	len_enc: okserde.NumberEncoding?
 ): okserde.Schema<{ number }>
-	const len = if len_spec == nil then DEFAULT_LEN_SPEC else len_spec
+	const len = if len_enc == nil then DEFAULT_LEN_ENCODING else len_enc
 	const len_write, len_read, len_size = len.write, len.read, len.size
 
 	return {
@@ -19,8 +19,8 @@ const function bitarray_schema(
 			local bit_offset = (offset + len_size) * 8
 
 			for _, num in value do
-				buffer.writebits(b, bit_offset, bit_width, num)
-				bit_offset += bit_width
+				buffer.writebits(b, bit_offset, element_bit_width, num)
+				bit_offset += element_bit_width
 			end
 
 			return math.ceil(bit_offset / 8)
@@ -32,14 +32,14 @@ const function bitarray_schema(
 			local bit_offset = (offset + len_size) * 8
 
 			for i = 1, count do
-				output[i] = buffer.readbits(b, bit_offset, bit_width)
-				bit_offset += bit_width
+				output[i] = buffer.readbits(b, bit_offset, element_bit_width)
+				bit_offset += element_bit_width
 			end
 
 			return math.ceil(bit_offset / 8), output
 		end,
 		size = @native function(value: { number }): number
-			return len_size + math.ceil(#value * bit_width / 8) % (len.max + 1)
+			return len_size + math.ceil(#value * element_bit_width / 8) % (len.max + 1)
 		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if not is_array(value) then

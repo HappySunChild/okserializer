@@ -1,10 +1,10 @@
-const specs = require("../specs")
-const types = require("../types")
+const encodings = require("../encodings")
+const okserde = require("../types")
 
-const DEFAULT_VECTOR_SPEC = specs.f32
+const DEFAULT_VECTOR_ENCODING = encodings.f32
 
-const function Vector2_schema(component_spec: types.NumberTypeSpec?): types.Schema<Vector2>
-	const component = if component_spec == nil then DEFAULT_VECTOR_SPEC else component_spec
+const function Vector2_schema(component_enc: okserde.NumberEncoding?): okserde.Schema<Vector2>
+	const component = if component_enc == nil then DEFAULT_VECTOR_ENCODING else component_enc
 	const component_write, component_read, component_size = component.write, component.read, component.size
 
 	const schema_size = component_size * 2

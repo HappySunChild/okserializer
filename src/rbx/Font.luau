@@ -1,6 +1,6 @@
-const types = require("../types")
+const okserde = require("../types")
 
-const Font_schema: types.Schema<Font> = {
+const Font_schema: okserde.Schema<Font> = {
 	write = @native function(b: buffer, offset: number, value: Font): number
 		const family = value.Family
 		const family_len = string.len(family)

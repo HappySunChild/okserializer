@@ -1,6 +1,6 @@
-const types = require("../types")
+const okserde = require("../types")
 
-const DateTime_schema: types.Schema<DateTime> = {
+const DateTime_schema: okserde.Schema<DateTime> = {
 	write = @native function(b: buffer, offset: number, value: DateTime): number
 		return 8, buffer.writef64(b, offset, value.UnixTimestampMillis)
 	end,

@@ -1,6 +1,6 @@
-local types = require("../types")
+const okserde = require("../types")
 
-const Color3_schema: types.Schema<Color3> = {
+const Color3_schema: okserde.Schema<Color3> = {
 	write = @native function(b: buffer, offset: number, value: Color3): number
 		buffer.writeu8(b, offset, value.R * 255)
 		buffer.writeu8(b, offset + 1, value.G * 255)

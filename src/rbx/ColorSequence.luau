@@ -1,13 +1,13 @@
-const specs = require("../specs")
-const types = require("../types")
+const encodings = require("../encodings")
+const okserde = require("../types")
 
 const ColorSequenceKeypoint_schema = require("./ColorSequenceKeypoint")
-const array_schema = require("../schemas/compound/array")
+const array_schema = require("../schemas/array")
 
-const data = array_schema(ColorSequenceKeypoint_schema, specs.u8)
+const data = array_schema(ColorSequenceKeypoint_schema, encodings.u8)
 const data_write, data_read, data_size = data.write, data.read, data.size
 
-const ColorSequence_schema: types.Schema<ColorSequence> = {
+const ColorSequence_schema: okserde.Schema<ColorSequence> = {
 	write = @native function(b: buffer, offset: number, value: ColorSequence): number
 		return data_write(b, offset, value.Keypoints)
 	end,

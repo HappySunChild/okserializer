@@ -1,16 +1,16 @@
-const specs = require("../specs")
-const types = require("../types")
+const encodings = require("../encodings")
+const okserde = require("../types")
 
 const NumberSequenceKeypoint_schema = require("./NumberSequenceKeypoint")
-const array_schema = require("../schemas/compound/array")
+const array_schema = require("../schemas/array")
 
-const array_len_spec = specs.u8
+const ARRAY_LEN_ENCODING = encodings.u8
 
 const function NumberSequence_schema(
-	value_spec: types.NumberTypeSpec?,
-	envelope_spec: types.NumberTypeSpec?
-): types.Schema<NumberSequence>
-	const data = array_schema(NumberSequenceKeypoint_schema(value_spec, envelope_spec), array_len_spec)
+	value_enc: okserde.NumberEncoding?,
+	envelope_enc: okserde.NumberEncoding?
+): okserde.Schema<NumberSequence>
+	const data = array_schema(NumberSequenceKeypoint_schema(value_enc, envelope_enc), ARRAY_LEN_ENCODING)
 	const data_write, data_read, data_size = data.write, data.read, data.size
 
 	return {

@@ -1,12 +1,12 @@
-const specs = require("../specs")
-const types = require("../types")
+const encodings = require("../encodings")
+const okserde = require("../types")
 
-const string_schema = require("../schemas/primitive/string")
+const string_schema = require("../schemas/string")
 
-const uri_schema = string_schema(specs.u8)
+const uri_schema = string_schema(encodings.u8)
 const uri_write, uri_read, uri_size = uri_schema.write, uri_schema.read, uri_schema.size
 
-const Content_schema: types.Schema<Content> = {
+const Content_schema: okserde.Schema<Content> = {
 	write = @native function(b: buffer, offset: number, value: Content): number
 		const source_type = value.SourceType
 

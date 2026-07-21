@@ -1,14 +1,14 @@
-const specs = require("../specs")
+const encodings = require("../encodings")
 const okserde = require("../types")
 
-const DEFAULT_LEN_SPEC = specs.u16
+const DEFAULT_LEN_ENCODING = encodings.u16
 
 const function map_schema<K, V>(
 	key_schema: okserde.Schema<K>,
 	value_schema: okserde.Schema<V>,
-	len_spec: okserde.NumberTypeSpec?
+	len_enc: okserde.NumberEncoding?
 ): okserde.Schema<{ [K]: V }>
-	const len = if len_spec == nil then DEFAULT_LEN_SPEC else len_spec
+	const len = if len_enc == nil then DEFAULT_LEN_ENCODING else len_enc
 	const len_write, len_read, len_size = len.write, len.read, len.size
 
 	const key_write, key_read, key_size, key_validate =

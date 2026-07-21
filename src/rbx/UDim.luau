@@ -1,17 +1,17 @@
-const specs = require("../specs")
-const types = require("../types")
+const encodings = require("../encodings")
+const okserde = require("../types")
 
-const DEFAULT_SCALE_SPEC = specs.f32
-const DEFAULT_OFFSET_SPEC = specs.i16
+const DEFAULT_SCALE_ENCODING = encodings.f32
+const DEFAULT_OFFSET_ENCODING = encodings.i16
 
 const function UDim_schema(
-	scale_spec: types.NumberTypeSpec?,
-	offset_spec: types.NumberTypeSpec?
-): types.Schema<UDim>
-	const scale = if scale_spec == nil then DEFAULT_SCALE_SPEC else scale_spec
+	scale_enc: okserde.NumberEncoding?,
+	offset_enc: okserde.NumberEncoding?
+): okserde.Schema<UDim>
+	const scale = if scale_enc == nil then DEFAULT_SCALE_ENCODING else scale_enc
 	const scale_write, scale_read, scale_size = scale.write, scale.read, scale.size
 
-	const offset = if offset_spec == nil then DEFAULT_OFFSET_SPEC else offset_spec
+	const offset = if offset_enc == nil then DEFAULT_OFFSET_ENCODING else offset_enc
 	const offset_write, offset_read, offset_size = offset.write, offset.read, offset.size
 
 	const schema_size = scale_size + offset_size

@@ -1,17 +1,17 @@
-const specs = require("../specs")
-const types = require("../types")
+const encodings = require("../encodings")
+const okserde = require("../types")
 
-const DEFAULT_POS_SPEC = specs.f32
-const DEFAULT_ROT_SPEC = specs.r16
+const DEFAULT_POS_ENCODING = encodings.f32
+const DEFAULT_ROT_ENCODING = encodings.r16
 
 const function CFrame_schema(
-	pos_spec: types.NumberTypeSpec?,
-	rot_spec: types.NumberTypeSpec?
-): types.Schema<CFrame>
-	const pos = if pos_spec == nil then DEFAULT_POS_SPEC else pos_spec
+	pos_enc: okserde.NumberEncoding?,
+	rot_enc: okserde.NumberEncoding?
+): okserde.Schema<CFrame>
+	const pos = if pos_enc == nil then DEFAULT_POS_ENCODING else pos_enc
 	const pos_write, pos_read, pos_size = pos.write, pos.read, pos.size
 
-	const rot = if rot_spec == nil then DEFAULT_ROT_SPEC else rot_spec
+	const rot = if rot_enc == nil then DEFAULT_ROT_ENCODING else rot_enc
 	const rot_write, rot_read, rot_size = rot.write, rot.read, rot.size
 
 	return {

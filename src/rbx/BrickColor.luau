@@ -1,4 +1,4 @@
-const types = require("../types")
+const okserde = require("../types")
 
 const BRICKCOLOR_IDS = {
 	1, -- White
@@ -226,7 +226,7 @@ const function to_brickcolor(index: number): BrickColor
 	return BrickColor.new(BRICKCOLOR_IDS[index])
 end
 
-const BrickColor_schema: types.Schema<BrickColor> = {
+const BrickColor_schema: okserde.Schema<BrickColor> = {
 	write = @native function(b: buffer, offset: number, value: BrickColor): number
 		buffer.writeu8(b, offset, to_index(value))
 		return 1

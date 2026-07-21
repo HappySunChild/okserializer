@@ -1,11 +1,11 @@
-const specs = require("../specs")
-const types = require("../types")
+const encodings = require("../encodings")
+const okserde = require("../types")
 
-const bitstruct_schema = require("../schemas/extra/bitstruct")
+const bitstruct_schema = require("../schemas/bitstruct")
 
-const DEFAULT_TIME_SPEC = specs.f32
-const DEFAULT_DELAY_SPEC = specs.f32
-const DEFAULT_REPEAT_COUNT_SPEC = specs.u8
+const DEFAULT_TIME_ENCODING = encodings.f32
+const DEFAULT_DELAY_ENCODING = encodings.f32
+const DEFAULT_REPEAT_COUNT_ENCODING = encodings.u8
 
 type TweenInfoStruct = {
 	direction: number,
@@ -22,17 +22,17 @@ const tweeninfo_write, tweeninfo_read, tweeninfo_size =
 	tweeninfo_schema.write, tweeninfo_schema.read, tweeninfo_schema.size(nil :: any)
 
 const function TweenInfo_schema(
-	time_spec: types.NumberTypeSpec?,
-	delay_spec: types.NumberTypeSpec?,
-	repeat_count_spec: types.NumberTypeSpec?
-): types.Schema<TweenInfo>
-	const time = if time_spec == nil then DEFAULT_TIME_SPEC else time_spec
+	time_enc: okserde.NumberEncoding?,
+	delay_enc: okserde.NumberEncoding?,
+	repeat_count_enc: okserde.NumberEncoding?
+): okserde.Schema<TweenInfo>
+	const time = if time_enc == nil then DEFAULT_TIME_ENCODING else time_enc
 	const time_write, time_read, time_size = time.write, time.read, time.size
 
-	const delay = if delay_spec == nil then DEFAULT_DELAY_SPEC else delay_spec
+	const delay = if delay_enc == nil then DEFAULT_DELAY_ENCODING else delay_enc
 	const delay_write, delay_read, delay_size = delay.write, delay.read, delay.size
 
-	const repeat_count = if repeat_count_spec == nil then DEFAULT_REPEAT_COUNT_SPEC else repeat_count_spec
+	const repeat_count = if repeat_count_enc == nil then DEFAULT_REPEAT_COUNT_ENCODING else repeat_count_enc
 	const repeat_count_write, repeat_count_read, repeat_count_size =
 		repeat_count.write, repeat_count.read, repeat_count.size
 

@@ -1,13 +1,13 @@
-const types = require("@self/types")
+const okserde = require("@self/types")
 
-export type Schema<T... = ...any> = types.Schema<T...>
+export type Schema<T... = ...any> = okserde.Schema<T...>
 
 return {
 	serialize = require("@self/utility/serialize"),
 	deserialize = require("@self/utility/deserialize"),
 	validate = require("@self/utility/validate"),
 
-	specs = require("@self/specs"),
+	encodings = require("@self/encodings"),
 	schemas = {
 		array = require("@self/schemas/array"),
 		bitarray = require("@self/schemas/bitarray"),

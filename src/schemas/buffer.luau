@@ -1,10 +1,10 @@
-const specs = require("../specs")
+const encodings = require("../encodings")
 const okserde = require("../types")
 
-const DEFAULT_LEN_SPEC = specs.u16
+const DEFAULT_LEN_ENCODING = encodings.u16
 
-const function buffer_schema(len_spec: okserde.NumberTypeSpec?): okserde.Schema<buffer>
-	const len = if len_spec == nil then DEFAULT_LEN_SPEC else len_spec
+const function buffer_schema(len_enc: okserde.NumberEncoding?): okserde.Schema<buffer>
+	const len = if len_enc == nil then DEFAULT_LEN_ENCODING else len_enc
 	const len_write, len_read, len_size = len.write, len.read, len.size
 
 	return {

@@ -1,10 +1,10 @@
-const specs = require("../specs")
+const encodings = require("../encodings")
 const okserde = require("../types")
 
-const DEFAULT_NUMBER_SPEC = specs.f32
+const DEFAULT_NUMBER_ENCODING = encodings.f32
 
-const function number_schema(num_spec: okserde.NumberTypeSpec?): okserde.Schema<number>
-	const num = if num_spec == nil then DEFAULT_NUMBER_SPEC else num_spec
+const function number_schema(num_enc: okserde.NumberEncoding?): okserde.Schema<number>
+	const num = if num_enc == nil then DEFAULT_NUMBER_ENCODING else num_enc
 	const num_write, num_read, num_size, num_min, num_max = num.write, num.read, num.size, num.min, num.max
 
 	return {

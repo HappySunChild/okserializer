@@ -1,9 +1,9 @@
-const types = require("../types")
+const okserde = require("../types")
 
 const Vector3_schema = require("./Vector3")
 
-const function Ray_schema(vec_spec: types.NumberTypeSpec?): types.Schema<Ray>
-	const vec = Vector3_schema(vec_spec)
+const function Ray_schema(vec_enc: okserde.NumberEncoding?): okserde.Schema<Ray>
+	const vec = Vector3_schema(vec_enc)
 	const vec_write, vec_read, vec_size = vec.write, vec.read, vec.size(Vector3.zero)
 
 	const schema_size = vec_size * 2

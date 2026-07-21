@@ -1,4 +1,4 @@
-const types = require("../types")
+const okserde = require("../types")
 
 const ENUMS = Enum:GetEnums()
 const ENUM_TO_INDEX = {}
@@ -17,7 +17,7 @@ const function to_enum(index: number): Enum
 	return ENUMS[index]
 end
 
-const Enum_schema: types.Schema<EnumItem> = {
+const Enum_schema: okserde.Schema<EnumItem> = {
 	write = @native function(b: buffer, offset: number, value: EnumItem): number
 		buffer.writeu16(b, offset, to_index(value.EnumType))
 		buffer.writeu16(b, offset + 2, value.Value)

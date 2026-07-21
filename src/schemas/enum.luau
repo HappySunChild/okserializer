@@ -1,10 +1,10 @@
 const okserde = require("../types")
 
-const determine_spec = require("../utility/determine_spec")
+const determine_encoding = require("../utility/determine_encoding")
 
 const function enum_schema<T>(variants: { T }): okserde.Schema<T>
-	const spec = determine_spec(#variants)
-	const write, read, size = spec.write, spec.read, spec.size
+	const id_enc = determine_encoding(#variants)
+	const id_write, id_read, id_size = id_enc.write, id_enc.read, id_enc.size
 
 	const values_to_index = {}
 
@@ -14,28 +14,28 @@ const function enum_schema<T>(variants: { T }): okserde.Schema<T>
 
 	return {
 		write = @native function(b: buffer, offset: number, value: T): number
-			const index = values_to_index[value]
+			const id = values_to_index[value]
 
-			if index == nil then
-				error(`value of type {type(value)} ({value}) not in variant`)
+			if id == nil then
+				error(`value of type {type(value)} ({value}) not in enum`)
 			end
 
-			write(b, offset, index)
+			id_write(b, offset, id)
 
-			return size
+			return id_size
 		end,
 		read = @native function(b: buffer, offset: number): (number, T)
-			const index = read(b, offset)
-			const value = variants[index]
+			const id = id_read(b, offset)
+			const value = variants[id]
 
 			if value == nil then
-				error(`invalid set index read {index}`)
+				error(`invalid set index read {id}`)
 			end
 
-			return size, value
+			return id_size, value
 		end,
 		size = @native function(): number
-			return size
+			return id_size
 		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if value == nil then
@@ -43,7 +43,7 @@ const function enum_schema<T>(variants: { T }): okserde.Schema<T>
 			end
 
 			if values_to_index[value :: any] == nil then
-				return false, `value of type {type(value)} ({value}) not in variant`
+				return false, `value of type {type(value)} ({value}) not in enum`
 			end
 
 			return true, nil

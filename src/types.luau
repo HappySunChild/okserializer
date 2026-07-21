@@ -1,4 +1,4 @@
-export type NumberTypeSpec = {
+export type NumberEncoding = {
 	read write: (b: buffer, offset: number, value: number) -> (),
 	read read: (b: buffer, offset: number) -> number,
 	read size: number,

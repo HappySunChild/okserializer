@@ -10,7 +10,7 @@ and finally asserts that the pre-serialization and post-deserialization values a
 
 ```luau
 const okserde = require("okserde")
-const schemas, specs = okserde.schemas, okserde.specs
+const schemas, encodings = okserde.schemas, okserde.encodings
 const serialize, deserialize = okserde.serialize, okserde.deserialize
 
 type Person = {
@@ -22,8 +22,8 @@ type Person = {
 -- defining a composite schema
 const person_schema = schemas.struct<<Person>>({
 	first_name = schemas.string(),
-	last_name = schemas.string(specs.u8), -- you can specify how the length header for strings are encoded, defaults to u16
-	age = schemas.number(specs.u8), -- same for numbers, defaults to f32
+	last_name = schemas.string(encodings.u8), -- you can specify how the length header for strings are encoded, defaults to u16
+	age = schemas.number(encodings.u8), -- same for numbers, defaults to f32
 })
 
 const candidate: Person = { first_name = "John", last_name = "Doe", age = 20 }
@@ -78,8 +78,8 @@ You can then use this schema in other composite schemas or by itself:
 
 ```luau
 -- /main.luau
-const okserde = require("okserde")
-const schemas, specs = okserde.schemas, okserde.specs
+const okserde = require("../../src")
+const schemas, encodings = okserde.schemas, okserde.encodings
 const serialize, deserialize = okserde.serialize, okserde.deserialize
 
 const integer_schema = require("./integer")
@@ -92,7 +92,7 @@ const deserialized_integer = deserialize(integer_schema, serialized_integer)
 assert(deserialized_integer == 1i)
 
 -- use in composite schemas
-const composite_schema = schemas.array(integer_schema, specs.u8)
+const composite_schema = schemas.array(integer_schema, encodings.u8)
 
 const serialized_composite = serialize(composite_schema, { 3i, 31i, 3141592i })
 print(buffer.len(serialized_composite)) --> 25
@@ -109,13 +109,13 @@ assert(deserialized_composite[3] == 3141592i)
 ```luau
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-const okserde = require(ReplicatedStorage.Libraries.okserde)
-const okserde_rbx = require(ReplicatedStorage.Libraries.okserde.rbx)
-const schemas, specs = okserde.schemas, okserde.specs
+const okserde = require(ReplicatedStorage.okserde)
+const okserde_rbx = require(ReplicatedStorage.okserde.rbx)
+const schemas, encodings = okserde.schemas, okserde.encodings
 const serialize, deserialize = okserde.serialize, okserde.deserialize
 
 -- defining a composite schema
-const colors_schema = schemas.array(okserde_rbx.Color3, specs.u8)
+const colors_schema = schemas.array(okserde_rbx.Color3, encodings.u8)
 
 const colors = { Color3.new(1, 0, 0), Color3.new(0, 0, 1), Color3.new(1, 0, 1) }
 
@@ -129,13 +129,13 @@ assert(deserialized_colors[1] == colors[1])
 assert(deserialized_colors[2] == colors[2])
 assert(deserialized_colors[3] == colors[3])
 
--- you can also send serialized data across RemoteEvents and RemoteFunctions for less bandwidth usage
--- note that the receiving side must also have the same schema to deserialize the incoming data
+-- you can also be sent across RemoteEvents and RemoteFunctions for less bandwidth usage
 const some_remote = ReplicatedStorage:WaitForChild("SomeRemote") :: RemoteEvent
 some_remote:FireServer(serialized_colors)
 
 -- server side:
 some_remote.OnServerEvent:Connect(function(player: Player, serialized_colors: buffer)
+	-- you will also have to define the same schema on the receiving context to deserialize properly
 	const deserialized_colors = deserialize(colors_schema, serialized_colors)
 
 	print("received colors from ", player, deserialized_colors)

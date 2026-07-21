@@ -1,11 +1,11 @@
-const types = require("../types")
+const okserde = require("../types")
 
-const flags_schema = require("../schemas/extra/flags")
+const flags_schema = require("../schemas/flags")
 
 const data = flags_schema(9)
 const data_write, data_read = data.write, data.read
 
-const Axes_schema: types.Schema<Axes> = {
+const Axes_schema: okserde.Schema<Axes> = {
 	write = @native function(b: buffer, offset: number, value: Axes): number
 		return data_write(b, offset, {
 			value.X,

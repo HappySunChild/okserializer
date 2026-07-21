@@ -1,20 +1,20 @@
-const specs = require("../specs")
-const types = require("../types")
+const encodings = require("../encodings")
+const okserde = require("../types")
 
-const DEFAULT_VALUE_SPEC = specs.f32
-const DEFAULT_ENVELOPE_SPEC = specs.f16
+const DEFAULT_VALUE_ENCODING = encodings.f32
+const DEFAULT_ENVELOPE_ENCODING = encodings.f16
 
-const time = specs.s16
-const time_write, time_read, time_size = time.write, time.read, time.size
+const time_enc = encodings.un16
+const time_write, time_read, time_size = time_enc.write, time_enc.read, time_enc.size
 
 const function NumberSequenceKeypoint_schema(
-	value_spec: types.NumberTypeSpec?,
-	envelope_spec: types.NumberTypeSpec?
-): types.Schema<NumberSequenceKeypoint>
-	const value = if value_spec == nil then DEFAULT_VALUE_SPEC else value_spec
+	value_enc: okserde.NumberEncoding?,
+	envelope_enc: okserde.NumberEncoding?
+): okserde.Schema<NumberSequenceKeypoint>
+	const value = if value_enc == nil then DEFAULT_VALUE_ENCODING else value_enc
 	const value_write, value_read, value_size = value.write, value.read, value.size
 
-	const envelope = if envelope_spec == nil then DEFAULT_ENVELOPE_SPEC else envelope_spec
+	const envelope = if envelope_enc == nil then DEFAULT_ENVELOPE_ENCODING else envelope_enc
 	const envelope_write, envelope_read, envelope_size = envelope.write, envelope.read, envelope.size
 
 	const schema_size = time_size + value_size + envelope_size

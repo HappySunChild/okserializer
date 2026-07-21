@@ -1,4 +1,4 @@
--- "unorm" number byte format
+-- "unorm" encoding
 -- stores decimals between 0-1 with even spacing.
 
 const U8_MAX = (2 ^ 8) - 1
