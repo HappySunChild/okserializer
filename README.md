@@ -143,7 +143,24 @@ end)
 
 ```
 
+## Out-of-Scope Features/Goals
+
+Here are some things that while would be nice to have all in one library, are generally out of the scope of this project.
+That doesn't mean that this library couldn't be used to accomplish some of these things however!
+- lossless buffer compression (`zlib`, `DEFALTE`, etc.)
+- struct/value deduplication
+- Roblox networking / client-server synchronization
+- built-in full Roblox Instance serializing/deserializing (can be manually done with the given tools!)
+
 ## Attributions
 
 - Initially based off of athar_adventure's [BufferConverter2](https://devforum.roblox.com/t/temporarily-archived-bufferconverter2-blazingly-fast-schema-based-buffer-serialization/3429040),
 though has severely pivotted towards a more modular, runtime-agnostic paradigm.
+
+## Alternatives
+
+- [BufferConverter2](https://devforum.roblox.com/t/temporarily-archived-bufferconverter2-blazingly-fast-schema-based-buffer-serialization/3429040) by @athar-adv
+- [BufferEncoder](https://github.com/anexpia/BufferEncoder) by @anexpia
+- [Sera](https://github.com/MadStudioRoblox/Sera) by Mad Studio
+- [BufferUtil](https://github.com/Sleitnick/RbxUtil/tree/main/modules/buffer-util) by @Sleitnick
+- [Serde](https://devforum.roblox.com/t/serde-schema-based-serialization-deserialization/3668435) by @saaawdust
