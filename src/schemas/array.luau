@@ -6,14 +6,14 @@ const is_array = require("../utility/is_array")
 const DEFAULT_LEN_SPEC = specs.u16
 
 const function array_schema<T>(
-	schema: okserde.Schema<T>,
+	element_schema: okserde.Schema<T>,
 	len_spec: okserde.NumberTypeSpec?
 ): okserde.Schema<{ T }>
 	const len = if len_spec == nil then DEFAULT_LEN_SPEC else len_spec
 	const len_write, len_read, len_size = len.write, len.read, len.size
 
-	const schema_write, schema_read, schema_size, schema_validate =
-		schema.write, schema.read, schema.size, schema.validate
+	const element_write, element_read, element_size, element_validate =
+		element_schema.write, element_schema.read, element_schema.size, element_schema.validate
 
 	return {
 		write = @native function(b: buffer, offset: number, array: { T }): number
@@ -22,8 +22,7 @@ const function array_schema<T>(
 			local current_offset = offset + len_size
 
 			for _, value in array do
-				const bytes_written = schema_write(b, current_offset, value)
-				current_offset += bytes_written
+				current_offset += element_write(b, current_offset, value)
 			end
 
 			return current_offset - offset
@@ -35,7 +34,7 @@ const function array_schema<T>(
 			local current_offset = offset + len_size
 
 			for i = 1, count do
-				const bytes_read, value = schema_read(b, current_offset)
+				const bytes_read, value = element_read(b, current_offset)
 				output[i] = value
 
 				current_offset += bytes_read
@@ -47,7 +46,7 @@ const function array_schema<T>(
 			local total_byte_count = len_size
 
 			for _, value in array do
-				total_byte_count += schema_size(value)
+				total_byte_count += element_size(value)
 			end
 
 			return total_byte_count
@@ -58,7 +57,7 @@ const function array_schema<T>(
 			end
 
 			for index, element in array :: { T } do
-				local ok, err = schema_validate(element)
+				local ok, err = element_validate(element)
 
 				if not ok then
 					return false, `invalid array element at index {index}:\n\t{err:gsub("\t", "\t\t")}`
