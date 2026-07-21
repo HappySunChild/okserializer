@@ -3,8 +3,6 @@ A low-abstraction, schema-based Luau buffer serializer/deserializer.
 This library provides a lot of schemas for serializing common datatypes in Luau.
 It also provides some runtime-specific schemas for Roblox datatypes that can be found under the `okserde/rbx` module.
 
-Initially based off of athar_adventure's [BufferConverter2](https://devforum.roblox.com/t/temporarily-archived-bufferconverter2-blazingly-fast-schema-based-buffer-serialization/3429040).
-
 ## Usage Example
 
 Here's a simple example that creates a `Person` schema, then using that schema, serializes and deserializes a person,
@@ -144,3 +142,8 @@ some_remote.OnServerEvent:Connect(function(player: Player, serialized_colors: bu
 end)
 
 ```
+
+## Attributions
+
+- Initially based off of athar_adventure's [BufferConverter2](https://devforum.roblox.com/t/temporarily-archived-bufferconverter2-blazingly-fast-schema-based-buffer-serialization/3429040),
+though has severely pivotted towards a more modular, runtime-agnostic paradigm.
