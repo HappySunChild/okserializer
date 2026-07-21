@@ -7,7 +7,7 @@ const U16_MAX_INCLUSIVE = 2 ^ 16
 const U32_MAX_INCLUSIVE = 2 ^ 32
 
 return {
-	r8 = {
+	rn8 = {
 		write = function(b: buffer, offset: number, value: number)
 			buffer.writeu8(b, offset, value / math.tau * U8_MAX_INCLUSIVE)
 		end,
@@ -18,7 +18,7 @@ return {
 		min = 0,
 		max = math.tau - 1 / U8_MAX_INCLUSIVE,
 	},
-	r16 = {
+	rn16 = {
 		write = function(b: buffer, offset: number, value: number)
 			buffer.writeu16(b, offset, value / math.tau * U16_MAX_INCLUSIVE)
 		end,
@@ -29,7 +29,7 @@ return {
 		min = 0,
 		max = math.tau - 1 / U16_MAX_INCLUSIVE,
 	},
-	r32 = {
+	rn32 = {
 		write = function(b: buffer, offset: number, value: number)
 			buffer.writeu32(b, offset, value / math.tau * U32_MAX_INCLUSIVE)
 		end,

@@ -27,9 +27,9 @@ return {
 	un16 = unorm.un16 :: okserde.NumberTypeSpec, -- 1 / 65535      ≈ 0.0000152590218967
 	un32 = unorm.un32 :: okserde.NumberTypeSpec, -- 1 / 4294967295 ≈ 0.0000000002328306
 
-	r8 = radian.r8 :: okserde.NumberTypeSpec, --   tau / 256        ≈ 1.40625    degrees
-	r16 = radian.r16 :: okserde.NumberTypeSpec, -- tau / 65536      ≈ 0.00549316 degrees
-	r32 = radian.r32 :: okserde.NumberTypeSpec, -- tau / 4294967296 ≈ 0.00000008 degrees
+	rn8 = radian.rn8 :: okserde.NumberTypeSpec, --   tau / 256        ≈ 1.40625    degrees
+	rn16 = radian.rn16 :: okserde.NumberTypeSpec, -- tau / 65536      ≈ 0.00549316 degrees
+	rn32 = radian.rn32 :: okserde.NumberTypeSpec, -- tau / 4294967296 ≈ 0.00000008 degrees
 
 	none = none :: okserde.NumberTypeSpec,
 	constant = constant,
