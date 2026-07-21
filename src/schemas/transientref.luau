@@ -27,7 +27,7 @@ its lifetime and synchronization requirements!!
 
 const okserde = require("../types")
 
-const function externalref_schema<T>(references: { T }): okserde.Schema<T>
+const function transientref_schema<T>(references: { T }): okserde.Schema<T>
 	return {
 		write = @native function(b: buffer, offset: number, value: T): number
 			const index = #references + 1
@@ -57,4 +57,4 @@ const function externalref_schema<T>(references: { T }): okserde.Schema<T>
 	}
 end
 
-return externalref_schema
+return transientref_schema
