@@ -21,12 +21,12 @@ return {
 		null = require("@self/schemas/null"),
 		number = require("@self/schemas/number"),
 		optional = require("@self/schemas/optional"),
+		padding = require("@self/schemas/padding"),
 		string = require("@self/schemas/string"),
 		struct = require("@self/schemas/struct"),
 		termstring = require("@self/schemas/termstring"),
 		tuple = require("@self/schemas/tuple"),
 		union = require("@self/schemas/union"),
 		vector = require("@self/schemas/vector"),
-		void = require("@self/schemas/void"),
 	},
 }
