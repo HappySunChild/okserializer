@@ -17,6 +17,7 @@ return {
 		enum = require("@self/schemas/enum"),
 		externalref = require("@self/schemas/externalref"),
 		flags = require("@self/schemas/flags"),
+		map = require("@self/schemas/map"),
 		null = require("@self/schemas/null"),
 		number = require("@self/schemas/number"),
 		optional = require("@self/schemas/optional"),
