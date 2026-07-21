@@ -1,3 +1,5 @@
 return {
-	all_units = {},
+	all_units = {
+		require("./okserde/schemas/array.spec"),
+	},
 }
