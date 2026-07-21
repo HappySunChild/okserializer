@@ -24,6 +24,7 @@ return {
 
 		bitarray = require("@self/schemas/extra/bitarray"),
 		bitstruct = require("@self/schemas/extra/bitstruct"),
+		externalref = require("@self/schemas/extra/externalref"),
 		flags = require("@self/schemas/extra/flags"),
 		literalvariant = require("@self/schemas/extra/literalvariant"),
 		termstring = require("@self/schemas/extra/termstring"),
