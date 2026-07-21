@@ -1,7 +1,7 @@
 const okserde = require("./types")
 
 const radian = require("@self/radian")
-const small = require("@self/small")
+const unorm = require("@self/unorm")
 
 const none = require("@self/none")
 const constant = require("@self/constant")
@@ -23,9 +23,9 @@ return {
 	f32 = float.f32 :: okserde.NumberTypeSpec,
 	f64 = float.f64 :: okserde.NumberTypeSpec,
 
-	s8 = small.s8 :: okserde.NumberTypeSpec, --   1 / 256        ≈ 0.00390625
-	s16 = small.s16 :: okserde.NumberTypeSpec, -- 1 / 65536      ≈ 0.0000152587890625
-	s32 = small.s32 :: okserde.NumberTypeSpec, -- 1 / 4294967296 ≈ 0.00000000023283064365386962890625
+	un8 = unorm.un8 :: okserde.NumberTypeSpec, --   1 / 255        ≈ 0.0039215686274509
+	un16 = unorm.un16 :: okserde.NumberTypeSpec, -- 1 / 65535      ≈ 0.0000152590218967
+	un32 = unorm.un32 :: okserde.NumberTypeSpec, -- 1 / 4294967295 ≈ 0.0000000002328306
 
 	r8 = radian.r8 :: okserde.NumberTypeSpec, --   tau / 256        ≈ 1.40625    degrees
 	r16 = radian.r16 :: okserde.NumberTypeSpec, -- tau / 65536      ≈ 0.00549316 degrees
