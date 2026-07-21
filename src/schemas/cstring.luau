@@ -12,7 +12,7 @@ const function next_terminator(value: string, offset: number?): number
 	return string.len(value)
 end
 
-const termstring_schema: okserde.Schema<string> = {
+const cstring_schema: okserde.Schema<string> = {
 	write = @native function(b: buffer, offset: number, value: string): number
 		const count = next_terminator(value)
 
@@ -40,4 +40,4 @@ const termstring_schema: okserde.Schema<string> = {
 	end,
 }
 
-return termstring_schema
+return cstring_schema
