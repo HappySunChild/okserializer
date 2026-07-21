@@ -29,11 +29,11 @@ const function tuple_schema<T...>(...: okserde.Schema | okserde.UnresolvedSchema
 
 			return current_offset - offset, unpack(output)
 		end,
-		alloc_size = @native function(...: T...): number
+		size = @native function(...: T...): number
 			local total_size = 0
 
 			for index, schema in tuple_order do
-				total_size += schema.alloc_size(select(index, ...))
+				total_size += schema.size(select(index, ...))
 			end
 
 			return total_size

@@ -18,7 +18,7 @@ const function NumberRange_schema(value_spec: types.NumberTypeSpec?): types.Sche
 		read = @native function(b: buffer, offset: number): (number, NumberRange)
 			return schema_size, NumberRange.new(value_read(b, offset), value_read(b, offset + value_size))
 		end,
-		alloc_size = @native function(): number
+		size = @native function(): number
 			return schema_size
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

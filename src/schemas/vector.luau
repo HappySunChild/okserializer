@@ -22,7 +22,7 @@ const function vector_schema(component_spec: okserde.NumberTypeSpec?): okserde.S
 					component_read(b, offset + component_size * 2)
 				)
 		end,
-		alloc_size = @native function(): number
+		size = @native function(): number
 			return component_size * 3
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

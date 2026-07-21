@@ -19,7 +19,7 @@ const tweeninfo_schema = bitstruct_schema<<TweenInfoStruct>>(
 	{ "repeats_indefinitely", "reverses", "direction", "style" }
 )
 const tweeninfo_write, tweeninfo_read, tweeninfo_size =
-	tweeninfo_schema.write, tweeninfo_schema.read, tweeninfo_schema.alloc_size(nil :: any)
+	tweeninfo_schema.write, tweeninfo_schema.read, tweeninfo_schema.size(nil :: any)
 
 const function TweenInfo_schema(
 	time_spec: types.NumberTypeSpec?,
@@ -80,7 +80,7 @@ const function TweenInfo_schema(
 					delay_time
 				)
 		end,
-		alloc_size = @native function(value: TweenInfo): number
+		size = @native function(value: TweenInfo): number
 			return schema_size
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

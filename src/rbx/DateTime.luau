@@ -7,7 +7,7 @@ const DateTime_schema: types.Schema<DateTime> = {
 	read = @native function(b: buffer, offset: number): (number, DateTime)
 		return 8, DateTime.fromUnixTimestampMillis(buffer.readf64(b, offset))
 	end,
-	alloc_size = @native function(value: DateTime): number
+	size = @native function(value: DateTime): number
 		return 8
 	end,
 	validate = @native function(value: unknown): (boolean, string?)

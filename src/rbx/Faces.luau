@@ -36,7 +36,7 @@ const Faces_schema: types.Schema<Faces> = {
 				back :: Enum.NormalId
 			)
 	end,
-	alloc_size = @native function(): number
+	size = @native function(): number
 		return 1
 	end,
 	validate = @native function(value: unknown): (boolean, string?)

@@ -28,7 +28,7 @@ const termstring_schema: okserde.Schema<string> = {
 
 		return 1 + count, buffer.readstring(b, offset, count)
 	end,
-	alloc_size = @native function(value: string): number
+	size = @native function(value: string): number
 		return 1 + next_terminator(value)
 	end,
 	validate = @native function(value: unknown): (boolean, string?)

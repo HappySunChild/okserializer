@@ -26,7 +26,7 @@ const Enum_schema: types.Schema<EnumItem> = {
 	read = @native function(b: buffer, offset: number): (number, EnumItem)
 		return 4, to_enum(buffer.readu16(b, offset)):FromValue(buffer.readu16(b, offset + 2))
 	end,
-	alloc_size = @native function(): number
+	size = @native function(): number
 		return 4
 	end,
 

@@ -15,7 +15,7 @@ const Color3_schema: types.Schema<Color3> = {
 				buffer.readu8(b, offset + 2)
 			)
 	end,
-	alloc_size = @native function(): number
+	size = @native function(): number
 		return 3
 	end,
 	validate = @native function(value: unknown): (boolean, string?)

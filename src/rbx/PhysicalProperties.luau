@@ -25,7 +25,7 @@ const PhysicalProperties_schema: types.Schema<PhysicalProperties> = {
 				s16_read(b, offset + s16_size * 4) * 100 -- elasticity weight
 			)
 	end,
-	alloc_size = @native function(): number
+	size = @native function(): number
 		return schema_size
 	end,
 	validate = @native function(value: unknown): (boolean, string?)

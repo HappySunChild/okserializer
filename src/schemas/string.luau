@@ -21,7 +21,7 @@ const function string_schema(len_spec: okserde.NumberTypeSpec?): okserde.Schema<
 
 			return len_size + count, buffer.readstring(b, offset + len_size, count)
 		end,
-		alloc_size = @native function(value: string): number
+		size = @native function(value: string): number
 			return len_size + string.len(value) % (len_max + 1)
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

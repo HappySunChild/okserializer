@@ -4,7 +4,7 @@ const Vector2_schema = require("./Vector2")
 
 const function Rect_schema(component_spec: types.NumberTypeSpec?): types.Schema<Rect>
 	const vec = Vector2_schema(component_spec)
-	const vec_write, vec_read, vec_size = vec.write, vec.read, vec.alloc_size(Vector2.zero)
+	const vec_write, vec_read, vec_size = vec.write, vec.read, vec.size(Vector2.zero)
 
 	const schema_size = vec_size * 2
 
@@ -19,7 +19,7 @@ const function Rect_schema(component_spec: types.NumberTypeSpec?): types.Schema<
 			const _, max = vec_read(b, offset + vec_size)
 			return schema_size, Rect.new(min, max)
 		end,
-		alloc_size = @native function(value: Rect): number
+		size = @native function(value: Rect): number
 			return schema_size
 		end,
 

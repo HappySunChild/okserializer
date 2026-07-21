@@ -15,7 +15,7 @@ const function EnumItem_schema(enumerator: Enum, value_spec: types.NumberTypeSpe
 		read = @native function(b: buffer, offset: number): (number, EnumItem)
 			return value_size, enumerator:FromValue(value_read(b, offset))
 		end,
-		alloc_size = @native function(): number
+		size = @native function(): number
 			return value_size
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

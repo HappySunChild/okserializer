@@ -8,7 +8,7 @@ const function void_schema(void_count: number): okserde.Schema<nil>
 		read = @native function(): (number, nil)
 			return void_count, nil
 		end,
-		alloc_size = @native function(): number
+		size = @native function(): number
 			return void_count
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

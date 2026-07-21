@@ -33,7 +33,7 @@ const function flags_schema(flag_count: number): okserde.Schema<{ boolean }>
 
 			return byte_count, flags
 		end,
-		alloc_size = @native function(): number
+		size = @native function(): number
 			return byte_count
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

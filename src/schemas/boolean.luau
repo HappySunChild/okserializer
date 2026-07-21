@@ -8,7 +8,7 @@ const boolean_schema: okserde.Schema<boolean> = {
 	read = @native function(b: buffer, offset: number): (number, boolean)
 		return 1, buffer.readu8(b, offset) == 1
 	end,
-	alloc_size = @native function(): number
+	size = @native function(): number
 		return 1
 	end,
 	validate = @native function(value: unknown): (boolean, string?)

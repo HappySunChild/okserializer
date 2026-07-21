@@ -7,7 +7,7 @@ const function UDim2_schema(
 	offset_spec: types.NumberTypeSpec?
 ): types.Schema<UDim2>
 	const udim = UDim_schema(scale_spec, offset_spec)
-	const udim_write, udim_read, udim_size = udim.write, udim.read, udim.alloc_size(UDim.new())
+	const udim_write, udim_read, udim_size = udim.write, udim.read, udim.size(UDim.new())
 
 	const schema_size = udim_size * 2
 
@@ -22,7 +22,7 @@ const function UDim2_schema(
 			const _, y = udim_read(b, offset + udim_size)
 			return schema_size, UDim2.new(x, y)
 		end,
-		alloc_size = @native function(value: UDim2): number
+		size = @native function(value: UDim2): number
 			return schema_size
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

@@ -35,7 +35,7 @@ const function NumberSequenceKeypoint_schema(
 					envelope_read(b, offset + time_size + value_size)
 				)
 		end,
-		alloc_size = @native function(value: NumberSequenceKeypoint): number
+		size = @native function(value: NumberSequenceKeypoint): number
 			return schema_size
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

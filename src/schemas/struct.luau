@@ -42,13 +42,13 @@ const function struct_schema<T>(
 
 			return current_offset - offset, output
 		end,
-		alloc_size = @native function(value: T | any): number
+		size = @native function(value: T | any): number
 			local total_byte_count = 0
 
 			for _, key in ordered_keys do
 				const value_schema = shape[key]
 
-				total_byte_count += value_schema.alloc_size(value[key])
+				total_byte_count += value_schema.size(value[key])
 			end
 
 			return total_byte_count

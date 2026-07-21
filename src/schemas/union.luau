@@ -40,14 +40,14 @@ const function union_schema(...: okserde.Schema | okserde.UnresolvedSchema): oks
 
 			return id_size + read_data[1], unpack(read_data, 2)
 		end,
-		alloc_size = @native function(...: any): number
+		size = @native function(...: any): number
 			const index, schema = determine_schema(schemas, ...)
 
 			if index == nil or schema == nil then
 				error(`no valid schema available in union for value(s) of type {vararg_repr(...)}`)
 			end
 
-			const value_size = schema.alloc_size(...)
+			const value_size = schema.size(...)
 
 			return id_size + value_size
 		end,

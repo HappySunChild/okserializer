@@ -21,7 +21,7 @@ const ColorSequenceKeypoint_schema: types.Schema<ColorSequenceKeypoint> = {
 
 		return schema_size, ColorSequenceKeypoint.new(keypoint_time, keypoint_color)
 	end,
-	alloc_size = @native function(): number
+	size = @native function(): number
 		return schema_size
 	end,
 	validate = @native function(value: unknown): (boolean, string?)

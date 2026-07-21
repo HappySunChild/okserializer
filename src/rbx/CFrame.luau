@@ -40,7 +40,7 @@ const function CFrame_schema(
 
 			return pos_size * 3 + rot_size * 3, CFrame.new(x, y, z) * CFrame.fromOrientation(rx, ry, rz)
 		end,
-		alloc_size = @native function(): number
+		size = @native function(): number
 			return pos_size * 3 + rot_size * 3
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

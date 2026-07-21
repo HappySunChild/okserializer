@@ -4,7 +4,7 @@ const types = require("../types")
 const string_schema = require("../schemas/primitive/string")
 
 const uri_schema = string_schema(specs.u8)
-const uri_write, uri_read, uri_alloc_size = uri_schema.write, uri_schema.read, uri_schema.alloc_size
+const uri_write, uri_read, uri_size = uri_schema.write, uri_schema.read, uri_schema.size
 
 const Content_schema: types.Schema<Content> = {
 	write = @native function(b: buffer, offset: number, value: Content): number
@@ -28,11 +28,11 @@ const Content_schema: types.Schema<Content> = {
 
 		return 1, Content.none
 	end,
-	alloc_size = @native function(value: Content): number
+	size = @native function(value: Content): number
 		const source_type = value.SourceType
 
 		if source_type == Enum.ContentSourceType.Uri then
-			return 1 + uri_alloc_size(value.Uri or "")
+			return 1 + uri_size(value.Uri or "")
 		end
 
 		return 1

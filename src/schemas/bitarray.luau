@@ -38,7 +38,7 @@ const function bitarray_schema(
 
 			return math.ceil(bit_offset / 8), output
 		end,
-		alloc_size = @native function(value: { number }): number
+		size = @native function(value: { number }): number
 			return len_size + math.ceil(#value * bit_width / 8) % (len.max + 1)
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

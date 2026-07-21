@@ -34,7 +34,7 @@ const function enum_schema<T>(variants: { T }): okserde.Schema<T>
 
 			return size, value
 		end,
-		alloc_size = @native function(): number
+		size = @native function(): number
 			return size
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

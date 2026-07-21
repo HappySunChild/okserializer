@@ -19,7 +19,7 @@ const function Vector2_schema(component_spec: types.NumberTypeSpec?): types.Sche
 			return schema_size,
 				Vector2.new(component_read(b, offset), component_read(b, offset + component_size))
 		end,
-		alloc_size = @native function(): number
+		size = @native function(): number
 			return schema_size
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

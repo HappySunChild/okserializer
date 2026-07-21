@@ -49,7 +49,7 @@ const function bitstruct_schema<T>(width_dict: { [keyof<T>]: number }, order: { 
 
 			return byte_count, out_struct
 		end,
-		alloc_size = @native function(): number
+		size = @native function(): number
 			return byte_count
 		end,
 		validate = @native function(in_struct: any): (boolean, string?)

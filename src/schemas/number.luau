@@ -15,7 +15,7 @@ const function number_schema(num_spec: okserde.NumberTypeSpec?): okserde.Schema<
 		read = @native function(b: buffer, offset: number): (number, number)
 			return num_size, num_read(b, offset)
 		end,
-		alloc_size = function(): number
+		size = function(): number
 			return num_size
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

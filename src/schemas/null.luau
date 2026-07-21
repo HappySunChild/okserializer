@@ -7,7 +7,7 @@ const null_schema: okserde.Schema<nil> = {
 	read = @native function(): (number, nil)
 		return 0, nil
 	end,
-	alloc_size = @native function(): number
+	size = @native function(): number
 		return 0
 	end,
 	validate = @native function(value: unknown): (boolean, string?)

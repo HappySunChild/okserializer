@@ -21,7 +21,7 @@ const Font_schema: types.Schema<Font> = {
 
 		return 3 + family_len, Font.new(family, weight, style)
 	end,
-	alloc_size = @native function(value: Font): number
+	size = @native function(value: Font): number
 		const family_len = string.len(value.Family) % 256
 
 		return 3 + family_len

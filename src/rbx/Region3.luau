@@ -4,7 +4,7 @@ const Vector3_schema = require("./Vector3")
 
 const function Region3_schema(vec_spec: types.NumberTypeSpec?): types.Schema<Region3>
 	const vec = Vector3_schema(vec_spec)
-	const vec_write, vec_read, vec_size = vec.write, vec.read, vec.alloc_size(Vector3.zero)
+	const vec_write, vec_read, vec_size = vec.write, vec.read, vec.size(Vector3.zero)
 
 	const schema_size = vec_size * 2
 
@@ -22,7 +22,7 @@ const function Region3_schema(vec_spec: types.NumberTypeSpec?): types.Schema<Reg
 			const _, max = vec_read(b, offset + vec_size)
 			return schema_size, Region3.new(min, max)
 		end,
-		alloc_size = @native function(value: Region3): number
+		size = @native function(value: Region3): number
 			return schema_size
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

@@ -234,7 +234,7 @@ const BrickColor_schema: types.Schema<BrickColor> = {
 	read = @native function(b: buffer, offset: number): (number, BrickColor)
 		return 1, to_brickcolor(buffer.readu8(b, offset))
 	end,
-	alloc_size = @native function(): number
+	size = @native function(): number
 		return 1
 	end,
 	validate = @native function(value: unknown): (boolean, string?)

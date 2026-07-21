@@ -24,7 +24,7 @@ const function Vector3_schema(component_spec: types.NumberTypeSpec?): types.Sche
 					component_read(b, offset + component_size * 2)
 				)
 		end,
-		alloc_size = @native function(): number
+		size = @native function(): number
 			return schema_size
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

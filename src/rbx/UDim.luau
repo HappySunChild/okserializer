@@ -25,7 +25,7 @@ const function UDim_schema(
 		read = @native function(b: buffer, offset: number): (number, UDim)
 			return schema_size, UDim.new(scale_read(b, offset), offset_read(b, offset + scale_size))
 		end,
-		alloc_size = @native function(): number
+		size = @native function(): number
 			return schema_size
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

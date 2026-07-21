@@ -48,7 +48,7 @@ const function externalref_schema<T>(references: { T }): okserde.Schema<T>
 
 			return 1, references[index]
 		end,
-		alloc_size = function(): number
+		size = function(): number
 			return 1
 		end,
 		validate = function(): (boolean, string?)

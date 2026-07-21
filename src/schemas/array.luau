@@ -12,8 +12,8 @@ const function array_schema<T>(
 	const len = if len_spec == nil then DEFAULT_LEN_SPEC else len_spec
 	const len_write, len_read, len_size = len.write, len.read, len.size
 
-	const schema_write, schema_read, schema_alloc_size, schema_validate =
-		schema.write, schema.read, schema.alloc_size, schema.validate
+	const schema_write, schema_read, schema_size, schema_validate =
+		schema.write, schema.read, schema.size, schema.validate
 
 	return {
 		write = @native function(b: buffer, offset: number, array: { T }): number
@@ -43,11 +43,11 @@ const function array_schema<T>(
 
 			return current_offset - offset, output
 		end,
-		alloc_size = @native function(array: { T }): number
+		size = @native function(array: { T }): number
 			local total_byte_count = len_size
 
 			for _, value in array do
-				total_byte_count += schema_alloc_size(value)
+				total_byte_count += schema_size(value)
 			end
 
 			return total_byte_count

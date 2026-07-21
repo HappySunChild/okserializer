@@ -4,7 +4,7 @@ local Vector3_schema = require("./Vector3")
 
 const function PathWaypoint_schema(format: types.NumberTypeSpec?): types.Schema<PathWaypoint>
 	local pos = Vector3_schema(format)
-	local pos_write, pos_read, pos_size = pos.write, pos.read, pos.alloc_size(Vector3.zero)
+	local pos_write, pos_read, pos_size = pos.write, pos.read, pos.size(Vector3.zero)
 
 	const schema_size = pos_size + 1
 
@@ -21,7 +21,7 @@ const function PathWaypoint_schema(format: types.NumberTypeSpec?): types.Schema<
 
 			return schema_size, PathWaypoint.new(pos, action)
 		end,
-		alloc_size = @native function(waypoint: PathWaypoint): number
+		size = @native function(waypoint: PathWaypoint): number
 			return schema_size
 		end,
 		validate = @native function(value: unknown): (boolean, string?)

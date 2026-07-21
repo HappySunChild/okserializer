@@ -47,7 +47,7 @@ const Axes_schema: types.Schema<Axes> = {
 				back :: Enum.NormalId
 			)
 	end,
-	alloc_size = @native function(): number
+	size = @native function(): number
 		return 2
 	end,
 	validate = @native function(value: unknown): (boolean, string?)
