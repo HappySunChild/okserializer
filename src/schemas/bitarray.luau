@@ -1,11 +1,14 @@
-const specs = require("../../specs")
-const types = require("../../types")
+const specs = require("../specs")
+const okserde = require("../types")
 
-const is_array = require("../../utility/is_array")
+const is_array = require("../utility/is_array")
 
 const DEFAULT_LEN_SPEC = specs.u8
 
-const function bitarray_schema(bit_width: number, len_spec: types.NumberTypeSpec?): types.Schema<{ number }>
+const function bitarray_schema(
+	bit_width: number,
+	len_spec: okserde.NumberTypeSpec?
+): okserde.Schema<{ number }>
 	const len = if len_spec == nil then DEFAULT_LEN_SPEC else len_spec
 	const len_write, len_read, len_size = len.write, len.read, len.size
 

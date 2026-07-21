@@ -1,8 +1,8 @@
-const types = require("../../types")
+const okserde = require("../types")
 
-const resolve_schemas = require("../../utility/resolve_schemas")
+const resolve_schemas = require("../utility/resolve_schemas")
 
-const function tuple_schema<T...>(...: types.Schema | types.UnresolvedSchema): types.Schema<T...>
+const function tuple_schema<T...>(...: okserde.Schema | okserde.UnresolvedSchema): okserde.Schema<T...>
 	const tuple_order = { ... }
 
 	const new_schema = {

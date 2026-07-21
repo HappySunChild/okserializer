@@ -15,7 +15,7 @@ deserialized values may (and most likely will) be incorrect!!
 
 because of this it is very much **NOT** suitable for persistent storage, where the references tables will most
 certainly not be the same. if you're looking for a schema that can store arbitrary values that can't be serialized in a
-buffer, that also needs to work with persistent storage, then you should check out the `literalvariant` schema.
+buffer, that also needs to work with persistent storage, then you should check out the `enum` schema.
 
 one use case for this schema is when serializing Roblox Instances into buffers, and sending them across the network, since
 buffers can't directly hold references to Instances in them.
@@ -25,9 +25,9 @@ its lifetime and synchronization requirements!!
 
 --]]
 
-const types = require("../../types")
+const okserde = require("../types")
 
-const function externalref_schema<T>(references: { T }): types.Schema<T>
+const function externalref_schema<T>(references: { T }): okserde.Schema<T>
 	return {
 		write = @native function(b: buffer, offset: number, value: T): number
 			const index = #references + 1

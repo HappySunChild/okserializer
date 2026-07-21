@@ -1,10 +1,10 @@
-const types = require("../../types")
+const okserde = require("../types")
 
-const determine_spec = require("../../utility/determine_spec")
-const resolve_schemas = require("../../utility/resolve_schemas")
-const vararg_repr = require("../../utility/vararg_repr")
+const determine_spec = require("../utility/determine_spec")
+const resolve_schemas = require("../utility/resolve_schemas")
+const vararg_repr = require("../utility/vararg_repr")
 
-const function determine_schema<T...>(schemas: { types.Schema }, ...: T...): (number?, types.Schema<T...>?)
+const function determine_schema<T...>(schemas: { okserde.Schema }, ...: T...): (number?, okserde.Schema<T...>?)
 	for index, schema in schemas do
 		if schema.validate(...) then
 			return index, schema
@@ -14,13 +14,13 @@ const function determine_schema<T...>(schemas: { types.Schema }, ...: T...): (nu
 	return nil, nil
 end
 
-const function union_schema(...: types.Schema | types.UnresolvedSchema): types.Schema
+const function union_schema(...: okserde.Schema | okserde.UnresolvedSchema): okserde.Schema
 	const schemas = { ... }
 
 	const id = determine_spec(#schemas)
 	const id_write, id_read, id_size = id.write, id.read, id.size
 
-	const new_union_schema: types.Schema = {
+	const new_union_schema: okserde.Schema = {
 		write = @native function(b: buffer, offset: number, ...: any): number
 			const index, schema = determine_schema(schemas, ...)
 

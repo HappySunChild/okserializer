@@ -1,6 +1,6 @@
-const types = require("../../types")
+const okserde = require("../types")
 
-const function void_schema(void_count: number): types.Schema<nil>
+const function void_schema(void_count: number): okserde.Schema<nil>
 	return {
 		write = @native function(): number
 			return void_count

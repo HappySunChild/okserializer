@@ -1,9 +1,9 @@
-const specs = require("../../specs")
-const types = require("../../types")
+const specs = require("../specs")
+const okserde = require("../types")
 
 const DEFAULT_LEN_SPEC = specs.u16
 
-const function buffer_schema(len_spec: types.NumberTypeSpec?): types.Schema<buffer>
+const function buffer_schema(len_spec: okserde.NumberTypeSpec?): okserde.Schema<buffer>
 	const len = if len_spec == nil then DEFAULT_LEN_SPEC else len_spec
 	const len_write, len_read, len_size = len.write, len.read, len.size
 

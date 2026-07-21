@@ -1,9 +1,9 @@
-const specs = require("../../specs")
-const types = require("../../types")
+const specs = require("../specs")
+const okserde = require("../types")
 
 const DEFAULT_VECTOR_SPEC = specs.f32
 
-const function vector_schema(component_spec: types.NumberTypeSpec?): types.Schema<vector>
+const function vector_schema(component_spec: okserde.NumberTypeSpec?): okserde.Schema<vector>
 	const component = if component_spec == nil then DEFAULT_VECTOR_SPEC else component_spec
 	const component_write, component_read, component_size = component.write, component.read, component.size
 

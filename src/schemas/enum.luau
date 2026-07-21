@@ -1,8 +1,8 @@
-const types = require("../../types")
+const okserde = require("../types")
 
-const determine_spec = require("../../utility/determine_spec")
+const determine_spec = require("../utility/determine_spec")
 
-const function literalvariant_schema<T>(variants: { T }): types.Schema<T>
+const function enum_schema<T>(variants: { T }): okserde.Schema<T>
 	const spec = determine_spec(#variants)
 	const write, read, size = spec.write, spec.read, spec.size
 
@@ -51,4 +51,4 @@ const function literalvariant_schema<T>(variants: { T }): types.Schema<T>
 	}
 end
 
-return literalvariant_schema
+return enum_schema

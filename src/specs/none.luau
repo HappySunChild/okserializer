@@ -1,4 +1,4 @@
--- None ("omit"/"null")
+-- none ("omit"/"null")
 -- Mainly useful for omitting data you may not need to store (i.e. envelope of a NumberSequenceKeypoint)
 
 return {

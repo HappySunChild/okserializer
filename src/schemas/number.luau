@@ -1,9 +1,9 @@
-const specs = require("../../specs")
-const types = require("../../types")
+const specs = require("../specs")
+const okserde = require("../types")
 
 const DEFAULT_NUMBER_SPEC = specs.f32
 
-const function number_schema(num_spec: types.NumberTypeSpec?): types.Schema<number>
+const function number_schema(num_spec: okserde.NumberTypeSpec?): okserde.Schema<number>
 	const num = if num_spec == nil then DEFAULT_NUMBER_SPEC else num_spec
 	const num_write, num_read, num_size, num_min, num_max = num.write, num.read, num.size, num.min, num.max
 
@@ -29,7 +29,7 @@ const function number_schema(num_spec: types.NumberTypeSpec?): types.Schema<numb
 
 			return true, nil
 		end,
-	} :: types.Schema<number>
+	} :: okserde.Schema<number>
 end
 
 return number_schema

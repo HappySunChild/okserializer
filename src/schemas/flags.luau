@@ -1,8 +1,8 @@
-const types = require("../../types")
+const okserde = require("../types")
 
-const is_array = require("../../utility/is_array")
+const is_array = require("../utility/is_array")
 
-const function flags_schema(flag_count: number): types.Schema<{ boolean }>
+const function flags_schema(flag_count: number): okserde.Schema<{ boolean }>
 	assert(flag_count <= 32, "can't have more than 32 flags per flags schema")
 
 	const byte_count = math.ceil(flag_count / 8)
