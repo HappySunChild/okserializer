@@ -27,9 +27,9 @@ return {
 	un16 = unorm.un16 :: okserde.NumberEncoding, -- 1 / 65535      ≈ 0.0000152590218967
 	un32 = unorm.un32 :: okserde.NumberEncoding, -- 1 / 4294967295 ≈ 0.0000000002328306
 
-	sn8 = snorm.sn8 :: okserde.NumberEncoding, --   2 / 255        ≈ 0.0078431372549019
-	sn16 = snorm.sn16 :: okserde.NumberEncoding, -- 2 / 65535      ≈ 0.0000305180437934
-	sn32 = snorm.sn32 :: okserde.NumberEncoding, -- 2 / 4294967295 ≈ 0.0000000004656612
+	sn8 = snorm.sn8 :: okserde.NumberEncoding, --   1 / 127        ≈ 0.0078431372549019
+	sn16 = snorm.sn16 :: okserde.NumberEncoding, -- 1 / 32767      ≈ 0.0000305180437934
+	sn32 = snorm.sn32 :: okserde.NumberEncoding, -- 1 / 2147483647 ≈ 0.0000000004656612
 
 	rn8 = radian.rn8 :: okserde.NumberEncoding, --   tau / 256        ≈ 1.40625    degrees
 	rn16 = radian.rn16 :: okserde.NumberEncoding, -- tau / 65536      ≈ 0.00549316 degrees
