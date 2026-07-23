@@ -20,7 +20,7 @@ const function buffer_schema(len_enc: okserde.NumberEncoding?): okserde.Schema<b
 			const count = len_read(b, offset)
 			const new_buffer = buffer.create(count)
 
-			buffer.copy(new_buffer, 0, b, offset, count)
+			buffer.copy(new_buffer, 0, b, offset + len_size, count)
 
 			return len_size + count, new_buffer
 		end,
