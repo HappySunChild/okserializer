@@ -1,16 +1,18 @@
 export type NumberEncoding = {
-	read write: (b: buffer, offset: number, value: number) -> (),
-	read read: (b: buffer, offset: number) -> number,
-	read size: number,
-	read min: number,
-	read max: number,
+	write: (b: buffer, offset: number, value: number) -> (),
+	read: (b: buffer, offset: number) -> number,
+	size: number,
+	min: number,
+	max: number,
 }
 
 export type Schema<T... = ...any> = {
-	read write: (b: buffer, offset: number, T...) -> number,
-	read read: (b: buffer, offset: number) -> (number, T...),
-	read size: (T...) -> number,
-	read validate: (...any) -> (boolean, string?),
+	write: (b: buffer, offset: number, T...) -> number,
+	read: (b: buffer, offset: number) -> (number, T...),
+	validate: (...any) -> (boolean, string?),
+
+	dyn_size: ((T...) -> number)?,
+	static_size: number?,
 }
 
 export type UnresolvedSchema = (self: Schema) -> Schema
