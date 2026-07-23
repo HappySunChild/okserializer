@@ -2,7 +2,7 @@
 
 const okserde = require("../types")
 
-const function constant(value: number): okserde.NumberTypeSpec
+const function constant(value: number): okserde.NumberEncoding
 	return {
 		write = function(): () end,
 		read = function(): number
