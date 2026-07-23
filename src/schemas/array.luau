@@ -5,15 +5,13 @@ const is_array = require("../utility/is_array")
 
 const DEFAULT_LEN_ENCODING = encodings.u16
 
-const function array_schema<T>(
+const function create_array_proto<T>(
 	element_schema: okserde.Schema<T>,
-	len_enc: okserde.NumberEncoding?
+	len_enc: okserde.NumberEncoding
 ): okserde.Schema<{ T }>
-	const len = if len_enc == nil then DEFAULT_LEN_ENCODING else len_enc
-	const len_write, len_read, len_size = len.write, len.read, len.size
-
-	const element_write, element_read, element_size, element_validate =
-		element_schema.write, element_schema.read, element_schema.size, element_schema.validate
+	const len_write, len_read, len_size = len_enc.write, len_enc.read, len_enc.size
+	const element_write, element_read, element_validate =
+		element_schema.write, element_schema.read, element_schema.validate
 
 	return {
 		write = @native function(b: buffer, offset: number, array: { T }): number
@@ -42,16 +40,7 @@ const function array_schema<T>(
 
 			return current_offset - offset, output
 		end,
-		size = @native function(array: { T }): number
-			local total_byte_count = len_size
-
-			for _, value in array do
-				total_byte_count += element_size(value)
-			end
-
-			return total_byte_count
-		end,
-		validate = @native function(array: unknown): (boolean, string?)
+		validate = @native function(array: unknown): (boolean, string)
 			if not is_array(array) then
 				return false, "expected array value"
 			end
@@ -67,6 +56,34 @@ const function array_schema<T>(
 			return true, nil
 		end,
 	}
+end
+
+const function array_schema<T>(
+	element_schema: okserde.Schema<T>,
+	len_enc: okserde.NumberEncoding?
+): okserde.Schema<{ T }>
+	const len = if len_enc == nil then DEFAULT_LEN_ENCODING else len_enc
+	const proot = create_array_proto(element_schema, len)
+
+	const len_size = len.size
+	const element_static_size = element_schema.static_size
+	const element_dyn_size = element_schema.dyn_size
+
+	proot.dyn_size = if element_static_size ~= nil
+		then @native function(array: { T }): number
+			return len_size + element_static_size * #array
+		end
+		else @native function(array: { T }): number
+			local total_byte_count = len_size
+
+			for _, value in array do
+				total_byte_count += element_dyn_size(value)
+			end
+
+			return total_byte_count
+		end
+
+	return proot
 end
 
 return array_schema

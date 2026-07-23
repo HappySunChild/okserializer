@@ -24,15 +24,16 @@ const function buffer_schema(len_enc: okserde.NumberEncoding?): okserde.Schema<b
 
 			return len_size + count, new_buffer
 		end,
-		size = @native function(value: buffer): number
-			return len_size + buffer.len(value) % (len.max + 1)
-		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if type(value) ~= "buffer" then
 				return false, `expected value of type buffer, got {type(value)}`
 			end
 
 			return true, nil
+		end,
+		
+		dyn_size = @native function(value: buffer): number
+			return len_size + buffer.len(value) % (len.max + 1)
 		end,
 	}
 end

@@ -14,13 +14,13 @@ const function determine_schema<T...>(schemas: { okserde.Schema }, ...: T...): (
 	return nil, nil
 end
 
-const function union_schema(...: okserde.Schema | okserde.UnresolvedSchema): okserde.Schema
-	const schemas = { ... }
+const function create_union_proto(
+	schemas: { okserde.Schema | okserde.UnresolvedSchema },
+	id_enc: okserde.NumberEncoding
+): okserde.Schema
+	const id_write, id_read, id_size = id_enc.write, id_enc.read, id_enc.size
 
-	const id = determine_encoding(#schemas)
-	const id_write, id_read, id_size = id.write, id.read, id.size
-
-	const new_union_schema: okserde.Schema = {
+	return {
 		write = @native function(b: buffer, offset: number, ...: any): number
 			const index, schema = determine_schema(schemas, ...)
 
@@ -40,17 +40,6 @@ const function union_schema(...: okserde.Schema | okserde.UnresolvedSchema): oks
 
 			return id_size + read_data[1], unpack(read_data, 2)
 		end,
-		size = @native function(...: any): number
-			const index, schema = determine_schema(schemas, ...)
-
-			if index == nil or schema == nil then
-				error(`no valid schema available in union for value(s) of type {vararg_repr(...)}`)
-			end
-
-			const value_size = schema.size(...)
-
-			return id_size + value_size
-		end,
 		validate = @native function(...: unknown): (boolean, string?)
 			const index, schema = determine_schema(schemas, ...)
 
@@ -60,11 +49,25 @@ const function union_schema(...: okserde.Schema | okserde.UnresolvedSchema): oks
 
 			return true, nil
 		end,
+		
+		dyn_size = @native function(...: any): number
+			const index, schema = determine_schema(schemas, ...)
+
+			if index == nil or schema == nil then
+				error(`no valid schema available in union for value(s) of type {vararg_repr(...)}`)
+			end
+
+			return id_size + (schema.static_size or schema.dyn_size(...))
+		end,
 	}
+end
 
-	resolve_schemas(new_union_schema, schemas)
+const function union_schema(...: okserde.Schema | okserde.UnresolvedSchema): okserde.Schema
+	const schemas = { ... }
+	const proto = create_union_proto(schemas, determine_encoding(#schemas))
+	resolve_schemas(proto, schemas)
 
-	return new_union_schema
+	return proto
 end
 
 return union_schema

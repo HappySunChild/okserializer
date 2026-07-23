@@ -28,15 +28,16 @@ const cstring_schema: okserde.Schema<string> = {
 
 		return 1 + count, buffer.readstring(b, offset, count)
 	end,
-	size = @native function(value: string): number
-		return 1 + next_terminator(value)
-	end,
 	validate = @native function(value: unknown): (boolean, string?)
 		if type(value) ~= "string" then
 			return false, `expected value of type string, got {type(value)}`
 		end
 
 		return true, nil
+	end,
+	
+	dyn_size = @native function(value: string): number
+		return 1 + next_terminator(value)
 	end,
 }
 

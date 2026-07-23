@@ -21,9 +21,6 @@ const function string_schema(len_enc: okserde.NumberEncoding?): okserde.Schema<s
 
 			return len_size + count, buffer.readstring(b, offset + len_size, count)
 		end,
-		size = @native function(value: string): number
-			return len_size + string.len(value) % (len_max + 1)
-		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if type(value) ~= "string" then
 				return false, `expected value of type string, got {type(value)}`
@@ -35,6 +32,10 @@ const function string_schema(len_enc: okserde.NumberEncoding?): okserde.Schema<s
 			end
 
 			return true, nil
+		end,
+		
+		dyn_size = @native function(value: string): number
+			return len_size + string.len(value) % (len_max + 1)
 		end,
 	}
 end
