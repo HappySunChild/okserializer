@@ -7,9 +7,6 @@ const null_schema: okserde.Schema<nil> = {
 	read = @native function(): (number, nil)
 		return 0, nil
 	end,
-	size = @native function(): number
-		return 0
-	end,
 	validate = @native function(value: unknown): (boolean, string?)
 		if value ~= nil then
 			return false, `expected value of type nil, got {type(value)}`
@@ -17,6 +14,8 @@ const null_schema: okserde.Schema<nil> = {
 
 		return true, nil
 	end,
+
+	static_size = 0,
 }
 
 return null_schema

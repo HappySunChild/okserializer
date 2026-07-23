@@ -19,7 +19,7 @@ const function bitstruct_schema<T>(shape: { [keyof<T>]: number }, order: { keyof
 
 	sort_with_order(keys :: { any }, order)
 
-	const byte_count = math.ceil(total_bit_count / 8)
+	const static_size = math.ceil(total_bit_count / 8)
 
 	return {
 		write = @native function(b: buffer, offset: number, in_struct: T | any): number
@@ -34,7 +34,7 @@ const function bitstruct_schema<T>(shape: { [keyof<T>]: number }, order: { keyof
 				bit_offset += bit_width
 			end
 
-			return byte_count
+			return static_size
 		end,
 		read = @native function(b: buffer, offset: number): (number, T)
 			const out_struct = {}
@@ -47,10 +47,7 @@ const function bitstruct_schema<T>(shape: { [keyof<T>]: number }, order: { keyof
 				bit_offset += bit_width
 			end
 
-			return byte_count, out_struct
-		end,
-		size = @native function(): number
-			return byte_count
+			return static_size, out_struct
 		end,
 		validate = @native function(in_struct: any): (boolean, string?)
 			if type(in_struct) ~= "table" then
@@ -68,6 +65,8 @@ const function bitstruct_schema<T>(shape: { [keyof<T>]: number }, order: { keyof
 
 			return true, nil
 		end,
+
+		static_size = static_size,
 	}
 end
 

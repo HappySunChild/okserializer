@@ -34,9 +34,6 @@ const function enum_schema<T>(variants: { T }): okserde.Schema<T>
 
 			return id_size, value
 		end,
-		size = @native function(): number
-			return id_size
-		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if value == nil then
 				return false, "cannot store nil in a variant"
@@ -48,6 +45,8 @@ const function enum_schema<T>(variants: { T }): okserde.Schema<T>
 
 			return true, nil
 		end,
+
+		static_size = id_size,
 	}
 end
 

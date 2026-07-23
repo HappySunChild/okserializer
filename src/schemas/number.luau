@@ -15,9 +15,6 @@ const function number_schema(num_enc: okserde.NumberEncoding?): okserde.Schema<n
 		read = @native function(b: buffer, offset: number): (number, number)
 			return num_size, num_read(b, offset)
 		end,
-		size = function(): number
-			return num_size
-		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if type(value) ~= "number" then
 				return false, `expected value of type number, got {type(value)}`
@@ -29,6 +26,8 @@ const function number_schema(num_enc: okserde.NumberEncoding?): okserde.Schema<n
 
 			return true, nil
 		end,
+
+		static_size = num_size,
 	} :: okserde.Schema<number>
 end
 

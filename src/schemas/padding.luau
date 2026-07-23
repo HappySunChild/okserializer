@@ -8,9 +8,6 @@ const function padding_schema(byte_count: number): okserde.Schema<nil>
 		read = @native function(): (number, nil)
 			return byte_count, nil
 		end,
-		size = @native function(): number
-			return byte_count
-		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if value ~= nil then
 				return false, "can't write to void"
@@ -18,6 +15,8 @@ const function padding_schema(byte_count: number): okserde.Schema<nil>
 
 			return true, nil
 		end,
+
+		static_size = byte_count,
 	}
 end
 
