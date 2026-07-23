@@ -1,6 +1,6 @@
 const encodings = require("@okserde/encodings")
-const array = require("@okserde/schemas/array")
-const number = require("@okserde/schemas/number")
+const array_schema = require("@okserde/schemas/array")
+const number_schema = require("@okserde/schemas/number")
 
 const generate_serde_tests = require("@utility/generate_serde_tests")
 
@@ -11,11 +11,11 @@ return function(configured: butler.Configured)
 
 	return configured.unit("schema / array", function(test: butler.Test)
 		test("constructs", function()
-			expect(array(number())):to_exist()
-			expect(array(number(), encodings.u8)):to_exist()
+			expect(array_schema(number_schema())):to_exist()
+			expect(array_schema(number_schema(), encodings.u8)):to_exist()
 		end)
 		test("throws without element schema", function()
-			expect(array):to_throw()
+			expect(array_schema):to_throw()
 		end)
 
 		generate_serde_tests({
@@ -23,7 +23,7 @@ return function(configured: butler.Configured)
 			cases = {
 				{
 					label = "array(number(f32), u8)",
-					schema = array(number(encodings.f32), encodings.u8),
+					schema = array_schema(number_schema(encodings.f32), encodings.u8),
 					sets = {
 						{
 							expected_size_bytes = 1,
@@ -45,7 +45,7 @@ return function(configured: butler.Configured)
 				},
 				{
 					label = "array(number(f32), u16)",
-					schema = array(number(encodings.f32), encodings.u16),
+					schema = array_schema(number_schema(encodings.f32), encodings.u16),
 					sets = {
 						{
 							expected_size_bytes = 2,
@@ -67,7 +67,10 @@ return function(configured: butler.Configured)
 				},
 				{
 					label = "array(array(number(f32), u8), u8)",
-					schema = array(array(number(encodings.f32), encodings.u8), encodings.u8),
+					schema = array_schema(
+						array_schema(number_schema(encodings.f32), encodings.u8),
+						encodings.u8
+					),
 					sets = {
 						{
 							expected_size_bytes = 1,

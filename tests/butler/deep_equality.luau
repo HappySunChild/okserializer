@@ -28,6 +28,8 @@ const function deep_equality(a: any, b: any): boolean
 		return math.isnan(a) and math.isnan(b)
 	elseif a_type == "buffer" then
 		return buffer.tostring(a) == buffer.tostring(b)
+	elseif a_type == "vector" then
+		return deep_equality(a.x, b.x) and deep_equality(a.y, b.y) and deep_equality(a.z, b.z)
 	end
 
 	return false

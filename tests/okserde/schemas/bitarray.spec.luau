@@ -1,5 +1,5 @@
 const encodings = require("@okserde/encodings")
-const bitarray = require("@okserde/schemas/bitarray")
+const bitarray_schema = require("@okserde/schemas/bitarray")
 
 const generate_serde_tests = require("@utility/generate_serde_tests")
 
@@ -10,11 +10,11 @@ return function(configured: butler.Configured)
 
 	return configured.unit("schema / bitarray", function(test: butler.Test)
 		test("constructs", function()
-			expect(bitarray(1)):to_exist()
-			expect(bitarray(1, encodings.u8)):to_exist()
+			expect(bitarray_schema(1)):to_exist()
+			expect(bitarray_schema(1, encodings.u8)):to_exist()
 		end)
 		test("throws without element bitwidth", function()
-			expect(bitarray):to_throw()
+			expect(bitarray_schema):to_throw()
 		end)
 
 		generate_serde_tests({
@@ -22,7 +22,7 @@ return function(configured: butler.Configured)
 			cases = {
 				{
 					label = "bitarray(2, u8)",
-					schema = bitarray(2, encodings.u8),
+					schema = bitarray_schema(2, encodings.u8),
 					sets = {
 						{
 							expected_size_bytes = 1,
@@ -40,7 +40,7 @@ return function(configured: butler.Configured)
 				},
 				{
 					label = "bitarray(4, u8)",
-					schema = bitarray(4, encodings.u8),
+					schema = bitarray_schema(4, encodings.u8),
 					sets = {
 						{
 							expected_size_bytes = 1,
@@ -62,7 +62,7 @@ return function(configured: butler.Configured)
 				},
 				{
 					label = "bitarray(4, u16)",
-					schema = bitarray(4, encodings.u16),
+					schema = bitarray_schema(4, encodings.u16),
 					sets = {
 						{
 							expected_size_bytes = 2,

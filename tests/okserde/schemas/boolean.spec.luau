@@ -1,4 +1,4 @@
-const boolean = require("@okserde/schemas/boolean")
+const boolean_schema = require("@okserde/schemas/boolean")
 
 const generate_serde_tests = require("@utility/generate_serde_tests")
 
@@ -11,7 +11,7 @@ return function(configured: butler.Configured)
 			cases = {
 				{
 					label = "boolean",
-					schema = boolean,
+					schema = boolean_schema,
 					sets = {
 						{
 							expected_size_bytes = 1,

@@ -14,6 +14,12 @@ return function(configured: butler.Configured)
 			expect(buffer_schema(encodings.u8)):to_exist()
 		end)
 
+		const populated_b = buffer.create(64)
+
+		for i = 0, 3 do
+			buffer.writeu16(populated_b, i * 16, math.random(0, 2 ^ 16 - 1))
+		end
+
 		generate_serde_tests({
 			test = test,
 			cases = {
@@ -33,6 +39,10 @@ return function(configured: butler.Configured)
 							expected_size_bytes = 2 ^ 16 + 1,
 							values = { buffer.create(2 ^ 16 - 1) },
 						},
+						{
+							expected_size_bytes = 66,
+							values = { populated_b },
+						},
 					},
 				},
 				{
@@ -50,6 +60,10 @@ return function(configured: butler.Configured)
 						{
 							expected_size_bytes = 256,
 							values = { buffer.create(2 ^ 8 - 1) },
+						},
+						{
+							expected_size_bytes = 65,
+							values = { populated_b },
 						},
 					},
 				},
