@@ -1,13 +1,17 @@
 const butler = require("@butler/butler")
-const okserde = require("@okserde")
-const serialize, deserialize = okserde.serialize, okserde.deserialize
+const expect = require("@butler/expect")
 
-const is_similar = require("./is_similar")
+const okserde = require("@okserde")
+
+type Set = {
+	values: { any },
+	expected_size_bytes: number,
+}
 
 type Case = {
 	schema: okserde.Schema,
 	label: string,
-	value_sets: { { any } },
+	sets: { Set },
 }
 
 type Options = {
@@ -19,33 +23,38 @@ const function generate_serde_tests(options: Options)
 	const test = options.test
 
 	for _, case in options.cases do
-		const schema, value_sets = case.schema, case.value_sets
+		const schema, sets = case.schema, case.sets
+		const write, read, size = schema.write, schema.read, schema.size
 
 		test(`serde {case.label}`, function(remark: (string) -> ())
-			for index, value_set in value_sets do
-				const serialize_start = os.clock()
-				const serialized_b = serialize(schema, unpack(value_set))
-				const serialize_duration = os.clock() - serialize_start
+			for index, set in sets do
+				const values = set.values
+
+				const size_start = os.clock()
+				const size_bytes = size(unpack(values))
+				const size_duration = os.clock() - size_start
+
+				expect(size_bytes):to_equal(set.expected_size_bytes)
+
+				const b = buffer.create(size_bytes)
+
+				const write_start = os.clock()
+				write(b, 0, unpack(values))
+				const write_duration = os.clock() - write_start
 
 				const deserialize_start = os.clock()
-				const deserialized_set = { deserialize(schema, serialized_b) }
+				const deserialized_values = { select(2, read(b, 0)) }
 				const deserialize_duration = os.clock() - deserialize_start
 
 				const duration_output = string.format(
-					"serialize %.2fµs, deserialize %.2fµs",
-					serialize_duration * 1e6,
+					"size: %.2fµs, write %.2fµs, deserialize %.2fµs",
+					size_duration * 1e6,
+					write_duration * 1e6,
 					deserialize_duration * 1e6
 				)
+				remark(`set #{index} with {#values} value(s): {size_bytes} bytes(s), {duration_output}`)
 
-				remark(
-					`set #{index} with {#value_set} value(s): {buffer.len(serialized_b)} bytes(s), {duration_output}`
-				)
-
-				const similar = is_similar(value_set, deserialized_set)
-
-				if not similar then
-					error(`deserialized values were not similar to serialized values`)
-				end
+				expect(values):to_equal(deserialized_values)
 			end
 		end)
 	end
