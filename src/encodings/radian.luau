@@ -16,7 +16,7 @@ return {
 		end,
 		size = 1,
 		min = 0,
-		max = math.tau - 1 / U8_MAX_INCLUSIVE,
+		max = math.tau - math.tau / U8_MAX_INCLUSIVE,
 	},
 	rn16 = {
 		write = function(b: buffer, offset: number, value: number)
@@ -27,7 +27,7 @@ return {
 		end,
 		size = 2,
 		min = 0,
-		max = math.tau - 1 / U16_MAX_INCLUSIVE,
+		max = math.tau - math.tau / U16_MAX_INCLUSIVE,
 	},
 	rn32 = {
 		write = function(b: buffer, offset: number, value: number)
@@ -38,6 +38,6 @@ return {
 		end,
 		size = 4,
 		min = 0,
-		max = math.tau - 1 / U32_MAX_INCLUSIVE,
+		max = math.tau - math.tau / U32_MAX_INCLUSIVE,
 	},
 }
