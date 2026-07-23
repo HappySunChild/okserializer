@@ -1,6 +1,6 @@
 const okserde = require("../types")
 
-const determine_spec = require("../utility/determine_spec")
+const determine_encoding = require("../utility/determine_encoding")
 const resolve_schemas = require("../utility/resolve_schemas")
 const vararg_repr = require("../utility/vararg_repr")
 
@@ -17,7 +17,7 @@ end
 const function union_schema(...: okserde.Schema | okserde.UnresolvedSchema): okserde.Schema
 	const schemas = { ... }
 
-	const id = determine_spec(#schemas)
+	const id = determine_encoding(#schemas)
 	const id_write, id_read, id_size = id.write, id.read, id.size
 
 	const new_union_schema: okserde.Schema = {
