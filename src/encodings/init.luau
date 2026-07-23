@@ -36,6 +36,5 @@ return {
 	rn16 = radian.rn16 :: okserde.NumberTypeSpec, -- tau / 65536      ≈ 0.00549316 degrees
 	rn32 = radian.rn32 :: okserde.NumberTypeSpec, -- tau / 4294967296 ≈ 0.00000008 degrees
 
-	none = none :: okserde.NumberTypeSpec,
 	constant = constant,
 }
