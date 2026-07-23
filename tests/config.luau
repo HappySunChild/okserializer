@@ -9,5 +9,9 @@ return {
 		require("./okserde/encodings/unorm.spec"),
 
 		require("./okserde/schemas/array.spec"),
+		require("./okserde/schemas/bitarray.spec"),
+		require("./okserde/schemas/bitstruct.spec"),
+		require("./okserde/schemas/boolean.spec"),
+		require("./okserde/schemas/buffer.spec"),
 	},
 }
