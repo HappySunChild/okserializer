@@ -9,6 +9,8 @@ const function bitarray_schema(
 	element_bit_width: number,
 	len_enc: okserde.NumberEncoding?
 ): okserde.Schema<{ number }>
+	assert(element_bit_width, "missing element_bit_width")
+
 	const len = if len_enc == nil then DEFAULT_LEN_ENCODING else len_enc
 	const len_write, len_read, len_size = len.write, len.read, len.size
 
