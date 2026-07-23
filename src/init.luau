@@ -1,6 +1,7 @@
 const okserde = require("@self/types")
 
 export type Schema<T... = ...any> = okserde.Schema<T...>
+export type NumberEncoding = okserde.NumberEncoding
 
 return {
 	serialize = require("@self/utility/serialize"),
