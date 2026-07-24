@@ -10,7 +10,7 @@ const time_write, time_read, time_size = time_enc.write, time_enc.read, time_enc
 const function NumberSequenceKeypoint_schema(
 	value_enc: okserde.NumberEncoding?,
 	envelope_enc: okserde.NumberEncoding?
-): okserde.Schema<NumberSequenceKeypoint>
+): okserde.StaticSchema<NumberSequenceKeypoint>
 	const value = if value_enc == nil then DEFAULT_VALUE_ENCODING else value_enc
 	const value_write, value_read, value_size = value.write, value.read, value.size
 
@@ -35,9 +35,6 @@ const function NumberSequenceKeypoint_schema(
 					envelope_read(b, offset + time_size + value_size)
 				)
 		end,
-		size = @native function(value: NumberSequenceKeypoint): number
-			return schema_size
-		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "NumberSequenceKeypoint" then
 				return false, `expected value of type NumberSequenceKeypoint, got {typeof(value)}`
@@ -45,6 +42,8 @@ const function NumberSequenceKeypoint_schema(
 
 			return true, nil
 		end,
+
+		static_size = schema_size,
 	}
 end
 

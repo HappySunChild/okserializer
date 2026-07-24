@@ -3,9 +3,9 @@ const okserde = require("../types")
 const flags_schema = require("../schemas/flags")
 
 const data = flags_schema(9)
-const data_write, data_read = data.write, data.read
+const data_write, data_read, data_static_size = data.write, data.read, data.static_size
 
-const Axes_schema: okserde.Schema<Axes> = {
+const Axes_schema: okserde.StaticSchema<Axes> = {
 	write = @native function(b: buffer, offset: number, value: Axes): number
 		return data_write(b, offset, {
 			value.X,
@@ -47,9 +47,6 @@ const Axes_schema: okserde.Schema<Axes> = {
 				back :: Enum.NormalId
 			)
 	end,
-	size = @native function(): number
-		return 2
-	end,
 	validate = @native function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "Axes" then
 			return false, `expected value of type Axes, got {typeof(value)}`
@@ -57,6 +54,8 @@ const Axes_schema: okserde.Schema<Axes> = {
 
 		return true, nil
 	end,
+
+	static_size = data_static_size,
 }
 
 return Axes_schema

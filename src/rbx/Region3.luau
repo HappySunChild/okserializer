@@ -2,9 +2,9 @@ const okserde = require("../types")
 
 const Vector3_schema = require("./Vector3")
 
-const function Region3_schema(vec_enc: okserde.NumberEncoding?): okserde.Schema<Region3>
+const function Region3_schema(vec_enc: okserde.NumberEncoding?): okserde.StaticSchema<Region3>
 	const vec = Vector3_schema(vec_enc)
-	const vec_write, vec_read, vec_size = vec.write, vec.read, vec.size(Vector3.zero)
+	const vec_write, vec_read, vec_size = vec.write, vec.read, vec.static_size
 
 	const schema_size = vec_size * 2
 
@@ -22,9 +22,6 @@ const function Region3_schema(vec_enc: okserde.NumberEncoding?): okserde.Schema<
 			const _, max = vec_read(b, offset + vec_size)
 			return schema_size, Region3.new(min, max)
 		end,
-		size = @native function(value: Region3): number
-			return schema_size
-		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "Region3" then
 				return false, `expected value of type Region3, got {typeof(value)}`
@@ -32,6 +29,8 @@ const function Region3_schema(vec_enc: okserde.NumberEncoding?): okserde.Schema<
 
 			return true, nil
 		end,
+
+		static_size = schema_size,
 	}
 end
 

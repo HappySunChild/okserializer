@@ -6,7 +6,7 @@ const string_schema = require("../schemas/string")
 const uri_schema = string_schema(encodings.u8)
 const uri_write, uri_read, uri_size = uri_schema.write, uri_schema.read, uri_schema.size
 
-const Content_schema: okserde.Schema<Content> = {
+const Content_schema: okserde.DynSchema<Content> = {
 	write = @native function(b: buffer, offset: number, value: Content): number
 		const source_type = value.SourceType
 
@@ -28,7 +28,15 @@ const Content_schema: okserde.Schema<Content> = {
 
 		return 1, Content.none
 	end,
-	size = @native function(value: Content): number
+	validate = @native function(value: unknown): (boolean, string?)
+		if typeof(value) ~= "Content" then
+			return false, `expected value of type Content, got {typeof(value)}`
+		end
+
+		return true, nil
+	end,
+
+	dyn_size = @native function(value: Content): number
 		const source_type = value.SourceType
 
 		if source_type == Enum.ContentSourceType.Uri then
@@ -36,13 +44,6 @@ const Content_schema: okserde.Schema<Content> = {
 		end
 
 		return 1
-	end,
-	validate = @native function(value: unknown): (boolean, string?)
-		if typeof(value) ~= "Content" then
-			return false, `expected value of type Content, got {typeof(value)}`
-		end
-
-		return true, nil
 	end,
 }
 

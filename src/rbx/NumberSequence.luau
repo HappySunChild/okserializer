@@ -9,9 +9,9 @@ const ARRAY_LEN_ENCODING = encodings.u8
 const function NumberSequence_schema(
 	value_enc: okserde.NumberEncoding?,
 	envelope_enc: okserde.NumberEncoding?
-): okserde.Schema<NumberSequence>
+): okserde.DynSchema<NumberSequence>
 	const data = array_schema(NumberSequenceKeypoint_schema(value_enc, envelope_enc), ARRAY_LEN_ENCODING)
-	const data_write, data_read, data_size = data.write, data.read, data.size
+	const data_write, data_read, data_dyn_size = data.write, data.read, data.dyn_size
 
 	return {
 		write = @native function(b: buffer, offset: number, value: NumberSequence): number
@@ -21,15 +21,16 @@ const function NumberSequence_schema(
 			const bytes_read, keypoints = data_read(b, offset)
 			return bytes_read, NumberSequence.new(keypoints)
 		end,
-		size = @native function(value: NumberSequence): number
-			return data_size(value.Keypoints)
-		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "NumberSequence" then
 				return false, `expected value of type NumberSequence, got {typeof(value)}`
 			end
 
 			return true, nil
+		end,
+
+		dyn_size = @native function(value: NumberSequence): number
+			return data_dyn_size(value.Keypoints)
 		end,
 	}
 end

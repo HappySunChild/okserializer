@@ -6,7 +6,7 @@ local un16_write, un16_read, un16_size = un16.write, un16.read, un16.size
 
 const SCHEMA_SIZE = un16_size * 5
 
-const PhysicalProperties_schema: okserde.Schema<PhysicalProperties> = {
+const PhysicalProperties_schema: okserde.StaticSchema<PhysicalProperties> = {
 	write = @native function(b: buffer, offset: number, value: PhysicalProperties): number
 		un16_write(b, offset, value.Density / 100)
 		un16_write(b, offset + un16_size, value.Friction / 2)
@@ -25,9 +25,6 @@ const PhysicalProperties_schema: okserde.Schema<PhysicalProperties> = {
 				un16_read(b, offset + un16_size * 4) * 100 -- elasticity weight
 			)
 	end,
-	size = @native function(): number
-		return SCHEMA_SIZE
-	end,
 	validate = @native function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "PhysicalProperties" then
 			return false, `expected value of type PhysicalProperties, got {typeof(value)}`
@@ -35,6 +32,8 @@ const PhysicalProperties_schema: okserde.Schema<PhysicalProperties> = {
 
 		return true, nil
 	end,
+
+	static_size = SCHEMA_SIZE,
 }
 
 return PhysicalProperties_schema

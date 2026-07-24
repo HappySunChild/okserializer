@@ -5,9 +5,9 @@ const UDim_schema = require("./UDim")
 const function UDim2_schema(
 	scale_enc: okserde.NumberEncoding?,
 	offset_enc: okserde.NumberEncoding?
-): okserde.Schema<UDim2>
+): okserde.StaticSchema<UDim2>
 	const udim = UDim_schema(scale_enc, offset_enc)
-	const udim_write, udim_read, udim_size = udim.write, udim.read, udim.size(UDim.new())
+	const udim_write, udim_read, udim_size = udim.write, udim.read, udim.static_size
 
 	const schema_size = udim_size * 2
 
@@ -22,9 +22,6 @@ const function UDim2_schema(
 			const _, y = udim_read(b, offset + udim_size)
 			return schema_size, UDim2.new(x, y)
 		end,
-		size = @native function(value: UDim2): number
-			return schema_size
-		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "UDim2" then
 				return false, `expected value of type UDim2, got {typeof(value)}`
@@ -32,6 +29,8 @@ const function UDim2_schema(
 
 			return true, nil
 		end,
+
+		static_size = schema_size,
 	}
 end
 

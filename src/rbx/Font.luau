@@ -1,6 +1,6 @@
 const okserde = require("../types")
 
-const Font_schema: okserde.Schema<Font> = {
+const Font_schema: okserde.DynSchema<Font> = {
 	write = @native function(b: buffer, offset: number, value: Font): number
 		const family = value.Family
 		const family_len = string.len(family)
@@ -21,18 +21,18 @@ const Font_schema: okserde.Schema<Font> = {
 
 		return 3 + family_len, Font.new(family, weight, style)
 	end,
-	size = @native function(value: Font): number
-		const family_len = string.len(value.Family) % 256
-
-		return 3 + family_len
-	end,
-
 	validate = @native function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "Font" then
 			return false, `expected value of type Font, got {typeof(value)}`
 		end
 
 		return true, nil
+	end,
+
+	dyn_size = @native function(value: Font): number
+		const family_len = string.len(value.Family) % 256
+
+		return 3 + family_len
 	end,
 }
 

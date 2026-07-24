@@ -2,9 +2,9 @@ const okserde = require("../types")
 
 const Vector2_schema = require("./Vector2")
 
-const function Rect_schema(component_enc: okserde.NumberEncoding?): okserde.Schema<Rect>
+const function Rect_schema(component_enc: okserde.NumberEncoding?): okserde.StaticSchema<Rect>
 	const vec = Vector2_schema(component_enc)
-	const vec_write, vec_read, vec_size = vec.write, vec.read, vec.size(Vector2.zero)
+	const vec_write, vec_read, vec_size = vec.write, vec.read, vec.static_size
 
 	const schema_size = vec_size * 2
 
@@ -19,10 +19,6 @@ const function Rect_schema(component_enc: okserde.NumberEncoding?): okserde.Sche
 			const _, max = vec_read(b, offset + vec_size)
 			return schema_size, Rect.new(min, max)
 		end,
-		size = @native function(value: Rect): number
-			return schema_size
-		end,
-
 		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "Rect" then
 				return false, `expected value of type Rect, got {typeof(value)}`
@@ -30,6 +26,8 @@ const function Rect_schema(component_enc: okserde.NumberEncoding?): okserde.Sche
 
 			return true, nil
 		end,
+
+		static_size = schema_size,
 	}
 end
 

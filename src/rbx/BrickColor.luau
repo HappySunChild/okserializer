@@ -226,16 +226,13 @@ const function to_brickcolor(index: number): BrickColor
 	return BrickColor.new(BRICKCOLOR_IDS[index])
 end
 
-const BrickColor_schema: okserde.Schema<BrickColor> = {
+const BrickColor_schema: okserde.StaticSchema<BrickColor> = {
 	write = @native function(b: buffer, offset: number, value: BrickColor): number
 		buffer.writeu8(b, offset, to_index(value))
 		return 1
 	end,
 	read = @native function(b: buffer, offset: number): (number, BrickColor)
 		return 1, to_brickcolor(buffer.readu8(b, offset))
-	end,
-	size = @native function(): number
-		return 1
 	end,
 	validate = @native function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "BrickColor" then
@@ -244,6 +241,8 @@ const BrickColor_schema: okserde.Schema<BrickColor> = {
 
 		return true, nil
 	end,
+
+	static_size = 1,
 }
 
 return BrickColor_schema
