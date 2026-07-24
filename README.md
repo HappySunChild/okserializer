@@ -42,7 +42,6 @@ assert(deserialized_person.age == candidate.age)
 
 ### Custom Schemas
 
-The design of this library is supposed to be as simple as possible, so that creating your own custom schemas is super simple and easy.
 Here's a quick example showing how to create a **uniform** schema (not composed of other preexisting schemas, like `struct`):
 
 ```luau
