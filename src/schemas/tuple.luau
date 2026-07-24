@@ -1,11 +1,12 @@
 const okserde = require("../types")
 
 const resolve_schemas = require("../utility/resolve_schemas")
+const is_static = require("../utility/is_static")
 
-const function tuple_schema<T...>(...: okserde.Schema | okserde.UnresolvedSchema): okserde.Schema<T...>
-	const tuple_order = { ... }
-
-	const new_schema = {
+const function create_tuple_proto<T...>(
+	tuple_order: { okserde.Schema | okserde.UnresolvedSchema }
+): okserde.Schema<T...>
+	return {
 		write = @native function(b: buffer, offset: number, ...: T...): number
 			local current_offset = offset
 
@@ -29,15 +30,6 @@ const function tuple_schema<T...>(...: okserde.Schema | okserde.UnresolvedSchema
 
 			return current_offset - offset, unpack(output)
 		end,
-		size = @native function(...: T...): number
-			local total_size = 0
-
-			for index, schema in tuple_order do
-				total_size += schema.size(select(index, ...))
-			end
-
-			return total_size
-		end,
 		validate = @native function(...: unknown): (boolean, string?)
 			for index, schema in tuple_order do
 				local ok, err = schema.validate(select(index, ...))
@@ -50,10 +42,30 @@ const function tuple_schema<T...>(...: okserde.Schema | okserde.UnresolvedSchema
 			return true, nil
 		end,
 	}
+end
 
-	resolve_schemas(new_schema, tuple_order)
+const function tuple_schema<T...>(...: okserde.Schema | okserde.UnresolvedSchema): okserde.Schema<T...>
+	const tuple_order = { ... }
+	const proto = create_tuple_proto(tuple_order)
+	resolve_schemas(proto, tuple_order)
 
-	return new_schema
+	const static, total_size = is_static(tuple_order)
+
+	if static then
+		proto.static_size = total_size
+	else
+		proto.dyn_size = @native function(...: T...): number
+			local total_byte_count = 0
+
+			for index, schema: okserde.Schema in tuple_order do
+				total_byte_count += schema.static_size or schema.dyn_size(select(index, ...))
+			end
+
+			return total_byte_count
+		end
+	end
+
+	return proto
 end
 
 return tuple_schema
