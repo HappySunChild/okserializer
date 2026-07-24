@@ -18,27 +18,27 @@ const f32 = encodings.f32
 const function determine_encoding(n: number): types.NumberEncoding
 	const whole, frac = math.modf(n)
 
-	if frac == 0 then -- integer
-		if whole < 0 then -- signed
-			if math.abs(n) > i16_limit then
-				return i32
-			elseif math.abs(n) > i8_limit then
-				return i16
-			else
-				return i8
-			end
-		end
+	if frac ~= 0 then -- integer
+		return f32
+	end
 
-		if n > u16_limit then
-			return u32
-		elseif n > u8_limit then
-			return u16
+	if whole < 0 then -- signed
+		if math.abs(n) > i16_limit then
+			return i32
+		elseif math.abs(n) > i8_limit then
+			return i16
 		else
-			return u8
+			return i8
 		end
 	end
 
-	return f32
+	if n > u16_limit then
+		return u32
+	elseif n > u8_limit then
+		return u16
+	else
+		return u8
+	end
 end
 
 return determine_encoding
