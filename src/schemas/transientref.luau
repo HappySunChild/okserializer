@@ -27,7 +27,7 @@ its lifetime and synchronization requirements!!
 
 const okserde = require("../types")
 
-const function transientref_schema<T>(references: { T }): okserde.Schema<T>
+const function transientref_schema<T>(references: { T }): okserde.StaticSchema<T>
 	return {
 		write = @native function(b: buffer, offset: number, value: T): number
 			const index = #references + 1
@@ -51,7 +51,7 @@ const function transientref_schema<T>(references: { T }): okserde.Schema<T>
 		validate = function(): (boolean, string?)
 			return true
 		end,
-		
+
 		static_size = 1,
 	}
 end

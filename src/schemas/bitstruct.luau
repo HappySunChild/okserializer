@@ -8,7 +8,7 @@ const okserde = require("../types")
 
 const sort_with_order = require("../utility/sort_with_order")
 
-const function bitstruct_schema<T>(shape: { [keyof<T>]: number }, order: { keyof<T> }?): okserde.Schema<T>
+const function bitstruct_schema<T>(shape: { [keyof<T>]: number }, order: { keyof<T> }?): okserde.StaticSchema<T>
 	const keys = {}
 	local total_bit_count = 0
 

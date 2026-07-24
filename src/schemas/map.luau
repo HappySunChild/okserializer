@@ -71,13 +71,12 @@ const function create_map_proto<K, V>(
 end
 
 const function map_schema<K, V>(
-	key_schema: okserde.Schema<K>,
-	value_schema: okserde.Schema<V>,
+	key_schema: okserde.SizedSchema<K>,
+	value_schema: okserde.SizedSchema<V>,
 	len_enc: okserde.NumberEncoding?
-): okserde.Schema<{ [K]: V }>
+): okserde.DynSchema<{ [K]: V }>
 	const len = if len_enc == nil then DEFAULT_LEN_ENCODING else len_enc
-
-	const proot = create_map_proto(key_schema, value_schema, len)
+	const proot: okserde.DynSchema<{ [K]: V }> = create_map_proto(key_schema, value_schema, len)
 
 	const len_size = len.size
 	const k_static_size = key_schema.static_size

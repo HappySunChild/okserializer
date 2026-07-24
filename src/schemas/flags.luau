@@ -2,7 +2,7 @@ const okserde = require("../types")
 
 const is_array = require("../utility/is_array")
 
-const function flags_schema(flag_count: number): okserde.Schema<{ boolean }>
+const function flags_schema(flag_count: number): okserde.StaticSchema<{ boolean }>
 	assert(flag_count <= 32 and flag_count > 0, "flag count must be between 1-32, inclusive")
 
 	const static_size = math.ceil(flag_count / 8)

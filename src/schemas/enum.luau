@@ -2,7 +2,7 @@ const okserde = require("../types")
 
 const determine_encoding = require("../utility/determine_encoding")
 
-const function enum_schema<T>(variants: { T }): okserde.Schema<T>
+const function enum_schema<T>(variants: { T }): okserde.StaticSchema<T>
 	const id_enc = determine_encoding(#variants)
 	const id_write, id_read, id_size = id_enc.write, id_enc.read, id_enc.size
 

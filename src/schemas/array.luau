@@ -59,11 +59,11 @@ const function create_array_proto<T>(
 end
 
 const function array_schema<T>(
-	element_schema: okserde.Schema<T>,
+	element_schema: okserde.SizedSchema<T>,
 	len_enc: okserde.NumberEncoding?
-): okserde.Schema<{ T }>
+): okserde.DynSchema<{ T }>
 	const len = if len_enc == nil then DEFAULT_LEN_ENCODING else len_enc
-	const proot = create_array_proto(element_schema, len)
+	const proot: okserde.DynSchema<{ T }> = create_array_proto(element_schema, len)
 
 	const len_size = len.size
 	const element_static_size = element_schema.static_size

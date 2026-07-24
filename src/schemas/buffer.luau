@@ -3,7 +3,7 @@ const okserde = require("../types")
 
 const DEFAULT_LEN_ENCODING = encodings.u16
 
-const function buffer_schema(len_enc: okserde.NumberEncoding?): okserde.Schema<buffer>
+const function buffer_schema(len_enc: okserde.NumberEncoding?): okserde.DynSchema<buffer>
 	const len = if len_enc == nil then DEFAULT_LEN_ENCODING else len_enc
 	const len_write, len_read, len_size = len.write, len.read, len.size
 
@@ -31,7 +31,7 @@ const function buffer_schema(len_enc: okserde.NumberEncoding?): okserde.Schema<b
 
 			return true, nil
 		end,
-		
+
 		dyn_size = @native function(value: buffer): number
 			return len_size + buffer.len(value) % (len.max + 1)
 		end,

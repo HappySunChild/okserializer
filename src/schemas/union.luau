@@ -15,9 +15,9 @@ const function determine_schema<T...>(schemas: { okserde.Schema }, ...: T...): (
 end
 
 const function create_union_proto(
-	schemas: { okserde.Schema | okserde.UnresolvedSchema },
+	schemas: { okserde.Resolvable<okserde.SizedSchema> },
 	id_enc: okserde.NumberEncoding
-): okserde.Schema
+): okserde.DynSchema
 	const id_write, id_read, id_size = id_enc.write, id_enc.read, id_enc.size
 
 	return {
@@ -49,7 +49,7 @@ const function create_union_proto(
 
 			return true, nil
 		end,
-		
+
 		dyn_size = @native function(...: any): number
 			const index, schema = determine_schema(schemas, ...)
 
@@ -62,7 +62,7 @@ const function create_union_proto(
 	}
 end
 
-const function union_schema(...: okserde.Schema | okserde.UnresolvedSchema): okserde.Schema
+const function union_schema(...: okserde.Resolvable<okserde.SizedSchema>): okserde.DynSchema
 	const schemas = { ... }
 	const proto = create_union_proto(schemas, determine_encoding(#schemas))
 	resolve_schemas(proto, schemas)

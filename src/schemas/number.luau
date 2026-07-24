@@ -3,7 +3,7 @@ const okserde = require("../types")
 
 const DEFAULT_NUMBER_ENCODING = encodings.f32
 
-const function number_schema(num_enc: okserde.NumberEncoding?): okserde.Schema<number>
+const function number_schema(num_enc: okserde.NumberEncoding?): okserde.StaticSchema<number>
 	const num = if num_enc == nil then DEFAULT_NUMBER_ENCODING else num_enc
 	const num_write, num_read, num_size, num_min, num_max = num.write, num.read, num.size, num.min, num.max
 
@@ -28,7 +28,7 @@ const function number_schema(num_enc: okserde.NumberEncoding?): okserde.Schema<n
 		end,
 
 		static_size = num_size,
-	} :: okserde.Schema<number>
+	}
 end
 
 return number_schema

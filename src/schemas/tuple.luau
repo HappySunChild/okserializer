@@ -4,7 +4,7 @@ const resolve_schemas = require("../utility/resolve_schemas")
 const is_static = require("../utility/is_static")
 
 const function create_tuple_proto<T...>(
-	tuple_order: { okserde.Schema | okserde.UnresolvedSchema }
+	tuple_order: { okserde.Resolvable<okserde.SizedSchema> }
 ): okserde.Schema<T...>
 	return {
 		write = @native function(b: buffer, offset: number, ...: T...): number
@@ -44,9 +44,9 @@ const function create_tuple_proto<T...>(
 	}
 end
 
-const function tuple_schema<T...>(...: okserde.Schema | okserde.UnresolvedSchema): okserde.Schema<T...>
+const function tuple_schema<T...>(...: okserde.Resolvable<okserde.SizedSchema>): okserde.SizedSchema<T...>
 	const tuple_order = { ... }
-	const proto = create_tuple_proto(tuple_order)
+	const proto: okserde.SizedSchema = create_tuple_proto(tuple_order)
 	resolve_schemas(proto, tuple_order)
 
 	const static, total_size = is_static(tuple_order)

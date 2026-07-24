@@ -5,7 +5,7 @@ const resolve_schemas = require("../utility/resolve_schemas")
 const is_static = require("../utility/is_static")
 
 const function create_struct_proto<T>(
-	shape: { [keyof<T>]: okserde.Schema<any> },
+	shape: { [keyof<T>]: okserde.Resolvable<okserde.SizedSchema<any>> },
 	order: { keyof<T> }
 ): okserde.Schema<T>
 	const ordered_keys: { keyof<T> } = {}
@@ -64,10 +64,10 @@ const function create_struct_proto<T>(
 end
 
 const function struct_schema<T>(
-	shape: { [keyof<T>]: okserde.Schema<any> | okserde.UnresolvedSchema },
+	shape: { [keyof<T>]: okserde.Resolvable<okserde.SizedSchema<any>> },
 	order: { keyof<T> }?
-): okserde.Schema<T>
-	const proto = create_struct_proto(shape, order)
+): okserde.SizedSchema<T>
+	const proto: okserde.SizedSchema<T> = create_struct_proto(shape, order)
 	resolve_schemas(proto, shape)
 
 	const static, total_size = is_static(shape)

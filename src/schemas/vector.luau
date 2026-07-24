@@ -3,7 +3,7 @@ const okserde = require("../types")
 
 const DEFAULT_VECTOR_ENCODING = encodings.f32
 
-const function vector_schema(component_enc: okserde.NumberEncoding?): okserde.Schema<vector>
+const function vector_schema(component_enc: okserde.NumberEncoding?): okserde.StaticSchema<vector>
 	const component = if component_enc == nil then DEFAULT_VECTOR_ENCODING else component_enc
 	const component_write, component_read, component_size = component.write, component.read, component.size
 

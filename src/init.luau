@@ -1,6 +1,10 @@
 const okserde = require("@self/types")
 
 export type Schema<T... = ...any> = okserde.Schema<T...>
+export type StaticSchema<T... = ...any> = okserde.StaticSchema<T...>
+export type DynSchema<T... = ...any> = okserde.DynSchema<T...>
+export type SizedSchema<T... = ...any> = okserde.SizedSchema<T...>
+
 export type NumberEncoding = okserde.NumberEncoding
 
 return {

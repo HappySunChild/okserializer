@@ -1,6 +1,6 @@
 const okserde = require("../types")
 
-const boolean_schema: okserde.Schema<boolean> = {
+const boolean_schema: okserde.StaticSchema<boolean> = {
 	write = @native function(b: buffer, offest: number, value: boolean): number
 		buffer.writeu8(b, offest, if value then 1 else 0)
 		return 1

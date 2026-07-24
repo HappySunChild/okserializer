@@ -1,6 +1,6 @@
 const okserde = require("../types")
 
-const function padding_schema(byte_count: number): okserde.Schema<nil>
+const function padding_schema(byte_count: number): okserde.StaticSchema<nil>
 	return {
 		write = @native function(): number
 			return byte_count

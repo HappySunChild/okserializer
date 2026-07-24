@@ -12,7 +12,7 @@ const function next_terminator(value: string, offset: number?): number
 	return string.len(value)
 end
 
-const cstring_schema: okserde.Schema<string> = {
+const cstring_schema: okserde.DynSchema<string> = {
 	write = @native function(b: buffer, offset: number, value: string): number
 		const count = next_terminator(value)
 
@@ -35,7 +35,7 @@ const cstring_schema: okserde.Schema<string> = {
 
 		return true, nil
 	end,
-	
+
 	dyn_size = @native function(value: string): number
 		return 1 + next_terminator(value)
 	end,
