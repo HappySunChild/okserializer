@@ -17,7 +17,7 @@ const function to_enum(index: number): Enum
 	return ENUMS[index]
 end
 
-const Enum_schema: okserde.Schema<EnumItem> = {
+const Enum_schema: okserde.StaticSchema<EnumItem> = {
 	write = @native function(b: buffer, offset: number, value: EnumItem): number
 		buffer.writeu16(b, offset, to_index(value.EnumType))
 		buffer.writeu16(b, offset + 2, value.Value)
@@ -26,10 +26,6 @@ const Enum_schema: okserde.Schema<EnumItem> = {
 	read = @native function(b: buffer, offset: number): (number, EnumItem)
 		return 4, to_enum(buffer.readu16(b, offset)):FromValue(buffer.readu16(b, offset + 2))
 	end,
-	size = @native function(): number
-		return 4
-	end,
-
 	validate = @native function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "EnumItem" then
 			return false, `expected value of type EnumItem, got {typeof(value)}`
@@ -37,6 +33,8 @@ const Enum_schema: okserde.Schema<EnumItem> = {
 
 		return true, nil
 	end,
+
+	static_size = 4,
 }
 
 return Enum_schema

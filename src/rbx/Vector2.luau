@@ -3,7 +3,7 @@ const okserde = require("../types")
 
 const DEFAULT_VECTOR_ENCODING = encodings.f32
 
-const function Vector2_schema(component_enc: okserde.NumberEncoding?): okserde.Schema<Vector2>
+const function Vector2_schema(component_enc: okserde.NumberEncoding?): okserde.StaticSchema<Vector2>
 	const component = if component_enc == nil then DEFAULT_VECTOR_ENCODING else component_enc
 	const component_write, component_read, component_size = component.write, component.read, component.size
 
@@ -19,9 +19,6 @@ const function Vector2_schema(component_enc: okserde.NumberEncoding?): okserde.S
 			return schema_size,
 				Vector2.new(component_read(b, offset), component_read(b, offset + component_size))
 		end,
-		size = @native function(): number
-			return schema_size
-		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "Vector2" then
 				return false, `expected value of type Vector2, got {typeof(value)}`
@@ -29,6 +26,8 @@ const function Vector2_schema(component_enc: okserde.NumberEncoding?): okserde.S
 
 			return true, nil
 		end,
+
+		static_size = schema_size,
 	}
 end
 

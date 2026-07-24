@@ -6,23 +6,20 @@ const function PathWaypoint_schema(pos_enc: okserde.NumberEncoding?): okserde.Sc
 	local pos = Vector3_schema(pos_enc)
 	local pos_write, pos_read, pos_size = pos.write, pos.read, pos.size(Vector3.zero)
 
-	const schema_size = pos_size + 1
+	const static_size = pos_size + 1
 
 	return {
 		write = @native function(b: buffer, offset: number, waypoint: PathWaypoint): number
 			buffer.writeu8(b, offset, waypoint.Action.Value)
 			pos_write(b, offset + 1, waypoint.Position)
-			return schema_size
+			return static_size
 		end,
 		read = @native function(b: buffer, offset: number): (number, PathWaypoint)
 			const action = Enum.PathWaypointAction:FromValue(buffer.readu8(b, offset))
 				or Enum.PathWaypointAction.Walk
 			const _, pos = pos_read(b, offset + 1)
 
-			return schema_size, PathWaypoint.new(pos, action)
-		end,
-		size = @native function(waypoint: PathWaypoint): number
-			return schema_size
+			return static_size, PathWaypoint.new(pos, action)
 		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "PathWaypoint" then
@@ -31,6 +28,8 @@ const function PathWaypoint_schema(pos_enc: okserde.NumberEncoding?): okserde.Sc
 
 			return true, nil
 		end,
+
+		static_size = static_size,
 	}
 end
 

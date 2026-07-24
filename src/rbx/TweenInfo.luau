@@ -19,13 +19,13 @@ const tweeninfo_schema = bitstruct_schema<<TweenInfoStruct>>(
 	{ "repeats_indefinitely", "reverses", "direction", "style" }
 )
 const tweeninfo_write, tweeninfo_read, tweeninfo_size =
-	tweeninfo_schema.write, tweeninfo_schema.read, tweeninfo_schema.size(nil :: any)
+	tweeninfo_schema.write, tweeninfo_schema.read, tweeninfo_schema.static_size
 
 const function TweenInfo_schema(
 	time_enc: okserde.NumberEncoding?,
 	delay_enc: okserde.NumberEncoding?,
 	repeat_count_enc: okserde.NumberEncoding?
-): okserde.Schema<TweenInfo>
+): okserde.StaticSchema<TweenInfo>
 	const time = if time_enc == nil then DEFAULT_TIME_ENCODING else time_enc
 	const time_write, time_read, time_size = time.write, time.read, time.size
 
@@ -80,9 +80,6 @@ const function TweenInfo_schema(
 					delay_time
 				)
 		end,
-		size = @native function(value: TweenInfo): number
-			return schema_size
-		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "TweenInfo" then
 				return false, `expected value of type TweenInfo, got {typeof(value)}`
@@ -90,6 +87,8 @@ const function TweenInfo_schema(
 
 			return true, nil
 		end,
+
+		static_size = schema_size,
 	}
 end
 

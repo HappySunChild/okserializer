@@ -1,12 +1,30 @@
 const okserde = require("@self/types")
 
 export type Schema<T... = ...any> = okserde.Schema<T...>
+export type StaticSchema<T... = ...any> = okserde.StaticSchema<T...>
+export type DynSchema<T... = ...any> = okserde.DynSchema<T...>
+export type SizedSchema<T... = ...any> = okserde.SizedSchema<T...>
+
 export type NumberEncoding = okserde.NumberEncoding
 
+const function deserialize<T...>(schema: okserde.SizedSchema<T...>, b: buffer): T...
+	return select(2, schema.read(b, 0))
+end
+
+const function serialize<T...>(schema: okserde.SizedSchema<T...>, ...: T...): buffer
+	const b = buffer.create(schema.static_size or schema.dyn_size(...))
+	schema.write(b, 0, ...)
+	return b
+end
+
+const function validate<T...>(schema: okserde.Schema<T...>, ...: T...): (boolean, string?)
+	return schema.validate(...)
+end
+
 return {
-	serialize = require("@self/utility/serialize"),
-	deserialize = require("@self/utility/deserialize"),
-	validate = require("@self/utility/validate"),
+	serialize = serialize,
+	deserialize = deserialize,
+	validate = validate,
 
 	encodings = require("@self/encodings"),
 	schemas = {

@@ -60,9 +60,6 @@ return {
 	read = function(b: buffer, offset: number): (number, integer)
 		return INTEGER_BYTE_SIZE, buffer.readinteger(b, offset)
 	end,
-	size = function()
-		return INTEGER_BYTE_SIZE
-	end,
 	validate = function(value: unknown): (boolean, string?)
 		if type(value) ~= "integer" then
 			return false, `expected value of type integer, got {type(value)}`
@@ -70,7 +67,9 @@ return {
 
 		return true, nil
 	end,
-} :: okserde.Schema<integer>
+	
+	static_size = INTEGER_BYTE_SIZE,
+} :: okserde.StaticSchema<integer>
 
 ```
 

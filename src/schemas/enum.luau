@@ -2,7 +2,7 @@ const okserde = require("../types")
 
 const determine_encoding = require("../utility/determine_encoding")
 
-const function enum_schema<T>(variants: { T }): okserde.Schema<T>
+const function enum_schema<T>(variants: { T }): okserde.StaticSchema<T>
 	const id_enc = determine_encoding(#variants)
 	const id_write, id_read, id_size = id_enc.write, id_enc.read, id_enc.size
 
@@ -34,9 +34,6 @@ const function enum_schema<T>(variants: { T }): okserde.Schema<T>
 
 			return id_size, value
 		end,
-		size = @native function(): number
-			return id_size
-		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if value == nil then
 				return false, "cannot store nil in a variant"
@@ -48,6 +45,8 @@ const function enum_schema<T>(variants: { T }): okserde.Schema<T>
 
 			return true, nil
 		end,
+
+		static_size = id_size,
 	}
 end
 

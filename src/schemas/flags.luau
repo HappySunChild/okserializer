@@ -2,10 +2,10 @@ const okserde = require("../types")
 
 const is_array = require("../utility/is_array")
 
-const function flags_schema(flag_count: number): okserde.Schema<{ boolean }>
+const function flags_schema(flag_count: number): okserde.StaticSchema<{ boolean }>
 	assert(flag_count <= 32 and flag_count > 0, "flag count must be between 1-32, inclusive")
 
-	const byte_count = math.ceil(flag_count / 8)
+	const static_size = math.ceil(flag_count / 8)
 
 	return {
 		write = @native function(b: buffer, offset: number, flags_value: { boolean }): number
@@ -21,7 +21,7 @@ const function flags_schema(flag_count: number): okserde.Schema<{ boolean }>
 
 			buffer.writebits(b, offset * 8, flag_count, value)
 
-			return byte_count
+			return static_size
 		end,
 		read = @native function(b: buffer, offset: number): (number, { boolean })
 			const flags = table.create(flag_count, false) :: { boolean }
@@ -31,10 +31,7 @@ const function flags_schema(flag_count: number): okserde.Schema<{ boolean }>
 				flags[i] = bit32.btest(value, 2 ^ (i - 1))
 			end
 
-			return byte_count, flags
-		end,
-		size = @native function(): number
-			return byte_count
+			return static_size, flags
 		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if not is_array(value) then
@@ -49,6 +46,8 @@ const function flags_schema(flag_count: number): okserde.Schema<{ boolean }>
 
 			return true, nil
 		end,
+
+		static_size = static_size,
 	}
 end
 

@@ -8,7 +8,7 @@ const DEFAULT_LEN_ENCODING = encodings.u8
 const function bitarray_schema(
 	element_bit_width: number,
 	len_enc: okserde.NumberEncoding?
-): okserde.Schema<{ number }>
+): okserde.DynSchema<{ number }>
 	assert(element_bit_width, "missing element_bit_width")
 
 	const len = if len_enc == nil then DEFAULT_LEN_ENCODING else len_enc
@@ -40,9 +40,6 @@ const function bitarray_schema(
 
 			return math.ceil(bit_offset / 8), output
 		end,
-		size = @native function(value: { number }): number
-			return len_size + math.ceil(#value * element_bit_width / 8) % (len.max + 1)
-		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if not is_array(value) then
 				return false, "expected array value"
@@ -55,6 +52,10 @@ const function bitarray_schema(
 			end
 
 			return true, nil
+		end,
+
+		dyn_size = @native function(value: { number }): number
+			return len_size + math.ceil(#value * element_bit_width / 8) % (len.max + 1)
 		end,
 	}
 end

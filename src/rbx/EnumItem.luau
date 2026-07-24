@@ -3,7 +3,10 @@ const okserde = require("../types")
 
 const DEFAULT_VALUE_ENCODING = encodings.u16
 
-const function EnumItem_schema(enumerator: Enum, value_enc: okserde.NumberEncoding?): okserde.Schema<EnumItem>
+const function EnumItem_schema(
+	enumerator: Enum,
+	value_enc: okserde.NumberEncoding?
+): okserde.StaticSchema<EnumItem>
 	const value = if value_enc == nil then DEFAULT_VALUE_ENCODING else value_enc
 	const value_write, value_read, value_size = value.write, value.read, value.size
 
@@ -14,9 +17,6 @@ const function EnumItem_schema(enumerator: Enum, value_enc: okserde.NumberEncodi
 		end,
 		read = @native function(b: buffer, offset: number): (number, EnumItem)
 			return value_size, enumerator:FromValue(value_read(b, offset))
-		end,
-		size = @native function(): number
-			return value_size
 		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if typeof(value) ~= "EnumItem" then
@@ -30,6 +30,8 @@ const function EnumItem_schema(enumerator: Enum, value_enc: okserde.NumberEncodi
 
 			return true, nil
 		end,
+
+		static_size = value_size,
 	}
 end
 

@@ -2,10 +2,11 @@ const okserde = require("../types")
 
 const sort_with_order = require("../utility/sort_with_order")
 const resolve_schemas = require("../utility/resolve_schemas")
+const is_static = require("../utility/is_static")
 
-const function struct_schema<T>(
-	shape: { [keyof<T>]: okserde.Schema<any> | okserde.UnresolvedSchema },
-	order: { keyof<T> }?
+const function create_struct_proto<T>(
+	shape: { [keyof<T>]: okserde.Resolvable<okserde.SizedSchema<any>> },
+	order: { keyof<T> }
 ): okserde.Schema<T>
 	const ordered_keys: { keyof<T> } = {}
 
@@ -13,9 +14,9 @@ const function struct_schema<T>(
 		table.insert(ordered_keys, key)
 	end
 
-	sort_with_order(ordered_keys :: { any }, order) -- casting to any because i don't know what it wants from me
+	sort_with_order(ordered_keys, order)
 
-	const new_schema = {
+	return {
 		write = @native function(b: buffer, offset: number, value: T | any): number
 			local current_offset = offset
 
@@ -42,17 +43,6 @@ const function struct_schema<T>(
 
 			return current_offset - offset, output
 		end,
-		size = @native function(value: T | any): number
-			local total_byte_count = 0
-
-			for _, key in ordered_keys do
-				const value_schema = shape[key]
-
-				total_byte_count += value_schema.size(value[key])
-			end
-
-			return total_byte_count
-		end,
 		validate = @native function(value: unknown): (boolean, string?)
 			if type(value) ~= "table" then
 				return false, `expected value of type table, got {type(value)}`
@@ -71,10 +61,32 @@ const function struct_schema<T>(
 			return true, nil
 		end,
 	}
+end
 
-	resolve_schemas(new_schema, shape)
+const function struct_schema<T>(
+	shape: { [keyof<T>]: okserde.Resolvable<okserde.SizedSchema<any>> },
+	order: { keyof<T> }?
+): okserde.SizedSchema<T>
+	const proto: okserde.SizedSchema<T> = create_struct_proto(shape, order)
+	resolve_schemas(proto, shape)
 
-	return new_schema
+	const static, total_size = is_static(shape)
+
+	if static then
+		proto.static_size = total_size
+	else
+		proto.dyn_size = @native function(value: T | any): number
+			local total_byte_count = 0
+
+			for key, value_schema: okserde.Schema<any> in shape do
+				total_byte_count += value_schema.static_size or value_schema.dyn_size(value[key])
+			end
+
+			return total_byte_count
+		end
+	end
+
+	return proto
 end
 
 return struct_schema

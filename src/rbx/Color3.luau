@@ -1,6 +1,6 @@
 const okserde = require("../types")
 
-const Color3_schema: okserde.Schema<Color3> = {
+const Color3_schema: okserde.StaticSchema<Color3> = {
 	write = @native function(b: buffer, offset: number, value: Color3): number
 		buffer.writeu8(b, offset, value.R * 255)
 		buffer.writeu8(b, offset + 1, value.G * 255)
@@ -15,9 +15,6 @@ const Color3_schema: okserde.Schema<Color3> = {
 				buffer.readu8(b, offset + 2)
 			)
 	end,
-	size = @native function(): number
-		return 3
-	end,
 	validate = @native function(value: unknown): (boolean, string?)
 		if typeof(value) ~= "Color3" then
 			return false, `expected value of type Color3, got {typeof(value)}`
@@ -25,6 +22,8 @@ const Color3_schema: okserde.Schema<Color3> = {
 
 		return true, nil
 	end,
+
+	static_size = 3,
 }
 
 return Color3_schema

@@ -24,14 +24,15 @@ const function generate_serde_tests(options: Options)
 
 	for _, case in options.cases do
 		const schema, sets = case.schema, case.sets
-		const write, read, size = schema.write, schema.read, schema.size
+		const write, read, dyn_size, static_size =
+			schema.write, schema.read, schema.dyn_size, schema.static_size
 
 		test(`serde {case.label}`, function(remark: (string) -> ())
 			for index, set in sets do
 				const values = set.values
 
 				const size_start = os.clock()
-				const size_bytes = size(unpack(values))
+				const size_bytes = static_size or dyn_size(unpack(values))
 				const size_duration = os.clock() - size_start
 
 				expect(size_bytes):to_equal(set.expected_size_bytes)

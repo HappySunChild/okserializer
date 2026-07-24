@@ -1,6 +1,6 @@
-const types = require("../types")
+const okserde = require("../types")
 
-const function resolve_schemas(base: types.Schema, schemas: { [any]: types.Schema | types.UnresolvedSchema })
+const function resolve_schemas(base: okserde.Schema, schemas: { [any]: okserde.Resolvable<okserde.Schema> })
 	for key, raw_schema in schemas do
 		if type(raw_schema) == "function" then
 			const new_schema = raw_schema(base)
