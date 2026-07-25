@@ -1,7 +1,7 @@
 const okserde = require("../types")
 
 const determine_encoding = require("../utility/determine_encoding")
-const resolve_schemas = require("../utility/resolve_schemas")
+const resolve_schemas_in_place = require("../utility/resolve_schemas_in_place")
 const vararg_repr = require("../utility/vararg_repr")
 
 const function determine_schema<T...>(schemas: { okserde.Schema }, ...: T...): (number?, okserde.Schema<T...>?)
@@ -15,7 +15,7 @@ const function determine_schema<T...>(schemas: { okserde.Schema }, ...: T...): (
 end
 
 const function create_union_proto(
-	schemas: { okserde.Resolvable<okserde.SizedSchema> },
+	schemas: { okserde.SizedSchema },
 	id_enc: okserde.NumberEncoding
 ): okserde.DynSchema
 	const id_write, id_read, id_size = id_enc.write, id_enc.read, id_enc.size
@@ -62,10 +62,11 @@ const function create_union_proto(
 	}
 end
 
-const function union_schema(...: okserde.Resolvable<okserde.SizedSchema>): okserde.DynSchema
+const function union_schema(...: okserde.SizedSchema | okserde.UnresolvedSchema): okserde.DynSchema
 	const schemas = { ... }
 	const proto = create_union_proto(schemas, determine_encoding(#schemas))
-	resolve_schemas(proto, schemas)
+
+	resolve_schemas_in_place(proto, schemas)
 
 	return proto
 end

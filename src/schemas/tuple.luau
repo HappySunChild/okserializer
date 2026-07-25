@@ -1,10 +1,11 @@
 const okserde = require("../types")
 
-const resolve_schemas = require("../utility/resolve_schemas")
-const is_static = require("../utility/is_static")
+const resolve_schemas_in_place = require("../utility/resolve_schemas_in_place")
+const move_dyn_sizes_into = require("../utility/move_dyn_sizes_into")
+const is_shape_static = require("../utility/is_shape_static")
 
 const function create_tuple_proto<T...>(
-	tuple_order: { okserde.Resolvable<okserde.SizedSchema> }
+	tuple_order: { okserde.SizedSchema | okserde.UnresolvedSchema }
 ): okserde.Schema<T...>
 	return {
 		write = @native function(b: buffer, offset: number, ...: T...): number
@@ -44,26 +45,30 @@ const function create_tuple_proto<T...>(
 	}
 end
 
-const function tuple_schema<T...>(...: okserde.Resolvable<okserde.SizedSchema>): okserde.SizedSchema<T...>
-	const tuple_order = { ... }
-	const proto: okserde.SizedSchema = create_tuple_proto(tuple_order)
-	resolve_schemas(proto, tuple_order)
+const function tuple_schema<T...>(...: okserde.SizedSchema | okserde.UnresolvedSchema): okserde.SizedSchema<T...>
+	const tuple_schemas = { ... }
+	const proto: okserde.SizedSchema = create_tuple_proto(tuple_schemas)
 
-	const static, total_size = is_static(tuple_order)
+	const is_static, static_size = is_shape_static(tuple_schemas)
 
-	if static then
-		proto.static_size = total_size
+	const dyn_sizes: { (...any) -> number } = {}
+
+	if is_static then
+		proto.static_size = static_size
 	else
 		proto.dyn_size = @native function(...: T...): number
-			local total_byte_count = 0
+			local total_byte_count = static_size
 
-			for index, schema: okserde.Schema in tuple_order do
-				total_byte_count += schema.static_size or schema.dyn_size(select(index, ...))
+			for index: number, dyn_size in dyn_sizes do
+				total_byte_count += dyn_size(select(index, ...))
 			end
 
 			return total_byte_count
 		end
 	end
+
+	resolve_schemas_in_place(proto, tuple_schemas)
+	move_dyn_sizes_into(tuple_schemas, dyn_sizes)
 
 	return proto
 end

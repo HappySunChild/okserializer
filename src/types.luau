@@ -22,7 +22,6 @@ export type StaticSchema<T... = ...any> = Schema<T...> & StaticallySized
 --- A schema that's either dynamically or statically sized.
 export type SizedSchema<T... = ...any> = Schema<T...> & StaticallySized & DynamicallySized<T...>
 
-export type Unresolved<T> = (self: Schema) -> T
-export type Resolvable<T> = T | Unresolved<T>
+export type UnresolvedSchema = (self: SizedSchema) -> DynSchema
 
 return nil
