@@ -65,9 +65,15 @@ const function array_schema<T>(
 	const len = if len_enc == nil then DEFAULT_LEN_ENCODING else len_enc
 	const proot: okserde.DynSchema<{ T }> = create_array_proto(element_schema, len)
 
-	const len_size = len.size
 	const element_static_size = element_schema.static_size
 	const element_dyn_size = element_schema.dyn_size
+
+	assert(
+		element_static_size ~= nil or element_dyn_size ~= nil,
+		"'element' schema is not sized, make sure to specify a `static_size` field or `dyn_size` callback on your schema beforehand"
+	)
+
+	const len_size = len.size
 
 	proot.dyn_size = if element_static_size ~= nil
 		then @native function(array: { T }): number

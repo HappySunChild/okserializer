@@ -78,14 +78,25 @@ const function map_schema<K, V>(
 	const len = if len_enc == nil then DEFAULT_LEN_ENCODING else len_enc
 	const proot: okserde.DynSchema<{ [K]: V }> = create_map_proto(key_schema, value_schema, len)
 
-	const len_size = len.size
 	const k_static_size = key_schema.static_size
 	const k_dyn_size = key_schema.dyn_size
+
+	assert(
+		k_static_size ~= nil or k_dyn_size ~= nil,
+		"'key' schema is not sized, make sure to specify a `static_size` field or `dyn_size` callback on your schema beforehand"
+	)
+
 	const v_static_size = value_schema.static_size
 	const v_dyn_size = value_schema.dyn_size
 
-	-- horribly nested dyn_size dispatching, but it works
+	assert(
+		v_static_size ~= nil or v_dyn_size ~= nil,
+		"'value' schema is not sized, make sure to specify a `static_size` field or `dyn_size` callback on your schema beforehand"
+	)
 
+	const len_size = len.size
+
+	-- horribly nested dyn_size dispatching, but it works
 	proot.dyn_size = if k_static_size ~= nil
 		then if v_static_size ~= nil
 			then @native function(map: { [K]: V }): number -- static key, static value
