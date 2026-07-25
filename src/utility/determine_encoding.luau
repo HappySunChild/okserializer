@@ -15,6 +15,7 @@ const u8_limit = u8.max
 
 const f32 = encodings.f32
 
+--- Returns an encoding that is always able to encode the provided number.
 const function determine_encoding(n: number): types.NumberEncoding
 	const whole, frac = math.modf(n)
 
@@ -27,18 +28,18 @@ const function determine_encoding(n: number): types.NumberEncoding
 			return i32
 		elseif math.abs(n) > i8_limit then
 			return i16
-		else
-			return i8
 		end
+
+		return i8
 	end
 
 	if n > u16_limit then
 		return u32
 	elseif n > u8_limit then
 		return u16
-	else
-		return u8
 	end
+
+	return u8
 end
 
 return determine_encoding

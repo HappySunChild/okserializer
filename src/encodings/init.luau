@@ -10,6 +10,7 @@ const float = require("@self/float")
 const int = require("@self/int")
 const uint = require("@self/uint")
 
+--- A set of encodings provided by `okserde` for configuring schemas.
 return {
 	u8 = uint.u8 :: okserde.NumberEncoding,
 	u16 = uint.u16 :: okserde.NumberEncoding,

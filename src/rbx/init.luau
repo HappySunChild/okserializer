@@ -1,3 +1,4 @@
+--- A set of schemas specifically for Roblox datatypes.
 return {
 	Axes = require("@self/Axes"),
 	BrickColor = require("@self/BrickColor"),

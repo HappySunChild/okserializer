@@ -7,16 +7,23 @@ export type SizedSchema<T... = ...any> = okserde.SizedSchema<T...>
 
 export type NumberEncoding = okserde.NumberEncoding
 
+--[[
+Deserializes a buffer using the provided schema.
+
+This function does not validate that the passed values will be properly serialized, use `validate` for that.
+]]
 const function deserialize<T...>(schema: okserde.SizedSchema<T...>, b: buffer): T...
 	return select(2, schema.read(b, 0))
 end
 
+--- Serializes values into a buffer using the provided schema.
 const function serialize<T...>(schema: okserde.SizedSchema<T...>, ...: T...): buffer
 	const b = buffer.create(schema.static_size or schema.dyn_size(...))
 	schema.write(b, 0, ...)
 	return b
 end
 
+--- Returns whether the provided values can be serialized via provided schema.
 const function validate<T...>(schema: okserde.Schema<T...>, ...: T...): (boolean, string?)
 	return schema.validate(...)
 end
@@ -27,6 +34,7 @@ return {
 	validate = validate,
 
 	encodings = require("@self/encodings"),
+	--- A set of schemas provided by `okserde`.
 	schemas = {
 		array = require("@self/schemas/array"),
 		bitarray = require("@self/schemas/bitarray"),
