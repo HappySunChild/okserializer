@@ -1,7 +1,7 @@
 const okserde = require("../types")
 
 const resolve_schemas_in_place = require("../utility/resolve_schemas_in_place")
-const move_dyn_sizes_into = require("../utility/move_dyn_sizes_into")
+const flatten_into = require("../utility/flatten_into")
 const is_shape_static = require("../utility/is_shape_static")
 
 const function create_tuple_proto<T...>(
@@ -68,7 +68,7 @@ const function tuple_schema<T...>(...: okserde.SizedSchema | okserde.UnresolvedS
 	end
 
 	resolve_schemas_in_place(proto, tuple_schemas)
-	move_dyn_sizes_into(tuple_schemas, dyn_sizes)
+	flatten_into(tuple_schemas, dyn_sizes, "dyn_size")
 
 	return proto
 end

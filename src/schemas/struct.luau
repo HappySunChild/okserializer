@@ -1,7 +1,7 @@
 const okserde = require("../types")
 
 const is_shape_static = require("../utility/is_shape_static")
-const move_dyn_sizes_into = require("../utility/move_dyn_sizes_into")
+const flatten_into = require("../utility/flatten_into")
 const resolve_schemas_in_place = require("../utility/resolve_schemas_in_place")
 const sort_with_order = require("../utility/sort_with_order")
 
@@ -22,9 +22,7 @@ const function create_struct_proto<T>(
 			local current_offset = offset
 
 			for _, key in ordered_keys do
-				const value_schema = shape[key]
-
-				current_offset += value_schema.write(b, current_offset, value[key])
+				current_offset += shape[key].write(b, current_offset, value[key])
 			end
 
 			return current_offset - offset
@@ -35,8 +33,7 @@ const function create_struct_proto<T>(
 			local current_offset = offset
 
 			for _, key in ordered_keys do
-				const schema = shape[key]
-				const bytes_read, value = schema.read(b, current_offset)
+				const bytes_read, value = shape[key].read(b, current_offset)
 
 				output[key] = value
 				current_offset += bytes_read
@@ -51,8 +48,8 @@ const function create_struct_proto<T>(
 
 			value = value :: T | any
 
-			for key, value_schema in shape do
-				local ok, err = value_schema.validate(value[key])
+			for key, schema in shape do
+				const ok, err = schema.validate(value[key])
 
 				if not ok then
 					return false, `invalid value for key {key}:\n\t{err:gsub("\t", "\t\t")}`
@@ -88,7 +85,7 @@ const function struct_schema<T>(
 	end
 
 	resolve_schemas_in_place(proto, shape)
-	move_dyn_sizes_into(shape, dyn_sizes)
+	flatten_into(shape, dyn_sizes, "dyn_size")
 
 	return proto
 end
