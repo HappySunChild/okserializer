@@ -6,23 +6,17 @@ const resolve_schemas_in_place = require("../utility/resolve_schemas_in_place")
 const sort_with_order = require("../utility/sort_with_order")
 
 const function create_struct_proto<T>(
-	shape: { [keyof<T>]: okserde.SizedSchema },
-	order: { keyof<T> }
+	ordered_keys: { keyof<T> },
+	writes: { [keyof<T>]: okserde.write },
+	reads: { [keyof<T>]: okserde.read },
+	validates: { [keyof<T>]: okserde.validate }
 ): okserde.Schema<T>
-	const ordered_keys: { keyof<T> } = {}
-
-	for key in shape do
-		table.insert(ordered_keys, key)
-	end
-
-	sort_with_order(ordered_keys, order)
-
 	return {
 		write = @native function(b: buffer, offset: number, value: T | any): number
 			local current_offset = offset
 
 			for _, key in ordered_keys do
-				current_offset += shape[key].write(b, current_offset, value[key])
+				current_offset += writes[key](b, current_offset, value[key])
 			end
 
 			return current_offset - offset
@@ -33,7 +27,7 @@ const function create_struct_proto<T>(
 			local current_offset = offset
 
 			for _, key in ordered_keys do
-				const bytes_read, value = shape[key].read(b, current_offset)
+				const bytes_read, value = reads[key](b, current_offset)
 
 				output[key] = value
 				current_offset += bytes_read
@@ -48,8 +42,8 @@ const function create_struct_proto<T>(
 
 			value = value :: T | any
 
-			for key, schema in shape do
-				const ok, err = schema.validate(value[key])
+			for key, validate in validates do
+				const ok, err = validate(value[key])
 
 				if not ok then
 					return false, `invalid value for key {key}:\n\t{err:gsub("\t", "\t\t")}`
@@ -65,10 +59,19 @@ const function struct_schema<T>(
 	shape: { [keyof<T>]: okserde.SizedSchema | okserde.UnresolvedSchema },
 	order: { keyof<T> }?
 ): okserde.SizedSchema<T>
-	const proto: okserde.SizedSchema<T> = create_struct_proto(shape, order)
-	const is_static, static_size = is_shape_static(shape)
+	const ordered_keys = {}
 
-	const dyn_sizes: { [keyof<T>]: (index<T, keyof<T>>) -> number } = {}
+	for key in shape do
+		table.insert(ordered_keys, key)
+	end
+
+	sort_with_order(ordered_keys, order)
+
+	const writes, reads, validates = {}, {}, {}
+	const dyn_sizes: { [keyof<T>]: (any) -> number } = {}
+
+	const proto: okserde.SizedSchema<T> = create_struct_proto(ordered_keys, writes, reads, validates)
+	const is_static, static_size = is_shape_static(shape)
 
 	if is_static then
 		proto.static_size = static_size
@@ -85,7 +88,12 @@ const function struct_schema<T>(
 	end
 
 	resolve_schemas_in_place(proto, shape)
-	flatten_into(shape, dyn_sizes, "dyn_size")
+	flatten_into(shape, {
+		write = writes,
+		read = reads,
+		validate = validates,
+		dyn_size = dyn_sizes,
+	})
 
 	return proto
 end

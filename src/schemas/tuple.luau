@@ -68,7 +68,7 @@ const function tuple_schema<T...>(...: okserde.SizedSchema | okserde.UnresolvedS
 	end
 
 	resolve_schemas_in_place(proto, tuple_schemas)
-	flatten_into(tuple_schemas, dyn_sizes, "dyn_size")
+	flatten_into(tuple_schemas, { dyn_size = dyn_sizes })
 
 	return proto
 end
