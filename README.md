@@ -127,7 +127,7 @@ assert(deserialized_colors[1] == colors[1])
 assert(deserialized_colors[2] == colors[2])
 assert(deserialized_colors[3] == colors[3])
 
--- you can also be sent across RemoteEvents and RemoteFunctions for less bandwidth usage
+-- you can send buffers across RemoteEvents and RemoteFunctions for less bandwidth usage
 const some_remote = ReplicatedStorage:WaitForChild("SomeRemote") :: RemoteEvent
 some_remote:FireServer(serialized_colors)
 
