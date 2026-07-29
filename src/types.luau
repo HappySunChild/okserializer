@@ -6,9 +6,6 @@ export type NumberEncoding = {
 	max: number,
 }
 
-type StaticallySized = { static_size: number }
-type DynamicallySized<T...> = { dyn_size: (T...) -> number }
-
 --- A callback function that writes values to a buffer.
 export type write<T... = ...any> = (b: buffer, offset: number, T...) -> number
 --- A callback function that reads values from a buffer.
@@ -23,11 +20,14 @@ export type Schema<T... = ...any> = {
 	validate: validate,
 }
 --- A schema that's dynamically sized.
-export type DynSchema<T... = ...any> = Schema<T...> & DynamicallySized<T...>
+export type DynSchema<T... = ...any> = Schema<T...> & { dyn_size: (T...) -> number }
 --- A schema that's statically sized.
-export type StaticSchema<T... = ...any> = Schema<T...> & StaticallySized
+export type StaticSchema<T... = ...any> = Schema<T...> & { static_size: number }
 --- A schema that's either dynamically or statically sized.
-export type SizedSchema<T... = ...any> = Schema<T...> & StaticallySized & DynamicallySized<T...>
+export type SizedSchema<T... = ...any> = Schema<T...> & {
+	dyn_size: ((T...) -> number)?,
+	static_size: number?,
+}
 
 export type UnresolvedSchema = (self: SizedSchema) -> DynSchema
 
