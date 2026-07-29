@@ -5,14 +5,16 @@ const flatten_into = require("../utility/flatten_into")
 const is_shape_static = require("../utility/is_shape_static")
 
 const function create_tuple_proto<T...>(
-	tuple_order: { okserde.SizedSchema | okserde.UnresolvedSchema }
+	writes: { okserde.write },
+	reads: { okserde.read },
+	validates: { okserde.validate }
 ): okserde.Schema<T...>
 	return {
 		write = @native function(b: buffer, offset: number, ...: T...): number
 			local current_offset = offset
 
-			for index, schema in tuple_order do
-				current_offset += schema.write(b, current_offset, select(index, ...))
+			for index, write in writes do
+				current_offset += write(b, current_offset, select(index, ...))
 			end
 
 			return current_offset - offset
@@ -21,8 +23,8 @@ const function create_tuple_proto<T...>(
 			const output = {}
 			local current_offset = offset
 
-			for index, schema in tuple_order do
-				const read_data = { schema.read(b, current_offset) }
+			for index, read in reads do
+				const read_data = { read(b, current_offset) }
 
 				table.move(read_data, 2, #read_data, #output + 1, output)
 
@@ -32,8 +34,8 @@ const function create_tuple_proto<T...>(
 			return current_offset - offset, unpack(output)
 		end,
 		validate = @native function(...: unknown): (boolean, string?)
-			for index, schema in tuple_order do
-				local ok, err = schema.validate(select(index, ...))
+			for index, validate in validates do
+				const ok, err = validate(select(index, ...))
 
 				if not ok then
 					return false, `invalid tuple item at index {index}:\n\t{err:gsub("\t", "\t\t")}`
@@ -47,11 +49,12 @@ end
 
 const function tuple_schema<T...>(...: okserde.SizedSchema | okserde.UnresolvedSchema): okserde.SizedSchema<T...>
 	const tuple_schemas = { ... }
-	const proto: okserde.SizedSchema = create_tuple_proto(tuple_schemas)
+	const writes: { okserde.write }, reads: { okserde.read }, validates: { okserde.validate }, dyn_sizes: { (...any) -> number } =
+		{}, {}, {}, {}
+
+	const proto: okserde.SizedSchema = create_tuple_proto(writes, reads, validates)
 
 	const is_static, static_size = is_shape_static(tuple_schemas)
-
-	const dyn_sizes: { (...any) -> number } = {}
 
 	if is_static then
 		proto.static_size = static_size
@@ -68,7 +71,12 @@ const function tuple_schema<T...>(...: okserde.SizedSchema | okserde.UnresolvedS
 	end
 
 	resolve_schemas_in_place(proto, tuple_schemas)
-	flatten_into(tuple_schemas, { dyn_size = dyn_sizes })
+	flatten_into(tuple_schemas, {
+		write = writes,
+		read = reads,
+		validate = validates,
+		dyn_size = dyn_sizes,
+	})
 
 	return proto
 end
