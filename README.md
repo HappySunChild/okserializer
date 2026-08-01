@@ -152,6 +152,10 @@ That doesn't mean that this library couldn't be used to accomplish some of these
 - AOT compilation
 - JSON serialization/deserialization
 
+If you're interested in using `okserde` in your Roblox game for networking, I've already made a pretty lightweight module
+called [`netws`](https://github.com/HappySunChild/netws) that utilizes `okserde` for buffer serializing and deserializing.
+It's intended more as a demonstration than an actual production ready networking library, so you probably shouldn't use it for anything important.
+
 ## Attributions
 
 - Initially based off of athar_adventure's [BufferConverter2](https://devforum.roblox.com/t/temporarily-archived-bufferconverter2-blazingly-fast-schema-based-buffer-serialization/3429040),
