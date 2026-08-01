@@ -145,7 +145,7 @@ end)
 
 Here are some things that while would be nice to have all in one library, are generally out of the scope of this project.
 That doesn't mean that this library couldn't be used to accomplish some of these things however!
-- lossless buffer compression (`zlib`, `DEFLATE`, etc.)
+- buffer compression (`zlib`, `DEFLATE`, etc.)
 - value deduplication
 - Roblox networking / client-server synchronization
 - built-in full Roblox Instance serializing/deserializing (can be manually done with the given tools!)
